@@ -1,4 +1,5 @@
-const OK = 200;
-const BAD_REQUEST = 400;
-const SERVER_ERROR = 500;
-export { OK, BAD_REQUEST, SERVER_ERROR };
+const OK = 200
+const BAD_REQUEST = 400
+const SERVER_ERROR = 500
+
+export { OK, BAD_REQUEST, SERVER_ERROR }
