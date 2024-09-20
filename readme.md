@@ -1,3 +1,3 @@
 # images
 ![first](sunflower.jpg)
-<img src="sunflower.png" alt="first" width="400"/>
+<img src="./sunflower.png" alt="first" width="400"/>
