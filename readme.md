@@ -47,3 +47,5 @@ class DBConnection {
 
 export const dbInstance = DBConnection.getInstance()
 
+hello
+
