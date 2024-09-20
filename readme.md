@@ -1,3 +1,2 @@
 # images
-<!-- ![first](sunflower.jpg) -->
-<img src="/sunflower.jpg" alt="first" width="400"/>
+<img src="sunflower.jpg" alt="first" width="400"/>
