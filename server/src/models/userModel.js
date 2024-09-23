@@ -16,56 +16,55 @@ export class SQLusers extends Iusers {
 
             const [[user]] = await connection.query(q, [searchInput]);
 
-            if (user) return user;
-            else return { message: "USER_NOT_FOUND" };
+            if (!user) {
+                return { message: "USER_NOT_FOUND" };
+            }
+            return user;
         } catch (err) {
             throw new Error(err);
         }
     }
 
-    async createUser(id, userName, firstName, lastName, avatar, coverImage, email, password) {
+    async createUser(userId, userName, firstName, lastName, avatar, coverImage, email, password) {
         try {
-            const q = "INSERT INTO users (user_id, user_name, user_firstName, user_lastName, user_avatar, user_coverImage, user_email, user_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            const q =
+                "INSERT INTO users (user_id, user_name, user_firstName, user_lastName, user_avatar, user_coverImage, user_email, user_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-            await connection.query(q, [id, userName, firstName, lastName, avatar, coverImage, email, password]);
+            await connection.query(q, [userId, userName, firstName, lastName, avatar, coverImage, email, password]);
 
-            const user = await this.getUser(id);
+            const user = await this.getUser(userId);
 
             if (user?.message) {
                 throw new Error({ message: "USER_CREATION_DB_ISSUE" });
-            } else {
-                const { user_password, ...createdUser } = user; // to exclude the password from the response
-                return createdUser;
             }
+            const { user_password, refresh_token, ...createdUser } = user; // to exclude the password from the response
+            return createdUser;
         } catch (err) {
             throw new Error(err);
         }
     }
 
-    async deleteUser(id) {
+    async deleteUser(userId) {
         try {
-            const user = await this.getUser(id);
-            if (user?.message) {
-                throw new Error(user.message);
-            } else {
-                const q = "DELETE FROM users WHERE user_id = ?";
+            const q = "DELETE FROM users WHERE user_id = ?";
 
-                const [result] = await connection.query(q, [id]);
+            const [result] = await connection.query(q, [userId]);
 
-                if (result.affectedRows == 0) {
-                    throw new Error({ message: "USER_DELETION_DB_ISSUE" });
-                }
+            if (result.affectedRows == 0) {
+                throw new Error({ message: "USER_DELETION_DB_ISSUE" });
             }
         } catch (err) {
             throw new Error(err);
         }
     }
 
-    async logoutUser(id) {
+    async logoutUser(userId) {
         try {
             const q = "UPDATE users SET refresh_token = ? WHERE user_id = ?";
-            await connection.query(q, ["", id]);
-            const user = await this.getUser(id);
+            await connection.query(q, ["", userId]);
+
+            const user = await this.getUser(userId);
+
             if (user?.refresh_token !== "") {
                 throw new Error({ message: "REFRESH_TOKEN_NOT_DELETED_IN_DB" });
             }
@@ -74,11 +73,11 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateTokens(id, refreshToken) {
+    async updateTokens(userId, refreshToken) {
         try {
             const q = "UPDATE users SET refresh_token = ? WHERE user_id = ?";
-            await connection.query(q, [refreshToken, id]);
-            const user = await this.getUser(id);
+            await connection.query(q, [refreshToken, userId]);
+            const user = await this.getUser(userId);
             if (user?.refresh_token === "") {
                 throw new Error({ message: "REFRESH_TOKEN_NOT_SAVED_IN_DB" });
             }
@@ -87,71 +86,123 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateAccountDetails(id, firstName, lastName, email, password) {
+    async getChannelProfile(channelId, currentUserId) {
         try {
-            const q = "UPDATE users SET user_name=?, user_email=? WHERE user_id= ?";
+            const q1 = "(SELECT COUNT(p.post_id) FROM posts p where p.post_ownerId = u.user_id) as totalPosts";
 
-            await connection.query(q, [userName, email, id]);
+            const q2 = "(SELECT COUNT(f1.follower_id) FROM followers f1 WHERE f1.following_id = u.user_id) AS totalFollowers";
 
-            const result = await this.getUser(id);
+            const q3 = "(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowing";
 
-            if (result) return result;
+            const q4 = "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
+
+            // ⭐ SUB-QUERE example in SELECT not in WHERE
+            const q = `
+                    SELECT u.user_id, u.user_name, u.user_firstName, u.user_lastName, u.user_coverImage, u.user_avatar, ${q1}, ${q2} ,${q3}, ${q4} 
+                    FROM users u 
+                    WHERE u.user_id = ?
+                `;
+
+            const [[response]] = await connection.query(q, [currentUserId, channelId]);
+
+            return response;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async updateAccountDetails(userId, firstName, lastName, email) {
+        try {
+            const q = "UPDATE users SET user_firstName=?, user_lastName = ?, user_email=? WHERE user_id= ?";
+
+            await connection.query(q, [firstName, lastName, email, userId]);
+
+            const user = await this.getUser(userId);
+
+            if (user?.message) {
+                throw new Error({ message: "ACCOUNT_DETAILS_UPDATION_DB_ISSUE" });
+            }
+
+            const { user_password, refresh_token, ...updatedUser } = user;
+            return updatedUser;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async updateChannelDetails(userId, userName, bio) {
+        try {
+            const q = "UPDATE users SET user_name=?, user_bio=? WHERE user_id= ?";
+
+            await connection.query(q, [userName, bio, userId]);
+
+            const user = await this.getUser(userId);
+
+            if (user?.message) {
+                throw new Error({ message: "CHANNEL_DETAILS_UPDATION_DB_ISSUE" });
+            }
+
+            const { user_password, refresh_token, ...updatedUser } = user;
+            return updatedUser;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async updatePassword(userId, newPassword) {
+        try {
+            console.log(newPassword);
+            const q = "UPDATE users SET user_password = ? WHERE user_id = ?";
+
+            await connection.query(q, [newPassword, userId]);
+
+            const user = await this.getUser(userId);
+
+            if (user?.message) {
+                throw new Error({ message: "PASSWORD_UPDATION_DB_ISSUE" });
+            }
+
+            return;
+            // const { user_password, refresh_token, ...updatedUser } = user;  // we dont show password anywhere (no need to return)
+            // return updatedUser;
         } catch (err) {
             throw new Error(err.message);
         }
     }
 
-    async updateChannelDetails(id, userName, bio, password) {
+    async updateAvatar(userId, avatarURL) {
         try {
-            const q = "UPDATE users SET user_firstname=?, user_lastname=? WHERE user_id= ?";
+            const q = "UPDATE users SET user_avatar = ? WHERE user_id = ?";
 
-            await connection.query(q, [firstName, lastName, id]);
+            await connection.query(q, [avatarURL, userId]);
 
-            const result = this.getUser(id);
+            const user = await this.getUser(userId);
 
-            if (result) return result;
+            if (user?.message) {
+                throw new Error({ message: "AVATAR_UPDATION_DB_ISSUE" });
+            }
+
+            const { user_password, refresh_token, ...updatedUser } = user;
+            return updatedUser;
         } catch (err) {
             throw new Error(err.message);
         }
     }
 
-    async updatePassword(id, oldPassword, newPassword) {
+    async updateCoverImage(userId, coverImageURL) {
         try {
-            const q = "UPDATE users SET user_password=? WHERE user_id= ?";
+            const q = "UPDATE users SET user_coverImage=? WHERE user_id= ?";
 
-            await connection.query(q, [newPassword, id]);
+            await connection.query(q, [coverImageURL, userId]);
 
-            const result = this.getUser(id);
+            const user = await this.getUser(userId);
 
-            if (result) return result;
-        } catch (err) {
-            throw new Error(err.message);
-        }
-    }
+            if (user?.message) {
+                throw new Error({ message: "COVERIMAGE_UPDATION_DB_ISSUE" });
+            }
 
-    async updateAvatar(id, avatar) {
-        try {
-            const q = "UPDATE users SET user_password=? WHERE user_id= ?";
-
-            await connection.query(q, [newPassword, id]);
-
-            const result = this.getUser(id);
-
-            if (result) return result;
-        } catch (err) {
-            throw new Error(err.message);
-        }
-    }
-
-    async updateCoverImage(id, coverImage) {
-        try {
-            const q = "UPDATE users SET user_password=? WHERE user_id= ?";
-
-            await connection.query(q, [newPassword, id]);
-
-            const result = this.getUser(id);
-
-            if (result) return result;
+            const { user_password, refresh_token, ...updatedUser } = user;
+            return updatedUser;
         } catch (err) {
             throw new Error(err.message);
         }

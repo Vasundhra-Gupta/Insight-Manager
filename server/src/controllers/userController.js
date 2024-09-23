@@ -2,46 +2,49 @@ import getServiceObject from "../db/serviceObjects.js";
 import { OK, SERVER_ERROR, BAD_REQUEST } from "../constants/errorCodes.js";
 import { v4 as uuid, validate as isValiduuid } from "uuid";
 import fs from "fs";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { verifyPassword } from "../utils/verifyPassword.js";
 
 const userObject = getServiceObject("users");
 
 const cookieOptions = {
     httpOnly: true,
     path: "/",
-    secure: true,
+    // secure: true,
     sameSite: "None",
 };
 
-const generateTokens = async (id) => {
+const generateTokens = async (userId) => {
     try {
-        const user = await userObject.getUser(id);
-        if (user) {
-            const accessToken = jwt.sign(
-                {
-                    id,
-                    userName: user.user_name,
-                    email: user.user_email,
-                },
-                process.env.ACCESS_TOKEN_SECRET,
-                {
-                    expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-                }
-            );
-            const refreshToken = jwt.sign(
-                {
-                    id,
-                },
-                process.env.REFRESH_TOKEN_SECRET,
-                {
-                    expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-                }
-            );
-            await userObject.updateTokens(id, refreshToken);
-            return { accessToken, refreshToken };
+        const user = await userObject.getUser(userId);
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user);
         }
+        const accessToken = jwt.sign(
+            {
+                user_id: userId,
+                user_name: user.user_name,
+                user_email: user.user_email,
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            {
+                expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+            }
+        );
+        const refreshToken = jwt.sign(
+            {
+                user_id: userId,
+            },
+            process.env.REFRESH_TOKEN_SECRET,
+            {
+                expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+            }
+        );
+        await userObject.updateTokens(userId, refreshToken);
+
+        return { accessToken, refreshToken };
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             error: err.message,
@@ -52,12 +55,17 @@ const generateTokens = async (id) => {
 
 const registerUser = async (req, res) => {
     try {
-        const id = uuid();
+        const userId = uuid();
+        if (!userId) {
+            return res.status(SERVER_ERROR).json({ message: "USERID_CREATION_UUID_ISSUE" });
+        }
         const { userName, firstName, lastName, email, password } = req.body;
 
         if (!userName || !firstName || !email || !password) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
         }
+
+        // ⭐ format validity checks for email , username, firstname, if have lastname (frontend)
 
         const existingUser = await userObject.getUser(userName);
 
@@ -73,29 +81,44 @@ const registerUser = async (req, res) => {
 
         if (!req.files?.avatar) {
             if (req.files?.coverImage) {
-                fs.unlinkSync(req.files.coverImage[0].path);
+                const coverImageLocalPath = req.files.coverImage[0].path;
+                if (!coverImageLocalPath) {
+                    throw new Error({ message: "COVERIMAGE_LOCALPATH_MULTER_ISSUE" });
+                }
+                fs.unlinkSync(coverImageLocalPath);
             }
             return res.status(BAD_REQUEST).json({ message: "MISSING_AVATAR" });
         }
 
-        const avatar = await uploadOnCloudinary(req.files.avatar[0].path);
+        const avatarLocalPath = req.files.avatar[0].path;
+        if (!avatarLocalPath) {
+            throw new Error({ message: "AVATAR_LOCALPATH_MULTER_ISSUE" });
+        }
+        const avatar = await uploadOnCloudinary(avatarLocalPath);
+        if (!avatar) {
+            return res.status(500).json({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
+        }
 
         let coverImage;
         if (req.files?.coverImage) {
-            coverImage = await uploadOnCloudinary(req.files.coverImage[0].path);
+            const coverImageLocalPath = req.files.coverImage[0].path;
+            if (!coverImageLocalPath) {
+                throw new Error({ message: "COVERIMAGE_LOCALPATH_MULTER_ISSUE" });
+            }
+            coverImage = await uploadOnCloudinary(coverImageLocalPath);
+            if (!coverImage) {
+                return res.status(500).json({ message: "COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
+            }
         }
 
         const avatarURL = avatar.url;
         const coverImageURL = coverImage.url;
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await userObject.createUser(id, userName, firstName, lastName, avatarURL, coverImageURL, email, hashedPassword);
+        const user = await userObject.createUser(userId, userName, firstName, lastName, avatarURL, coverImageURL, email, hashedPassword);
+        // user.message has already been checked in createUser model
 
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json({ message: user.message });
-        } else {
-            return res.status(OK).json(user);
-        }
+        return res.status(OK).json(user);
     } catch (err) {
         return res.status(SERVER_ERROR).json({ message: "something went wrong while registering the user.", error: err.message });
     }
@@ -104,34 +127,37 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { loginInput, password } = req.body;
+
         if (!loginInput || !password) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
         }
 
         const user = await userObject.getUser(loginInput);
 
-        if (user) {
-            console.log(password, user.user_password);
-            const isPasswordValid = await bcrypt.compare(password, user.user_password);
-            if (!isPasswordValid) {
-                return res.status(BAD_REQUEST).json({ message: "WRONG_CREDENTIALS" });
-            } else {
-                const { accessToken, refreshToken } = generateTokens(user.user_id);
-                const { user_password, refresh_token, ...loggedUser } = user;
-
-                return res
-                    .status(OK)
-                    .cookie("accessToken", accessToken, {
-                        ...cookieOptions,
-                        maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE), // cause .env saves everything in strings
-                    })
-                    .cookie("refreshToken", refreshToken, {
-                        ...cookieOptions,
-                        maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
-                    })
-                    .json(loggedUser);
-            }
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user); // user = {message:"USER_NOT_FOUND"}
         }
+
+        const response = await verifyPassword(password, user.user_password);
+        if (response?.message) {
+            return res.status(BAD_REQUEST).json(response);
+        }
+
+        const { accessToken, refreshToken } = await generateTokens(user.user_id);
+
+        const { user_password, refresh_token, ...loggedUser } = user;
+
+        return res
+            .status(OK)
+            .cookie("accessToken", accessToken, {
+                ...cookieOptions,
+                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE), // cause .env saves everything in strings (so store the final value in .env as 60000 not as 60*1000)
+            })
+            .cookie("refreshToken", refreshToken, {
+                ...cookieOptions,
+                maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
+            })
+            .json(loggedUser);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while logging the user.",
@@ -143,8 +169,26 @@ const loginUser = async (req, res) => {
 const deleteAccount = async (req, res) => {
     try {
         const { user_id } = req.user;
-        await userObject.deleteAccount(user_id);
-        return res.status(OK).json({ message: "DELETION_SUCCESSFULL" });
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        }
+
+        const { password } = req.body;
+        const user = await userObject.getUser(user_id);
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user);
+        }
+        const response = await verifyPassword(password, user.user_password);
+        if (response?.message) {
+            return res.status(BAD_REQUEST).json(response);
+        }
+
+        await userObject.deleteUser(user_id);
+        return res
+            .status(OK)
+            .clearCookie("accessToken", cookieOptions)
+            .clearCookie("refreshToken", cookieOptions)
+            .json({ message: "DELETION_SUCCESSFULL" });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while delete the user account.",
@@ -156,8 +200,20 @@ const deleteAccount = async (req, res) => {
 const logoutUser = async (req, res) => {
     try {
         const { user_id } = req.user;
-        await userObject.logout(user_id);
-        return res.status(OK).json({ message: "LOGGED_OUT_SUCCESSFULLY" });
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        }
+
+        const user = await userObject.getUser(user_id);
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user);
+        }
+        await userObject.logoutUser(user_id);
+        return res
+            .status(OK)
+            .clearCookie("accessToken", cookieOptions)
+            .clearCookie("refreshToken", cookieOptions)
+            .json({ message: "LOGGED_OUT_SUCCESSFULLY" });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while logging the user out.",
@@ -168,14 +224,8 @@ const logoutUser = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
     try {
-        const { user_id } = req.user;
-        const user = await userObject.getUser(user_id);
-        if (user?.message) {
-            throw new Error(user.message);
-        } else {
-            const { user_password, ...currentUser } = user;
-            return res.status(OK).json(currentUser);
-        }
+        const user = req.user;
+        return res.status(OK).json(user);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while getting the current user.",
@@ -187,13 +237,19 @@ const getCurrentUser = async (req, res) => {
 const getChannelProfile = async (req, res) => {
     try {
         const { username } = req.params;
+
+        const { user_id } = req.user;
+        const currentUserId = user_id;
+
         const user = await userObject.getUser(username);
         if (user?.message) {
-            throw new Error(user.message);
-        } else {
-            const { user_password, ...currentUser } = user;
-            return res.status(OK).json(currentUser);
+            return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });
         }
+
+        const channelId = user.user_id;
+
+        const response = await userObject.getChannelProfile(channelId, currentUserId);
+        return res.status(OK).json(response);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while getting the channel profile.",
@@ -202,27 +258,187 @@ const getChannelProfile = async (req, res) => {
     }
 };
 
-const updateAccountDetails = async (req, res) => {};
-
-const updateChannelDetails = async (req, res) => {};
-
-const updatePassword = async (req, res) => {};
-
-const updateAvatar = async (req, res) => {};
-
-const updateCoverImage = async (req, res) => {};
-
-const editUser = async (req, res) => {
+const updateAccountDetails = async (req, res) => {
     try {
-        const { id } = req.params;
-        if (!id) return res.status(BAD_REQUEST).json({ message: "Id is missing" });
-        const { name, firstName, lastName, avatar, coverImage, email, password } = req.body;
-        const result = await userObject.editUser(id, name, firstName, lastName, avatar, coverImage, email, password);
-        if (result?.message) return res.status(BAD_REQUEST).json({ message: result.message });
-        else return res.status(OK).json(result);
+        const { user_id } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        }
+
+        const { firstName, lastName, email, password } = req.body;
+
+        const user = await userObject.getUser(user_id);
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user);
+        }
+
+        const response = await verifyPassword(password, user.user_password);
+        if (response?.message) {
+            return res.status(BAD_REQUEST).json(response);
+        }
+        const updatedUser = await userObject.updateAccountDetails(user_id, firstName, lastName, email);
+
+        return res.status(OK).json(updatedUser);
     } catch (err) {
-        return res.status(SERVER_ERROR).json({ error: "Failed to edit user", message: err.message });
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while updating account details.",
+            error: err.message,
+        });
     }
 };
 
-export { registerUser, loginUser, logoutUser, deleteAccount, updateAccountDetails, updateAvatar, updateChannelDetails, updatePassword, updateCoverImage, getChannelProfile, getCurrentUser };
+const updateChannelDetails = async (req, res) => {
+    try {
+        const { user_id } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        }
+
+        const { userName, bio, password } = req.body;
+
+        const user = await userObject.getUser(user_id);
+
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user);
+        }
+
+        const response = await verifyPassword(password, user.user_password);
+        if (response?.message) {
+            return res.status(BAD_REQUEST).json(response);
+        }
+        const updatedUser = await userObject.updateChannelDetails(user_id, userName, bio);
+
+        return res.status(OK).json(updatedUser);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while updating channel details.",
+            error: err.message,
+        });
+    }
+};
+
+const updatePassword = async (req, res) => {
+    try {
+        const { user_id } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        }
+
+        const { oldPassword, newPassword } = req.body;
+
+        const user = await userObject.getUser(user_id);
+
+        if (user?.message) {
+            return res.status(BAD_REQUEST).json(user);
+        }
+
+        const response = await verifyPassword(oldPassword, user.user_password);
+        if (response?.message) {
+            return res.status(BAD_REQUEST).json(response);
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+        await userObject.updatePassword(user_id, hashedNewPassword);
+
+        return res.status(OK).json({ message: "PASSWORD_UPDATED_SUCCESSFULLY" });
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while updating password.",
+            error: err.message,
+        });
+    }
+};
+
+const updateAvatar = async (req, res) => {
+    try {
+        const { user_id, user_avatar } = req.user;
+
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        }
+
+        if (!req.file) {
+            return res.status(BAD_REQUEST).json({ message: "AVATAR_MISSING" });
+        }
+
+        const avatarLocalPath = req.file.path;
+        if (!avatarLocalPath) {
+            throw new Error({ message: "AVATAR_LOCALPATH_MULTER_ISSUE" });
+        }
+
+        const avatar = await uploadOnCloudinary(avatarLocalPath);
+        if (!avatar) {
+            return res.status(500).json({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
+        }
+        const avatarURL = avatar.url;
+        const updatedUser = await userObject.updateAvatar(user_id, avatarURL);
+
+        if (updatedUser) {
+            const response = await deleteFromCloudinary(user_avatar);
+            if (response.result !== "ok") {
+                return res.status(500).json({ message: "OLD_AVATAR_DELETION_CLOUDINARY_ISSUE" });
+            }
+        }
+
+        return res.status(OK).json(updatedUser);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while updating avatar.",
+            error: err.message,
+        });
+    }
+};
+
+const updateCoverImage = async (req, res) => {
+    try {
+        const { user_id, user_coverImage } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        }
+
+        if (!req.file) {
+            return res.status(BAD_REQUEST).json({ message: "COVERIMAGE_MISSING" });
+        }
+
+        const coverImageLocalPath = req.file.path;
+        if (!coverImageLocalPath) {
+            throw new Error({ message: "COVERIMAGE_LOCALPATH_MULTER_ISSUE" });
+        }
+
+        const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+        if (!coverImage) {
+            return res.status(500).json({ message: "COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
+        }
+
+        const coverImageURL = coverImage.url;
+        const updatedUser = await userObject.updateCoverImage(user_id, coverImageURL);
+
+        if (updatedUser) {
+            const response = await deleteFromCloudinary(user_coverImage);
+            if (response.result !== "ok") {
+                return res.status(500).json({ message: "OLD_COVERIMAGE_DELETION_CLOUDINARY_ISSUE" });
+            }
+        }
+
+        return res.status(OK).json(updatedUser);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while updating coverImage.",
+            error: err.message,
+        });
+    }
+};
+
+export {
+    registerUser,
+    loginUser,
+    logoutUser,
+    deleteAccount,
+    updateAccountDetails,
+    updateAvatar,
+    updateChannelDetails,
+    updatePassword,
+    updateCoverImage,
+    getChannelProfile,
+    getCurrentUser,
+};

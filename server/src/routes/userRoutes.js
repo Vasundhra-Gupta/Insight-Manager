@@ -44,12 +44,12 @@ userRouter.route("/delete-account").delete(deleteAccount);
 
 userRouter.route("/current-user").get(verifyJwt, getCurrentUser);
 
-userRouter.route("/update-account-details").patch(updateAccountDetails);
+userRouter.route("/update-account").patch(updateAccountDetails);
 
-userRouter.route("/update-channel-details").patch(updateChannelDetails);
+userRouter.route("/update-channel").patch(updateChannelDetails);
 
 userRouter.route("/update-password").patch(updatePassword);
 
-userRouter.route("/avatar").patch(upload.single("avatar"), updateAvatar);
+userRouter.route("/update-avatar").patch(upload.single("avatar"), updateAvatar);
 
-userRouter.route("/cover-image").patch(upload.single("coverImage"), updateCoverImage);
+userRouter.route("/update-coverImage").patch(upload.single("coverImage"), updateCoverImage);
