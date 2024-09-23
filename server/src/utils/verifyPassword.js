@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
-import { BAD_REQUEST, SERVER_ERROR } from "../constants/errorCodes.js";
 
-export const verifyPassword = async (password, hashedPassword, res) => {
+export const verifyPassword = async (password, hashedPassword) => {
     try {
         const isPasswordValid = await bcrypt.compare(password, hashedPassword);
         if (!isPasswordValid) {
