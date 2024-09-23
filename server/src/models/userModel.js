@@ -104,7 +104,7 @@ export class SQLusers extends Iusers {
                 `;
 
             const [[response]] = await connection.query(q, [currentUserId, channelId]);
-
+            
             return response;
         } catch (err) {
             throw new Error(err);
@@ -170,11 +170,11 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateAvatar(userId, avatarURL) {
+    async updateAvatar(userId, avatar) {
         try {
             const q = "UPDATE users SET user_avatar = ? WHERE user_id = ?";
 
-            await connection.query(q, [avatarURL, userId]);
+            await connection.query(q, [avatar, userId]);
 
             const user = await this.getUser(userId);
 
@@ -189,11 +189,11 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateCoverImage(userId, coverImageURL) {
+    async updateCoverImage(userId, coverImage) {
         try {
             const q = "UPDATE users SET user_coverImage=? WHERE user_id= ?";
 
-            await connection.query(q, [coverImageURL, userId]);
+            await connection.query(q, [coverImage, userId]);
 
             const user = await this.getUser(userId);
 

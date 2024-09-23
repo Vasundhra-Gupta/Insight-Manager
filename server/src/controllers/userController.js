@@ -236,20 +236,17 @@ const getCurrentUser = async (req, res) => {
 
 const getChannelProfile = async (req, res) => {
     try {
-        const { username } = req.params;
+        const { userName } = req.params;
 
-        const { user_id } = req.user;
-        const currentUserId = user_id;
+        const user = req.user; // current user
 
-        const user = await userObject.getUser(username);
-        if (user?.message) {
+        const channel = await userObject.getUser(userName);
+        if (channel?.message) {
             return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });
         }
 
-        const channelId = user.user_id;
-
-        const response = await userObject.getChannelProfile(channelId, currentUserId);
-        return res.status(OK).json(response);
+        const channelProfile = await userObject.getChannelProfile(channel.user_id, user.user_id);
+        return res.status(OK).json(channelProfile);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while getting the channel profile.",

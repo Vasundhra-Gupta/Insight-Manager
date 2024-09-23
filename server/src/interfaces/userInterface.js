@@ -1,25 +1,49 @@
 export class Iusers {
-    async getUsers() {
-        throw new Error("Method getUsers not overwritten.");
-    }
-
-    async getUser(id) {
+    async getUser(searchInput) {
         throw new Error("Method getUser not overwritten.");
     }
 
-    async deleteUsers() {
-        throw new Error("Method deleteUsers not overwritten.");
+    async createUser(userId, userName, firstName, lastName, avatar, coverImage, email, password) {
+        throw new Error("Method createUser not overwritten.");
     }
 
-    async deleteUser(id) {
+    async deleteUser(userId) {
         throw new Error("Method deleteUser not overwritten.");
     }
 
-    async createUser(id, name, firstName, lastName, avatar, coverimage, email, password) {
-        throw new Error("Method createUsers not overwritten.");
+    async logoutUser(userId) {
+        throw new Error("Method logoutUser not overwritten.");
     }
 
-    async editUser(id, name, firstName, lastName, avatar, coverimage, email, password) {
-        throw new Error("Method editUser not overwritten.");
+    async updateTokens(userId, refreshToken) {
+        throw new Error("Method updateTokens not overwritten.");
     }
+
+    async getChannelProfile(channelId, currentUserId) {
+        throw new Error("Method getChannelProfile not overwritten.");
+    }
+
+    async updateAccountDetails(userId, firstName, lastName, email) {
+        throw new Error("Method updateAccountDetails not overwritten.");
+    }
+
+    async updateChannelDetails(userId, userName, bio) {
+        throw new Error("Method updateChannelDetails not overwritten.");
+    }
+
+    async updatePassword(userId, newPassword) {
+        throw new Error("Method updatePassword not overwritten.");
+    }
+
+    async updateAvatar(userId, avatar) {
+        throw new Error("Method updateAvatar not overwritten.");
+    }
+
+    async updateCoverImage(userId, coverImage) {
+        throw new Error("Method updateCoverImage not overwritten.");
+    }
+
+    // async deleteUsers() {
+    //     throw new Error("Method deleteUsers not overwritten.");
+    // }
 }

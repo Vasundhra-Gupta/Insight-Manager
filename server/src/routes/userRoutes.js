@@ -32,7 +32,7 @@ userRouter.route("/register").post(
     registerUser
 );
 
-userRouter.route("/profile/:username").get(optionalVerifyJwt, getChannelProfile);
+userRouter.route("/profile/:userName").get(optionalVerifyJwt, getChannelProfile);
 
 userRouter.route("/login").post(loginUser);
 
