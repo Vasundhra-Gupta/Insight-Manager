@@ -131,7 +131,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateChannelDetails(userId, userName, bio) {
+    async updateProfileDetails(userId, userName, bio) {
         try {
             const q = "UPDATE users SET user_name=?, user_bio=? WHERE user_id= ?";
 
@@ -166,7 +166,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user; // we dont show password anywhere (no need to return though)
             return updatedUser;
         } catch (err) {
-            throw new Error(err.message);
+            throw new Error(err);
         }
     }
 
@@ -185,7 +185,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err.message);
+            throw new Error(err);
         }
     }
 
@@ -204,7 +204,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err.message);
+            throw new Error(err);
         }
     }
 

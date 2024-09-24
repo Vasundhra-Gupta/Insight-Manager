@@ -10,7 +10,9 @@ export class SQLposts extends Iposts {
 
     async deletePost(postId) {}
 
-    async updatePost(currentUserId, postId, title, content, image) {}
+    async updatePostDetails(currentUserId, postId, title, content, image) {}
+
+    async updatePostImage(postId, image) {}
 
     async togglePostVisibility(PostId) {}
 

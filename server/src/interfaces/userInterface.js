@@ -27,7 +27,7 @@ export class Iusers {
         throw new Error("Method updateAccountDetails not overwritten.");
     }
 
-    async updateChannelDetails(userId, userName, bio) {
+    async updateProfileDetails(userId, userName, bio) {
         throw new Error("Method updateChannelDetails not overwritten.");
     }
 

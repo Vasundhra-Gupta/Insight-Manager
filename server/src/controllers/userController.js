@@ -1,50 +1,13 @@
 import getServiceObject from "../db/serviceObjects.js";
-import { OK, SERVER_ERROR, BAD_REQUEST,COOKIE_OPTIONS } from "../constants/errorCodes.js";
+import { OK, SERVER_ERROR, BAD_REQUEST, COOKIE_OPTIONS } from "../constants/errorCodes.js";
 import { v4 as uuid, validate as isValiduuid } from "uuid";
 import fs from "fs";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
-import jwt from "jsonwebtoken";
+import { generateRefreshToken, generateAccessToken } from "../utils/generateTokens.js";
 import bcrypt from "bcrypt";
 import { verifyPassword } from "../utils/verifyPassword.js";
 
-const userObject = getServiceObject("users");
-
-const generateTokens = async (userId) => {
-    try {
-        const user = await userObject.getUser(userId);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
-        const accessToken = jwt.sign(
-            {
-                user_id: userId,
-                user_name: user.user_name,
-                user_email: user.user_email,
-            },
-            process.env.ACCESS_TOKEN_SECRET,
-            {
-                expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-            }
-        );
-        const refreshToken = jwt.sign(
-            {
-                user_id: userId,
-            },
-            process.env.REFRESH_TOKEN_SECRET,
-            {
-                expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-            }
-        );
-        await userObject.updateTokens(userId, refreshToken);
-
-        return { accessToken, refreshToken };
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            error: err.message,
-            message: "something went wrong while generating the tokens.",
-        });
-    }
-};
+export const userObject = getServiceObject("users");
 
 const registerUser = async (req, res) => {
     try {
@@ -136,7 +99,8 @@ const loginUser = async (req, res) => {
             return res.status(BAD_REQUEST).json(response);
         }
 
-        const { accessToken, refreshToken } = await generateTokens(user.user_id);
+        const accessToken = await generateAccessToken(user.user_id);
+        const refreshToken = await generateRefreshToken(user.user_id);
 
         const { user_password, refresh_token, ...loggedUser } = user;
 
@@ -238,7 +202,7 @@ const getChannelProfile = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });
         }
 
-        const channelProfile = await userObject.getChannelProfile(channel?.user_id, user?.user_id);   
+        const channelProfile = await userObject.getChannelProfile(channel?.user_id, user?.user_id);
         return res.status(OK).json(channelProfile);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -277,7 +241,7 @@ const updateAccountDetails = async (req, res) => {
     }
 };
 
-const updateChannelDetails = async (req, res) => {
+const updateProfileDetails = async (req, res) => {
     try {
         const { user_id } = req.user;
         if (!user_id) {
@@ -426,7 +390,7 @@ export {
     deleteAccount,
     updateAccountDetails,
     updateAvatar,
-    updateChannelDetails,
+    updateProfileDetails,
     updatePassword,
     updateCoverImage,
     getChannelProfile,

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { BAD_REQUEST, FORBIDDEN,COOKIE_OPTIONS } from "../constants/errorCodes.js";
+import { BAD_REQUEST, FORBIDDEN, COOKIE_OPTIONS } from "../constants/errorCodes.js";
 import getServiceObject from "../db/serviceObjects.js";
 
 const userObject = getServiceObject("users");
