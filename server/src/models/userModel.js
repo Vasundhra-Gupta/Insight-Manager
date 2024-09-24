@@ -106,6 +106,10 @@ export class SQLusers extends Iusers {
 
             const [[response]] = await connection.query(q, [currentUserId, channelId]);
 
+            if (!response) {
+                throw new Error({ message: "CHANNEL_FETCHING_DB_ISSUE" });
+            }
+
             return response;
         } catch (err) {
             throw new Error(err);
@@ -140,7 +144,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "CHANNEL_DETAILS_UPDATION_DB_ISSUE" });
+                throw new Error({ message: "PROFILE_DETAILS_UPDATION_DB_ISSUE" });
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -152,7 +156,6 @@ export class SQLusers extends Iusers {
 
     async updatePassword(userId, newPassword) {
         try {
-            console.log(newPassword);
             const q = "UPDATE users SET user_password = ? WHERE user_id = ?";
 
             await connection.query(q, [newPassword, userId]);

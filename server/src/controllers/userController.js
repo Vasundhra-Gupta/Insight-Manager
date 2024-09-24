@@ -131,10 +131,12 @@ const deleteAccount = async (req, res) => {
         }
 
         const { password } = req.body;
+
         const user = await userObject.getUser(user_id);
         if (user?.message) {
             return res.status(BAD_REQUEST).json(user);
         }
+        
         const response = await verifyPassword(password, user.user_password);
         if (response?.message) {
             return res.status(BAD_REQUEST).json(response);

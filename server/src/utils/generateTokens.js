@@ -11,8 +11,6 @@ const generateAccessToken = async (userId) => {
         const accessToken = jwt.sign(
             {
                 user_id: userId,
-                user_name: user.user_name,
-                user_email: user.user_email,
             },
             process.env.ACCESS_TOKEN_SECRET,
             {
@@ -32,7 +30,7 @@ const generateRefreshToken = async (userId) => {
         if (user?.message) {
             return res.status(BAD_REQUEST).json(user);
         }
-        
+
         const refreshToken = jwt.sign(
             {
                 user_id: userId,
