@@ -7,7 +7,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static("../public"));
 app.use(cookieParser());
 
-
 import { userRouter } from "./routes/userRoutes.js";
+import { postRouter } from "./routes/postRoutes.js";
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/posts", postRouter);

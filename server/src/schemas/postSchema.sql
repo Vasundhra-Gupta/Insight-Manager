@@ -1,6 +1,3 @@
-CREATE DATABASE insight_manager;
-USE insight_manager;
-
 CREATE TABLE posts (	
 	post_id varchar(40) PRIMARY KEY,
     post_image varchar(300) NOT NULL,
@@ -10,6 +7,9 @@ CREATE TABLE posts (
     post_createdAt timestamp NOT NULL DEFAULT NOW(),
     CONSTRAINT posts_post_ownerId_fk FOREIGN KEY(post_ownerId) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE posts
+ADD COLUMN post_isVisible boolean DEFAULT true NOT NULL;
 
 CREATE TABLE saved_posts(
     post_id varchar(40),

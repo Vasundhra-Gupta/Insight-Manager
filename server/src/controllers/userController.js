@@ -1,5 +1,5 @@
 import getServiceObject from "../db/serviceObjects.js";
-import { OK, SERVER_ERROR, BAD_REQUEST } from "../constants/errorCodes.js";
+import { OK, SERVER_ERROR, BAD_REQUEST,COOKIE_OPTIONS } from "../constants/errorCodes.js";
 import { v4 as uuid, validate as isValiduuid } from "uuid";
 import fs from "fs";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
@@ -8,13 +8,6 @@ import bcrypt from "bcrypt";
 import { verifyPassword } from "../utils/verifyPassword.js";
 
 const userObject = getServiceObject("users");
-
-const cookieOptions = {
-    httpOnly: true,
-    path: "/",
-    // secure: true,
-    sameSite: "None",
-};
 
 const generateTokens = async (userId) => {
     try {
@@ -150,11 +143,11 @@ const loginUser = async (req, res) => {
         return res
             .status(OK)
             .cookie("accessToken", accessToken, {
-                ...cookieOptions,
+                ...COOKIE_OPTIONS,
                 maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE), // cause .env saves everything in strings (so store the final value in .env as 60000 not as 60*1000)
             })
             .cookie("refreshToken", refreshToken, {
-                ...cookieOptions,
+                ...COOKIE_OPTIONS,
                 maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
             })
             .json(loggedUser);
@@ -186,8 +179,8 @@ const deleteAccount = async (req, res) => {
         await userObject.deleteUser(user_id);
         return res
             .status(OK)
-            .clearCookie("accessToken", cookieOptions)
-            .clearCookie("refreshToken", cookieOptions)
+            .clearCookie("accessToken", COOKIE_OPTIONS)
+            .clearCookie("refreshToken", COOKIE_OPTIONS)
             .json({ message: "DELETION_SUCCESSFULL" });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -211,8 +204,8 @@ const logoutUser = async (req, res) => {
         await userObject.logoutUser(user_id);
         return res
             .status(OK)
-            .clearCookie("accessToken", cookieOptions)
-            .clearCookie("refreshToken", cookieOptions)
+            .clearCookie("accessToken", COOKIE_OPTIONS)
+            .clearCookie("refreshToken", COOKIE_OPTIONS)
             .json({ message: "LOGGED_OUT_SUCCESSFULLY" });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -245,7 +238,7 @@ const getChannelProfile = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });
         }
 
-        const channelProfile = await userObject.getChannelProfile(channel.user_id, user.user_id);
+        const channelProfile = await userObject.getChannelProfile(channel?.user_id, user?.user_id);   
         return res.status(OK).json(channelProfile);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -335,7 +328,7 @@ const updatePassword = async (req, res) => {
         }
 
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-        await userObject.updatePassword(user_id, hashedNewPassword);
+        const updatedUser = await userObject.updatePassword(user_id, hashedNewPassword);
 
         return res.status(OK).json({ message: "PASSWORD_UPDATED_SUCCESSFULLY" });
     } catch (err) {

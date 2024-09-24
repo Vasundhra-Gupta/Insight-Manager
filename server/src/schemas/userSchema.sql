@@ -10,6 +10,11 @@ CREATE TABLE users (
     user_createdAt timestamp NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE users
+ADD COLUMN user_bio varchar(100) DEFAULT '';
+ALTER TABLE users 
+ADD COLUMN refresh_token varchar(200) NOT NULL DEFAULT ''; 
+
 CREATE TABLE watch_history (
     post_id varchar(40),
 	user_id varchar(40),

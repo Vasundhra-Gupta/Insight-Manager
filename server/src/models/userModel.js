@@ -94,6 +94,7 @@ export class SQLusers extends Iusers {
 
             const q3 = "(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowing";
 
+            // will autohandle the case when user not logged in (currentUserId === undefined) as the AND condn is not true
             const q4 = "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
 
             // ⭐ SUB-QUERE example in SELECT not in WHERE
@@ -104,7 +105,7 @@ export class SQLusers extends Iusers {
                 `;
 
             const [[response]] = await connection.query(q, [currentUserId, channelId]);
-            
+
             return response;
         } catch (err) {
             throw new Error(err);
@@ -162,9 +163,8 @@ export class SQLusers extends Iusers {
                 throw new Error({ message: "PASSWORD_UPDATION_DB_ISSUE" });
             }
 
-            return;
-            // const { user_password, refresh_token, ...updatedUser } = user;  // we dont show password anywhere (no need to return)
-            // return updatedUser;
+            const { user_password, refresh_token, ...updatedUser } = user; // we dont show password anywhere (no need to return though)
+            return updatedUser;
         } catch (err) {
             throw new Error(err.message);
         }
