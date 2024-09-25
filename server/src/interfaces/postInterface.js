@@ -11,7 +11,7 @@ export class Iposts {
         throw new Error("method getPost is not overwritten.");
     }
 
-    async addPost(postId, ownerId, title, content, image) {
+    async createPost(postId, ownerId, title, content, image) {
         throw new Error("method addPost is not overwritten");
     }
 
@@ -19,11 +19,14 @@ export class Iposts {
         throw new Error("method deletePost is not overwritten.");
     }
 
-    async updatePost(currentUserId, postId, title, content, image) {
-        throw new Error("method updatePost is not overwritten.");
+    async updatePostDetails(postId, title, content) {
+        throw new Error("method updatePostDetails is not overwritten.");
+    }
+    async updatePostImage(image) {
+        throw new Error("method updatePostDetails is not overwritten.");
     }
 
-    async togglePostVisibility(PostId) {
+    async togglePostVisibility(postId, isVisible) {
         throw new Error("method togglePostVisibility is not overwritten.");
     }
 }
