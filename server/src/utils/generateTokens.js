@@ -40,7 +40,7 @@ const generateRefreshToken = async (userId) => {
                 expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
             }
         );
-        await userObject.updateTokens(userId, refreshToken);
+        await userObject.updateRefreshToken(userId, refreshToken);
 
         return refreshToken;
     } catch (err) {

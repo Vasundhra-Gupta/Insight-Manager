@@ -11,7 +11,7 @@ import {
     deleteAccount,
     updateAccountDetails,
     updateAvatar,
-    updateProfileDetails,
+    updateChannelDetails,
     updatePassword,
     updateCoverImage,
     getChannelProfile,
@@ -46,7 +46,7 @@ userRouter.route("/current-user").get(getCurrentUser);
 
 userRouter.route("/update-account").patch(updateAccountDetails);
 
-userRouter.route("/update-profile").patch(updateProfileDetails);
+userRouter.route("/update-profile").patch(updateChannelDetails);
 
 userRouter.route("/update-password").patch(updatePassword);
 

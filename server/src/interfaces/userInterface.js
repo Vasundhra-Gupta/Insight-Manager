@@ -15,7 +15,7 @@ export class Iusers {
         throw new Error("Method logoutUser not overwritten.");
     }
 
-    async updateTokens(userId, refreshToken) {
+    async updateRefreshToken(userId, refreshToken) {
         throw new Error("Method updateTokens not overwritten.");
     }
 
@@ -27,7 +27,7 @@ export class Iusers {
         throw new Error("Method updateAccountDetails not overwritten.");
     }
 
-    async updateProfileDetails(userId, userName, bio) {
+    async updateChannelDetails(userId, userName, bio) {
         throw new Error("Method updateChannelDetails not overwritten.");
     }
 

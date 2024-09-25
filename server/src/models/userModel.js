@@ -50,7 +50,7 @@ export class SQLusers extends Iusers {
 
             const [result] = await connection.query(q, [userId]);
 
-            if (result.affectedRows == 0) {
+            if (result.affectedRows === 0) {
                 throw new Error({ message: "USER_DELETION_DB_ISSUE" });
             }
         } catch (err) {
@@ -73,7 +73,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateTokens(userId, refreshToken) {
+    async updateRefreshToken(userId, refreshToken) {
         try {
             const q = "UPDATE users SET refresh_token = ? WHERE user_id = ?";
             await connection.query(q, [refreshToken, userId]);
@@ -135,7 +135,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateProfileDetails(userId, userName, bio) {
+    async updateChannelDetails(userId, userName, bio) {
         try {
             const q = "UPDATE users SET user_name=?, user_bio=? WHERE user_id= ?";
 
