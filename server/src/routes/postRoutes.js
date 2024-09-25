@@ -8,7 +8,7 @@ import { getPost, getPosts, getRandomPosts, deletePost, updatePostDetails,update
 
 postRouter.route("/random").get(getRandomPosts);
 
-postRouter.route("/").get(getPosts);
+postRouter.route("/:userId").get(getPosts);
 
 postRouter.route("/:postId").get(optionalVerifyJwt, getPost);
 
