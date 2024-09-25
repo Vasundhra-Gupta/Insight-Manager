@@ -19,9 +19,12 @@ export class SQLposts extends Iposts {
 
     async getPosts(userId) {
         try {
-            // user_id conformation?
-            const q =
-                "SELECT  u.user_avatar, u.user_name, u.user_firstName, u.user_lastName, p.post_title, p.post_content, p.post_image FROM posts p, users u WHERE p.post_owner_id = u.user_id";
+            let q;
+            if (validator.isUUID(userId)) {
+                q =
+                    "SELECT  u.user_avatar, u.user_name, u.user_firstName, u.user_lastName, p.post_title, p.post_content, p.post_image FROM posts p, users u WHERE p.post_owner_id = u.user_id AND p.post_owner_id= ?";
+            }
+
             const [posts] = await connection.query(q, [userId]);
             if (!posts) {
                 return { message: "POSTS_NOT_FOUND" };
@@ -35,7 +38,7 @@ export class SQLposts extends Iposts {
     async getPost(postId) {
         try {
             const q =
-                "SELECT  user_avatar, user_name , user_firstName, user_lastName, post_title, post_content, post_image FROM posts, users  WHERE post_id= ?";
+                "SELECT  user_avatar, user_name , user_firstName, user_lastName, post_title, post_content, post_image FROM posts, users  WHERE  p.post_id = u.user_id AND post_id= ?";
             const [[post]] = await connection.query(q, [postId]);
             if (!post) {
                 return { message: "POST_NOT_FOUND" };
@@ -73,7 +76,7 @@ export class SQLposts extends Iposts {
 
     async updatePostImage(postId, image) {
         try {
-            const q = "UPDATE posts SET post_image WHERE post_id = ?";
+            const q = "UPDATE posts SET post_image= ? WHERE post_id = ?";
             await connection.query(q, [image, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {
