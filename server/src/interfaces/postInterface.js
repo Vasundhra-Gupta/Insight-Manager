@@ -11,13 +11,14 @@ export class Iposts {
         throw new Error("method getPost is not overwritten.");
     }
 
-    async addPost(postId, ownerId, title, content, image) {
+    async createPost(postId, ownerId, title, content, image) {
         throw new Error("method addPost is not overwritten");
     }
 
     async deletePost(postId) {
         throw new Error("method deletePost is not overwritten.");
     }
+
 
     async updatePostDetails(postId, title, content, updatedAt) {
         throw new Error("method updatePostDetails is not overwritten.");
