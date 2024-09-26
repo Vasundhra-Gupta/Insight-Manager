@@ -1,50 +1,13 @@
 import getServiceObject from "../db/serviceObjects.js";
-import { OK, SERVER_ERROR, BAD_REQUEST,COOKIE_OPTIONS } from "../constants/errorCodes.js";
+import { OK, SERVER_ERROR, BAD_REQUEST, COOKIE_OPTIONS } from "../constants/errorCodes.js";
 import { v4 as uuid, validate as isValiduuid } from "uuid";
 import fs from "fs";
 import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
-import jwt from "jsonwebtoken";
+import { generateRefreshToken, generateAccessToken } from "../utils/generateTokens.js";
 import bcrypt from "bcrypt";
 import { verifyPassword } from "../utils/verifyPassword.js";
 
-const userObject = getServiceObject("users");
-
-const generateTokens = async (userId) => {
-    try {
-        const user = await userObject.getUser(userId);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
-        const accessToken = jwt.sign(
-            {
-                user_id: userId,
-                user_name: user.user_name,
-                user_email: user.user_email,
-            },
-            process.env.ACCESS_TOKEN_SECRET,
-            {
-                expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
-            }
-        );
-        const refreshToken = jwt.sign(
-            {
-                user_id: userId,
-            },
-            process.env.REFRESH_TOKEN_SECRET,
-            {
-                expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
-            }
-        );
-        await userObject.updateTokens(userId, refreshToken);
-
-        return { accessToken, refreshToken };
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            error: err.message,
-            message: "something went wrong while generating the tokens.",
-        });
-    }
-};
+export const userObject = getServiceObject("users");
 
 const registerUser = async (req, res) => {
     try {
@@ -126,7 +89,6 @@ const loginUser = async (req, res) => {
         }
 
         const user = await userObject.getUser(loginInput);
-
         if (user?.message) {
             return res.status(BAD_REQUEST).json(user); // user = {message:"USER_NOT_FOUND"}
         }
@@ -136,7 +98,8 @@ const loginUser = async (req, res) => {
             return res.status(BAD_REQUEST).json(response);
         }
 
-        const { accessToken, refreshToken } = await generateTokens(user.user_id);
+        const accessToken = await generateAccessToken(user.user_id);
+        const refreshToken = await generateRefreshToken(user.user_id);
 
         const { user_password, refresh_token, ...loggedUser } = user;
 
@@ -161,17 +124,20 @@ const loginUser = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
     try {
-        const { user_id } = req.user;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+        const { user_id, user_password } = req.user;
+        if (!user_id || !user_password) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_OR_PASSWORD_MISSING" });
         }
 
         const { password } = req.body;
-        const user = await userObject.getUser(user_id);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
-        const response = await verifyPassword(password, user.user_password);
+
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
+
+        const response = await verifyPassword(password, user_password);
         if (response?.message) {
             return res.status(BAD_REQUEST).json(response);
         }
@@ -197,10 +163,12 @@ const logoutUser = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
         }
 
-        const user = await userObject.getUser(user_id);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
+
         await userObject.logoutUser(user_id);
         return res
             .status(OK)
@@ -238,7 +206,7 @@ const getChannelProfile = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });
         }
 
-        const channelProfile = await userObject.getChannelProfile(channel?.user_id, user?.user_id);   
+        const channelProfile = await userObject.getChannelProfile(channel?.user_id, user?.user_id);
         return res.status(OK).json(channelProfile);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -250,19 +218,20 @@ const getChannelProfile = async (req, res) => {
 
 const updateAccountDetails = async (req, res) => {
     try {
-        const { user_id } = req.user;
+        const { user_id, user_password } = req.user;
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
         }
 
         const { firstName, lastName, email, password } = req.body;
 
-        const user = await userObject.getUser(user_id);
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
 
-        const response = await verifyPassword(password, user.user_password);
+        const response = await verifyPassword(password, user_password);
         if (response?.message) {
             return res.status(BAD_REQUEST).json(response);
         }
@@ -279,20 +248,20 @@ const updateAccountDetails = async (req, res) => {
 
 const updateChannelDetails = async (req, res) => {
     try {
-        const { user_id } = req.user;
+        const { user_id, user_password } = req.user;
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
         }
 
         const { userName, bio, password } = req.body;
 
-        const user = await userObject.getUser(user_id);
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
 
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
-
-        const response = await verifyPassword(password, user.user_password);
+        const response = await verifyPassword(password, user_password);
         if (response?.message) {
             return res.status(BAD_REQUEST).json(response);
         }
@@ -309,20 +278,20 @@ const updateChannelDetails = async (req, res) => {
 
 const updatePassword = async (req, res) => {
     try {
-        const { user_id } = req.user;
+        const { user_id, user_password } = req.user;
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
         }
 
         const { oldPassword, newPassword } = req.body;
 
-        const user = await userObject.getUser(user_id);
+        // ⭐ alreaady done in verifyJWT
+        // const user = await userObject.getUser(user_id);
+        // if (user?.message) {
+        //     return res.status(BAD_REQUEST).json(user);
+        // }
 
-        if (user?.message) {
-            return res.status(BAD_REQUEST).json(user);
-        }
-
-        const response = await verifyPassword(oldPassword, user.user_password);
+        const response = await verifyPassword(oldPassword, user_password);
         if (response?.message) {
             return res.status(BAD_REQUEST).json(response);
         }
@@ -342,7 +311,6 @@ const updatePassword = async (req, res) => {
 const updateAvatar = async (req, res) => {
     try {
         const { user_id, user_avatar } = req.user;
-
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
         }

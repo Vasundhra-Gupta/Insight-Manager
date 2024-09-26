@@ -42,11 +42,11 @@ userRouter.route("/logout").get(logoutUser);
 
 userRouter.route("/delete-account").delete(deleteAccount);
 
-userRouter.route("/current-user").get(verifyJwt, getCurrentUser);
+userRouter.route("/current-user").get(getCurrentUser);
 
 userRouter.route("/update-account").patch(updateAccountDetails);
 
-userRouter.route("/update-channel").patch(updateChannelDetails);
+userRouter.route("/update-profile").patch(updateChannelDetails);
 
 userRouter.route("/update-password").patch(updatePassword);
 

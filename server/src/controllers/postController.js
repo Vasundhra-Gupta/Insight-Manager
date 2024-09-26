@@ -1,3 +1,4 @@
+
 import getServiceObject from "../db/serviceObjects.js";
 import { OK, BAD_REQUEST, SERVER_ERROR, FORBIDDEN, COOKIE_OPTIONS } from "../constants/errorCodes.js";
 import { v4 as uuid } from "uuid";
@@ -161,7 +162,7 @@ const updatePostImage = async (req, res) => {
         }
 
         const postImageURL = postImage.url;
-        await postObject.updatePostImage(postId, postImageURL);
+        await postObject.updatePostImage(postId, postImageURL, );
 
         const updatedPost = await postObject.getPost(postId);
 
@@ -176,8 +177,8 @@ const updatePostImage = async (req, res) => {
 const togglePostVisibility = async (req, res) => {
     try {
         const { postId } = req.params;
-        const { isVisible } = req.body;
-        await postObject.togglePostVisibility(postId, isVisible);
+        const { visibility } = req.body;
+        await postObject.togglePostVisibility(postId, visibility);
         const updatedPost = await postObject.getPost(postId);
         return res.status(OK).json(updatedPost);
     } catch (err) {

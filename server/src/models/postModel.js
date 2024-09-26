@@ -3,7 +3,7 @@ import { connection } from "../server.js";
 import validator from "validator";
 //views and time left
 export class SQLposts extends Iposts {
-    async getRandomPosts() {
+    async getRandomPosts(limit) {
         try {
             const q =
                 "SELECT  u.user_avatar, u.user_name, u.user_firstName, u.user_lastName, p.post_title, p.post_content, p.post_image FROM posts p, users u WHERE p.post_owner_id = u.user_id";
@@ -35,6 +35,7 @@ export class SQLposts extends Iposts {
         }
     }
 
+
     async getPost(postId) {
         try {
             const q =
@@ -61,6 +62,7 @@ export class SQLposts extends Iposts {
         }
     }
 
+
     async updatePostDetails(postId, title, content, updatedAt) {
         try {
             const q = "UPDATE posts SET post_title = ?, post_content= ?, post_updatedAt= ? WHERE post_id = ?";
@@ -74,10 +76,10 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async updatePostImage(postId, image) {
+    async updatePostImage(postId, image, updatedAt) {
         try {
-            const q = "UPDATE posts SET post_image= ? WHERE post_id = ?";
-            await connection.query(q, [image, postId]);
+            const q = "UPDATE posts SET post_image= ?, post_updatedAt= ? WHERE post_id = ?";
+            await connection.query(q, [image, postId,, updatedAt]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POSTIMAGE_UPDATION_DB_ISSUE");
@@ -87,10 +89,10 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async togglePostVisibility(postId, isVisible) {
+    async togglePostVisibility(postId, visibility) {
         try {
             const q = "UPDATE posts SET post_visibility = ? WHERE post_id = ?";
-            await connection.query(q, [!isVisible, postId]);
+            await connection.query(q, [!visibility, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POSTVISIBILITY_UPDATION_DB_ISSUE");
@@ -113,4 +115,3 @@ export class SQLposts extends Iposts {
             throw new Error(err);
         }
     }
-}

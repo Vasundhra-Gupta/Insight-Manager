@@ -50,7 +50,7 @@ export class SQLusers extends Iusers {
 
             const [result] = await connection.query(q, [userId]);
 
-            if (result.affectedRows == 0) {
+            if (result.affectedRows === 0) {
                 throw new Error({ message: "USER_DELETION_DB_ISSUE" });
             }
         } catch (err) {
@@ -73,7 +73,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async updateTokens(userId, refreshToken) {
+    async updateRefreshToken(userId, refreshToken) {
         try {
             const q = "UPDATE users SET refresh_token = ? WHERE user_id = ?";
             await connection.query(q, [refreshToken, userId]);
@@ -105,6 +105,10 @@ export class SQLusers extends Iusers {
                 `;
 
             const [[response]] = await connection.query(q, [currentUserId, channelId]);
+
+            if (!response) {
+                throw new Error({ message: "CHANNEL_FETCHING_DB_ISSUE" });
+            }
 
             return response;
         } catch (err) {
@@ -140,7 +144,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "CHANNEL_DETAILS_UPDATION_DB_ISSUE" });
+                throw new Error({ message: "PROFILE_DETAILS_UPDATION_DB_ISSUE" });
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -152,7 +156,6 @@ export class SQLusers extends Iusers {
 
     async updatePassword(userId, newPassword) {
         try {
-            console.log(newPassword);
             const q = "UPDATE users SET user_password = ? WHERE user_id = ?";
 
             await connection.query(q, [newPassword, userId]);
@@ -166,7 +169,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user; // we dont show password anywhere (no need to return though)
             return updatedUser;
         } catch (err) {
-            throw new Error(err.message);
+            throw new Error(err);
         }
     }
 
@@ -185,7 +188,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err.message);
+            throw new Error(err);
         }
     }
 
@@ -204,7 +207,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err.message);
+            throw new Error(err);
         }
     }
 

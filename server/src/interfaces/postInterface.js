@@ -19,14 +19,16 @@ export class Iposts {
         throw new Error("method deletePost is not overwritten.");
     }
 
-    async updatePostDetails(postId, title, content) {
-        throw new Error("method updatePostDetails is not overwritten.");
-    }
-    async updatePostImage(image) {
+
+    async updatePostDetails(postId, title, content, updatedAt) {
         throw new Error("method updatePostDetails is not overwritten.");
     }
 
-    async togglePostVisibility(postId, isVisible) {
+    async updatePostImage(postId, image, updatedAt) {
+        throw new Error("method updatePostImage is not overwritten.");
+    }
+
+    async togglePostVisibility(PostId, visibility) {
         throw new Error("method togglePostVisibility is not overwritten.");
     }
 }
