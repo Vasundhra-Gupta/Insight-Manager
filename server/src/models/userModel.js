@@ -7,18 +7,21 @@ export class SQLusers extends Iusers {
         try {
             let q;
             if (validator.isEmail(searchInput)) {
-                q = "SELECT * FROM users WHERE user_email = ?";
+                // q = "SELECT * FROM users WHERE user_email = ?";           // without using PL/SQL Procedures
+                q = "CALL getUser('email',?)";
             } else if (validator.isUUID(searchInput)) {
-                q = "SELECT * FROM users WHERE user_id = ?";
+                // q = "SELECT * FROM users WHERE user_id = ?";
+                q = "CALL getUser('uuid',?);";
             } else {
-                q = "SELECT * FROM users WHERE user_name = ?";
+                // q = "SELECT * FROM users WHERE user_name = ?";
+                q = "CALL getUser('username',?);";
             }
 
-            const [[user]] = await connection.query(q, [searchInput]);
+            const [[[user]]] = await connection.query(q, [searchInput]);
 
-            if (!user) {
-                return { message: "USER_NOT_FOUND" };
-            }
+            // if (!user) {
+            //     return { message: "USER_NOT_FOUND" };
+            // }
             return user;
         } catch (err) {
             throw new Error(err);

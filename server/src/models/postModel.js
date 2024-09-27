@@ -11,9 +11,20 @@ export class SQLposts extends Iposts {
             }
 
             const q = `
-                SELECT u.user_id AS post_ownerId, u.user_avatar AS post_ownerAvatar, u.user_name AS post_ownerUserName, u.user_firstName AS post_ownerFirstName, u.user_lastName AS post_ownerLastName, p.post_id, p.post_visibility, p.post_updatedAt, p.post_title, p.post_content, p.post_image
-                FROM posts p
-                JOIN users u
+                SELECT 
+                    u.user_id AS post_ownerId, 
+                    u.user_avatar AS post_ownerAvatar, 
+                    u.user_name AS post_ownerUserName, 
+                    u.user_firstName AS post_ownerFirstName, 
+                    u.user_lastName AS post_ownerLastName, 
+                    p.post_id, 
+                    p.post_visibility, 
+                    p.post_updatedAt, 
+                    p.post_title, 
+                    p.post_content, 
+                    p.post_image
+                FROM posts p   
+                LEFT JOIN users u                             -- can't use natural join since no columns are compatable(same type but not name) so either use simple join(inner join) or left/right
                 ON p.post_ownerId = u.user_id
                 WHERE p.post_visibility = 1
                 ORDER BY p.post_updatedAt ${orderBy}
@@ -38,9 +49,20 @@ export class SQLposts extends Iposts {
             }
 
             const q = `
-                SELECT u.user_id AS post_ownerId, u.user_avatar AS post_ownerAvatar, u.user_name AS post_ownerUserName, u.user_firstName AS post_ownerFirstName, u.user_lastName AS post_ownerLastName, p.post_id, p.post_visibility, p.post_updatedAt, p.post_title, p.post_content, p.post_image
-                FROM posts p
-                JOIN users u 
+                SELECT 
+                    u.user_id AS post_ownerId, 
+                    u.user_avatar AS post_ownerAvatar,
+                    u.user_name AS post_ownerUserName, 
+                    u.user_firstName AS post_ownerFirstName, 
+                    u.user_lastName AS post_ownerLastName, 
+                    p.post_id, 
+                    p.post_visibility, 
+                    p.post_updatedAt, 
+                    p.post_title, 
+                    p.post_content, 
+                    p.post_image
+                FROM users u
+                JOIN posts p                                    -- same thing just interchange the tables so interchange left & right
                 ON p.post_ownerId = u.user_id
                 WHERE p.post_ownerId = ? AND p.post_visibility = 1
                 ORDER BY p.post_updatedAt ${orderBy}
@@ -60,9 +82,20 @@ export class SQLposts extends Iposts {
     async getPost(postId) {
         try {
             const q = `
-                SELECT u.user_id AS post_ownerId, u.user_avatar AS post_ownerAvatar, u.user_name AS post_ownerUserName, u.user_firstName AS post_ownerFirstName, u.user_lastName AS post_ownerLastName, p.post_id, p.post_visibility, p.post_updatedAt, p.post_title, p.post_content, p.post_image 
+                SELECT 
+                    u.user_id AS post_ownerId, 
+                    u.user_avatar AS post_ownerAvatar, 
+                    u.user_name AS post_ownerUserName, 
+                    u.user_firstName AS post_ownerFirstName, 
+                    u.user_lastName AS post_ownerLastName, 
+                    p.post_id, 
+                    p.post_visibility, 
+                    p.post_updatedAt, 
+                    p.post_title, 
+                    p.post_content, 
+                    p.post_image 
                 FROM posts p
-                JOIN users u
+                INNER JOIN users u                                -- same as default join with a condn.
                 ON p.post_ownerId = u.user_id
                 WHERE p.post_id= ?
                 `;

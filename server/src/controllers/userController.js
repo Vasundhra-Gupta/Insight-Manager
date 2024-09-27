@@ -208,10 +208,10 @@ const getCurrentUser = async (req, res) => {
 
 const getChannelProfile = async (req, res) => {
     try {
-        const { userName } = req.params;
+        const { input } = req.params;
         const user = req.user; // current user
 
-        const channel = await userObject.getUser(userName);
+        const channel = await userObject.getUser(input);
         if (channel?.message) {
             return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });
         }

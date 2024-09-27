@@ -30,7 +30,7 @@ userRouter.route("/register").post(
     registerUser
 );
 
-userRouter.route("/profile/:userName").get(optionalVerifyJwt, getChannelProfile);
+userRouter.route("/profile/:input").get(optionalVerifyJwt, getChannelProfile);    // because getUser is adaptable for username, email & uuid 
 
 userRouter.route("/login").post(loginUser);
 
