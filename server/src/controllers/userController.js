@@ -7,7 +7,7 @@ import { uploadOnCloudinary, deleteFromCloudinary, generateAccessToken, generate
 
 export const userObject = getServiceObject("users");
 
-// pending form valiity
+// pending form validity
 const registerUser = async (req, res) => {
     try {
         const { userName, firstName, lastName, email, password } = req.body;
