@@ -1,21 +1,21 @@
 import getServiceObject from "../db/serviceObjects.js";
 import { OK, SERVER_ERROR, BAD_REQUEST, COOKIE_OPTIONS } from "../constants/errorCodes.js";
-import { v4 as uuid, validate as isValiduuid } from "uuid";
+import { v4 as uuid } from "uuid";
 import fs from "fs";
-import { deleteFromCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
-import { generateRefreshToken, generateAccessToken } from "../utils/generateTokens.js";
 import bcrypt from "bcrypt";
-import { verifyPassword } from "../utils/verifyPassword.js";
+import { uploadOnCloudinary, deleteFromCloudinary, generateAccessToken, generateRefreshToken, verifyPassword } from "../utils/index.js";
 
 export const userObject = getServiceObject("users");
 
+// pending form valiity
 const registerUser = async (req, res) => {
     try {
-        const userId = uuid();
-        if (!userId) {
-            return res.status(SERVER_ERROR).json({ message: "USERID_CREATION_UUID_ISSUE" });
-        }
         const { userName, firstName, lastName, email, password } = req.body;
+        const userId = uuid();
+
+        if (!userId) {
+            throw new Error({ message: "USERID_CREATION_UUID_ISSUE" });
+        }
 
         if (!userName || !firstName || !email || !password) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
@@ -72,7 +72,6 @@ const registerUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userObject.createUser(userId, userName, firstName, lastName, avatarURL, coverImageURL, email, hashedPassword);
-        // user.message has already been checked in createUser model
 
         return res.status(OK).json(user);
     } catch (err) {
@@ -124,25 +123,36 @@ const loginUser = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
     try {
-        const { user_id, user_password } = req.user;
-        if (!user_id || !user_password) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_OR_PASSWORD_MISSING" });
-        }
-
+        const user = req.user;
         const { password } = req.body;
 
+        if (!user) {
+            return res.status(BAD_REQUEST).json({ message: "CURRENT_USER_MISSING" });
+        }
+
         // ⭐ alreaady done in verifyJWT
-        // const user = await userObject.getUser(user_id);
+        // const user = await userObject.getUser(user.user_id);
         // if (user?.message) {
         //     return res.status(BAD_REQUEST).json(user);
         // }
 
-        const response = await verifyPassword(password, user_password);
+        const response = await verifyPassword(password, user.user_password);
         if (response?.message) {
             return res.status(BAD_REQUEST).json(response);
         }
 
-        await userObject.deleteUser(user_id);
+        // delete its avatar & coverimage from cloudinary
+        const response1 = await deleteFromCloudinary(user.user_coverImage);
+        if (response1.result !== "ok") {
+            throw new Error({ message: "COVERIMAGE_DELETION_CLOUDINARY_ISSUE" });
+        }
+
+        const response2 = await deleteFromCloudinary(user.user_avatar);
+        if (response2.result !== "ok") {
+            throw new Error({ message: "AVATAR_DELETION_CLOUDINARY_ISSUE" });
+        }
+
+        await userObject.deleteUser(user.user_id);
         return res
             .status(OK)
             .clearCookie("accessToken", COOKIE_OPTIONS)
@@ -159,8 +169,9 @@ const deleteAccount = async (req, res) => {
 const logoutUser = async (req, res) => {
     try {
         const { user_id } = req.user;
+
         if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
 
         // ⭐ alreaady done in verifyJWT
@@ -198,7 +209,6 @@ const getCurrentUser = async (req, res) => {
 const getChannelProfile = async (req, res) => {
     try {
         const { userName } = req.params;
-
         const user = req.user; // current user
 
         const channel = await userObject.getUser(userName);
@@ -219,11 +229,11 @@ const getChannelProfile = async (req, res) => {
 const updateAccountDetails = async (req, res) => {
     try {
         const { user_id, user_password } = req.user;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
-        }
-
         const { firstName, lastName, email, password } = req.body;
+
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+        }
 
         // ⭐ alreaady done in verifyJWT
         // const user = await userObject.getUser(user_id);
@@ -249,11 +259,11 @@ const updateAccountDetails = async (req, res) => {
 const updateChannelDetails = async (req, res) => {
     try {
         const { user_id, user_password } = req.user;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
-        }
-
         const { userName, bio, password } = req.body;
+
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+        }
 
         // ⭐ alreaady done in verifyJWT
         // const user = await userObject.getUser(user_id);
@@ -279,11 +289,11 @@ const updateChannelDetails = async (req, res) => {
 const updatePassword = async (req, res) => {
     try {
         const { user_id, user_password } = req.user;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
-        }
-
         const { oldPassword, newPassword } = req.body;
+
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+        }
 
         // ⭐ alreaady done in verifyJWT
         // const user = await userObject.getUser(user_id);
@@ -311,12 +321,13 @@ const updatePassword = async (req, res) => {
 const updateAvatar = async (req, res) => {
     try {
         const { user_id, user_avatar } = req.user;
+
         if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
 
         if (!req.file) {
-            return res.status(BAD_REQUEST).json({ message: "AVATAR_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: "MISSING_AVATAR" });
         }
 
         const avatarLocalPath = req.file.path;
@@ -350,12 +361,13 @@ const updateAvatar = async (req, res) => {
 const updateCoverImage = async (req, res) => {
     try {
         const { user_id, user_coverImage } = req.user;
+
         if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
 
         if (!req.file) {
-            return res.status(BAD_REQUEST).json({ message: "COVERIMAGE_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: "MISSING_COVERIMAGE" });
         }
 
         const coverImageLocalPath = req.file.path;

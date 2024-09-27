@@ -1,9 +1,9 @@
 export class Iposts {
-    async getRandomPosts() {
+    async getRandomPosts(limit, orderBy) {
         throw new Error("method getRandomPosts is not overwritten.");
     }
 
-    async getPosts(userId) {
+    async getPosts(userId, limit, orderBy) {
         throw new Error("method getPosts is not overwritten.");
     }
 
@@ -18,7 +18,6 @@ export class Iposts {
     async deletePost(postId) {
         throw new Error("method deletePost is not overwritten.");
     }
-
 
     async updatePostDetails(postId, title, content, updatedAt) {
         throw new Error("method updatePostDetails is not overwritten.");

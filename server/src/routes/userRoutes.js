@@ -1,8 +1,6 @@
 import express from "express";
 export const userRouter = express.Router();
-import { upload } from "../middlewares/multerMiddleware.js";
-import { verifyJwt } from "../middlewares/authMiddleware.js";
-import { optionalVerifyJwt } from "../middlewares/optionalAuthMiddleware.js";
+import { upload, verifyJwt, optionalVerifyJwt } from "../middlewares/index.js";
 
 import {
     registerUser,

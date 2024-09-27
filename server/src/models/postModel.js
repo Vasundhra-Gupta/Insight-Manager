@@ -1,15 +1,27 @@
 import { Iposts } from "../interfaces/postInterface.js";
 import { connection } from "../server.js";
-import validator from "validator";
-//views and time left
+
 export class SQLposts extends Iposts {
-    async getRandomPosts(limit) {
+    // pending search query & views
+    async getRandomPosts(limit, orderBy) {
         try {
-            const q =
-                "SELECT  u.user_avatar, u.user_name, u.user_firstName, u.user_lastName, p.post_title, p.post_content, p.post_image FROM posts p, users u WHERE p.post_owner_id = u.user_id";
-            const [posts] = await connection.query(q);
+            const validOrderBy = ["ASC", "DESC"];
+            if (!validOrderBy.includes(orderBy.toUpperCase())) {
+                throw new Error("INVALID_ORDERBY_VALUE");
+            }
+
+            const q = `
+                SELECT u.user_id AS post_ownerId, u.user_avatar AS post_ownerAvatar, u.user_name AS post_ownerUserName, u.user_firstName AS post_ownerFirstName, u.user_lastName AS post_ownerLastName, p.post_id, p.post_visibility, p.post_updatedAt, p.post_title, p.post_content, p.post_image
+                FROM posts p
+                JOIN users u
+                ON p.post_ownerId = u.user_id
+                WHERE p.post_visibility = 1
+                ORDER BY p.post_updatedAt ${orderBy}
+                LIMIT ?
+                `;
+            const [posts] = await connection.query(q, [limit]);
             if (!posts) {
-                return { message: "DB_POST_FETCH_FAILED" };
+                return { message: "NO_POSTS_FOUND" };
             }
             return posts;
         } catch (err) {
@@ -17,17 +29,26 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async getPosts(userId) {
+    // pending views
+    async getPosts(userId, limit, orderBy) {
         try {
-            let q;
-            if (validator.isUUID(userId)) {
-                q =
-                    "SELECT  u.user_avatar, u.user_name, u.user_firstName, u.user_lastName, p.post_title, p.post_content, p.post_image FROM posts p, users u WHERE p.post_owner_id = u.user_id AND p.post_owner_id= ?";
+            const validOrderBy = ["ASC", "DESC"];
+            if (!validOrderBy.includes(orderBy.toUpperCase())) {
+                throw new Error("INVALID_ORDERBY_VALUE");
             }
 
-            const [posts] = await connection.query(q, [userId]);
+            const q = `
+                SELECT u.user_id AS post_ownerId, u.user_avatar AS post_ownerAvatar, u.user_name AS post_ownerUserName, u.user_firstName AS post_ownerFirstName, u.user_lastName AS post_ownerLastName, p.post_id, p.post_visibility, p.post_updatedAt, p.post_title, p.post_content, p.post_image
+                FROM posts p
+                JOIN users u 
+                ON p.post_ownerId = u.user_id
+                WHERE p.post_ownerId = ? AND p.post_visibility = 1
+                ORDER BY p.post_updatedAt ${orderBy}
+                LIMIT ?
+                `;
+            const [posts] = await connection.query(q, [userId, limit]);
             if (!posts) {
-                return { message: "POSTS_NOT_FOUND" };
+                return { message: "NO_POSTS_FOUND" };
             }
             return posts;
         } catch (err) {
@@ -35,11 +56,16 @@ export class SQLposts extends Iposts {
         }
     }
 
-
+    // pending
     async getPost(postId) {
         try {
-            const q =
-                "SELECT  user_avatar, user_name , user_firstName, user_lastName, post_title, post_content, post_image FROM posts, users  WHERE  p.post_id = u.user_id AND post_id= ?";
+            const q = `
+                SELECT u.user_id AS post_ownerId, u.user_avatar AS post_ownerAvatar, u.user_name AS post_ownerUserName, u.user_firstName AS post_ownerFirstName, u.user_lastName AS post_ownerLastName, p.post_id, p.post_visibility, p.post_updatedAt, p.post_title, p.post_content, p.post_image 
+                FROM posts p
+                JOIN users u
+                ON p.post_ownerId = u.user_id
+                WHERE p.post_id= ?
+                `;
             const [[post]] = await connection.query(q, [postId]);
             if (!post) {
                 return { message: "POST_NOT_FOUND" };
@@ -52,7 +78,7 @@ export class SQLposts extends Iposts {
 
     async deletePost(postId) {
         try {
-            const q = "DELETE FROM posts WHERE post_id= ?";
+            const q = "DELETE FROM posts WHERE post_id = ?";
             const [result] = await connection.query(q, [postId]);
             if (result.affectedRows == 0) {
                 throw new Error("POST_DELETION_DB_ISSUE");
@@ -62,15 +88,15 @@ export class SQLposts extends Iposts {
         }
     }
 
-
     async updatePostDetails(postId, title, content, updatedAt) {
         try {
-            const q = "UPDATE posts SET post_title = ?, post_content= ?, post_updatedAt= ? WHERE post_id = ?";
+            const q = "UPDATE posts SET post_title = ?, post_content = ?, post_updatedAt = ? WHERE post_id = ?";
             await connection.query(q, [title, content, updatedAt, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POSTDETAILS_UPDATION_DB_ISSUE");
             }
+            return post;
         } catch (err) {
             throw new Error(err);
         }
@@ -78,12 +104,13 @@ export class SQLposts extends Iposts {
 
     async updatePostImage(postId, image, updatedAt) {
         try {
-            const q = "UPDATE posts SET post_image= ?, post_updatedAt= ? WHERE post_id = ?";
-            await connection.query(q, [image, postId,, updatedAt]);
+            const q = "UPDATE posts SET post_image = ?, post_updatedAt = ? WHERE post_id = ?";
+            await connection.query(q, [image, updatedAt, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POSTIMAGE_UPDATION_DB_ISSUE");
             }
+            return post;
         } catch (err) {
             throw new Error(err);
         }
@@ -92,11 +119,12 @@ export class SQLposts extends Iposts {
     async togglePostVisibility(postId, visibility) {
         try {
             const q = "UPDATE posts SET post_visibility = ? WHERE post_id = ?";
-            await connection.query(q, [!visibility, postId]);
+            await connection.query(q, [visibility, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POSTVISIBILITY_UPDATION_DB_ISSUE");
             }
+            return post;
         } catch (err) {
             throw new Error(err);
         }
@@ -104,7 +132,7 @@ export class SQLposts extends Iposts {
 
     async createPost(postId, ownerId, title, content, image) {
         try {
-            const q = "INSERT INTO posts (post_id, post_owner_id, post_title, post_content, post_image) VALUES (?, ?, ?, ?, ?)";
+            const q = "INSERT INTO posts (post_id, post_ownerId, post_title, post_content, post_image) VALUES (?, ?, ?, ?, ?)";
             await connection.query(q, [postId, ownerId, title, content, image]);
             const post = await this.getPost(postId);
             if (post?.message) {
@@ -115,3 +143,4 @@ export class SQLposts extends Iposts {
             throw new Error(err);
         }
     }
+}
