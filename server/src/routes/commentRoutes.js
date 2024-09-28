@@ -8,4 +8,6 @@ commentRouter.route("/:postId").get(getComments);
 
 commentRouter.use(verifyJWT);
 
-commentRouter.route("/:postId").post(addComment).patch(updateComment).delete(deleteComment);
+commentRouter.route("/:postId").post(addComment);
+
+commentRouter.route("/:commentId").patch(updateComment).delete(deleteComment);
