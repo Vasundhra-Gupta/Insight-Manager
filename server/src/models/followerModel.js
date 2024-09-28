@@ -69,6 +69,7 @@ export class SQLfollowers extends Ifollowers {
             // if (!response) {
             //     throw new Error({ message: "FOLLOWING_RECORD_CREATION_DB_ISSUE" });
             // }
+            
 
             // using PL/SQL Procedures 
             const q = "CALL toggleFollow(?, ?)";
