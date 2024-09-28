@@ -1,6 +1,7 @@
 import { SQLusers } from "../models/userModel.js";
 import { SQLposts } from "../models/postModel.js";
 import { SQLfollowers } from "../models/followerModel.js";
+import { SQLcomments } from "../models/commentModel.js";
 
 export default function getServiceObject(serviceType) {
     if (process.env.DATABASE_TYPE == "SQL") {
