@@ -23,8 +23,8 @@ const getPosts = async (req, res) => {
     try {
         const { userId } = req.params;
         const { orderBy = "desc", limit = 10 } = req.query;
-        if (!userId) {
-            return { message: "MISSING_USERID" };
+        if (!userId || !validator.isUUID(userId)) {
+            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING_OR_INVALID" });
         }
         const posts = await postObject.getPosts(userId, limit, orderBy);
         return res.status(OK).json(posts);
@@ -39,8 +39,8 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
     try {
         const { postId } = req.params;
-        if (!postId) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_POSTID" });
+        if (!postId || !validator.isUUID(postId)) {
+            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
         let userIdentifier = req.ip;
@@ -147,8 +147,8 @@ const deletePost = async (req, res) => {
     try {
         const { postId } = req.params;
         const { user_id } = req.user;
-        if (!postId) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_POSTID" });
+        if (!postId || !validator.isUUID(postId)) {
+            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
         const post = await postObject.getPost(postId);
@@ -181,8 +181,8 @@ const updatePostDetails = async (req, res) => {
         const { user_id } = req.user;
         const { title, content } = req.body;
 
-        if (!postId) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_POSTID" });
+        if (!postId || !validator.isUUID(postId)) {
+            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
         if (!title || !content) {
@@ -219,8 +219,8 @@ const updatePostImage = async (req, res) => {
         const { postId } = req.params;
         const { user_id } = req.user;
 
-        if (!postId) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_POSTID" });
+        if (!postId || !validator.isUUID(postId)) {
+            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
         const post = await postObject.getPost(postId);
@@ -272,6 +272,10 @@ const togglePostVisibility = async (req, res) => {
         const { postId } = req.params;
         const { user_id } = req.user;
 
+        if (!postId || !validator.isUUID(postId)) {
+            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
+        }
+
         const post = await postObject.getPost(postId);
         if (!post) {
             return res.status(BAD_REQUEST).json(post);
@@ -300,8 +304,8 @@ const toggleSavePost = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
 
-        if (!postId) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_POSTID" });
+        if (!postId || !validator.isUUID(postId)) {
+            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
         const post = postObject.getPost(postId);

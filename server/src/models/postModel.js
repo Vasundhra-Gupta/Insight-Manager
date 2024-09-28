@@ -101,7 +101,7 @@ export class SQLposts extends Iposts {
         try {
             const q = "DELETE FROM posts WHERE post_id = ?";
             const [result] = await connection.query(q, [postId]);
-            if (result.affectedRows == 0) {
+            if (result.affectedRows === 0) {
                 throw new Error("POST_DELETION_DB_ISSUE");
             }
         } catch (err) {

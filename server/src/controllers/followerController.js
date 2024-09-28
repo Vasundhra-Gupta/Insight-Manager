@@ -1,4 +1,4 @@
-import { validate as isValiduuid } from "uuid";
+import validator from "validator";
 import { BAD_REQUEST, SERVER_ERROR, OK } from "../constants/errorCodes.js";
 import getServiceObject from "../db/serviceObjects.js";
 import { userObject } from "./userController.js";
@@ -8,7 +8,7 @@ export const followerObject = getServiceObject("followers");
 const getFollowers = async (req, res) => {
     try {
         const { channelId } = req.params;
-        if (!channelId || !isValiduuid(channelId)) {
+        if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({ message: "CHANNELID_MISSING_OR_INVALID" });
         }
 
