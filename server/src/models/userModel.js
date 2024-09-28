@@ -7,7 +7,7 @@ export class SQLusers extends Iusers {
         try {
             // let q;
             // if (validator.isEmail(searchInput)) {
-            //     q = "SELECT * FROM users WHERE user_email = ?";           
+            //     q = "SELECT * FROM users WHERE user_email = ?";
             // } else if (validator.isUUID(searchInput)) {
             //     q = "SELECT * FROM users WHERE user_id = ?";
             // } else {
@@ -19,7 +19,6 @@ export class SQLusers extends Iusers {
             // if (!user) {
             //     return { message: "USER_NOT_FOUND" };
             // }
-
 
             // using PL/SQL Procedures
             let q;
@@ -108,17 +107,31 @@ export class SQLusers extends Iusers {
 
             const q3 = "(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowing";
 
+            // sum(x) returns string if x is of the type bigint
+            const q4 = "(SELECT CAST(SUM(v.post_views) AS UNSIGNED) FROM post_owner_view v WHERE v.owner_id = ?) AS totalChannelViews";
+
             // will autohandle the case when user not logged in (currentUserId === undefined) as the AND condn is not true
-            const q4 = "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
+            const q5 = "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
 
             // ⭐ SUB-QUERE example in SELECT not in WHERE
             const q = `
-                    SELECT u.user_id, u.user_name, u.user_firstName, u.user_lastName, u.user_coverImage, u.user_avatar, ${q1}, ${q2} ,${q3}, ${q4} 
+                    SELECT 
+                        u.user_id, 
+                        u.user_name, 
+                        u.user_firstName,
+                        u.user_lastName, 
+                        u.user_coverImage, 
+                        u.user_avatar, 
+                        ${q1}, 
+                        ${q2},
+                        ${q3}, 
+                        ${q4}, 
+                        ${q5} 
                     FROM users u 
                     WHERE u.user_id = ?
                 `;
 
-            const [[response]] = await connection.query(q, [currentUserId, channelId]);
+            const [[response]] = await connection.query(q, [channelId, currentUserId, channelId]);
 
             if (!response) {
                 throw new Error({ message: "CHANNEL_FETCHING_DB_ISSUE" });

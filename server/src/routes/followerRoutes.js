@@ -8,4 +8,4 @@ followerRouter.route("/followedBy/:channelId").get(getFollowers);
 
 followerRouter.route("/follows/:channelId").get(getFollowings);
 
-followerRouter.route("/toggle/:channelId").patch(verifyJwt, toggleFollow);
+followerRouter.route("/toggle/:channelId").post(verifyJwt, toggleFollow);

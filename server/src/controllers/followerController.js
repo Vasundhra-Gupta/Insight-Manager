@@ -61,6 +61,10 @@ const toggleFollow = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
         }
 
+        if (user_id === channelId) {
+            return res.status(BAD_REQUEST).json({ message: "CANNOT_FOLLOW_OWN_CHANNEL" });
+        }
+
         const channel = await userObject.getUser(channelId);
         if (channel?.message) {
             return res.status(BAD_REQUEST).json({ message: "CHANNEL_NOT_FOUND" });

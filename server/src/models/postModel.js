@@ -60,17 +60,24 @@ export class SQLposts extends Iposts {
 
             let isLiked = 0;
             let isDisliked = 0;
+            let isSaved = 0;
 
             if (userId) {
                 const q1 = "SELECT is_liked FROM post_likes WHERE post_id = ? AND user_id = ?";
-                const [[response]] = await connection.query(q1, [postId, userId]);
-                if (response) {
-                    if (response.is_liked) isLiked = 1;
+                const [[response1]] = await connection.query(q1, [postId, userId]);
+                if (response1) {
+                    if (response1.is_liked) isLiked = 1;
                     else isDisliked = 1;
+                }
+
+                const q2 = "SELECT COUNT(*) AS isSaved FROM saved_posts WHERE post_id = ? AND user_id = ?";
+                const [[response2]] = await connection.query(q2, [postId, userId]);
+                if (response2?.isSaved) {
+                    isSaved = 1;
                 }
             }
 
-            return { ...post, isLiked, isDisliked };
+            return { ...post, isLiked, isDisliked, isSaved };
         } catch (err) {
             throw new Error(err);
         }
@@ -106,7 +113,7 @@ export class SQLposts extends Iposts {
         try {
             const q1 = "SELECT COUNT(*) AS isViewed FROM post_views WHERE post_id = ? AND user_identifier = ?";
             const [[response]] = await connection.query(q1, [postId, userIdentifier]);
-            if (response.isViewed) {
+            if (response?.isViewed) {
                 return;
             }
 
@@ -214,15 +221,36 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async toggleSavePost(PostId, userId) {
+    async toggleSavePost(postId, userId) {
         try {
+            const q = "CALL toggleSavePost(?, ?)";
+            const [[[response]]] = await connection.query(q, [userId, postId]);
+            return response;
         } catch (err) {
             throw new Error(err);
         }
     }
 
-    async getSavedPosts(userId) {
+    async getSavedPosts(userId, orderBy) {
         try {
+            const validOrderBy = ["ASC", "DESC"];
+            if (!validOrderBy.includes(orderBy.toUpperCase())) {
+                throw new Error("INVALID_ORDERBY_VALUE");
+            }
+            const q = `
+                    SELECT * 
+                    FROM post_owner_view v
+                    INNER JOIN saved_posts s 
+                    ON v.post_id = s.post_id 
+                    WHERE s.user_id = ?
+                    ORDER BY v.post_updatedAt ${orderBy}
+                `;
+            const [savedPosts] = await connection.query(q, [userId]);
+            if (!savedPosts.length) {
+                return { message: "NO_SAVED_POSTS" };
+            }
+
+            return savedPosts;
         } catch (err) {
             throw new Error(err);
         }

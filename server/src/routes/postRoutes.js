@@ -35,6 +35,8 @@ postRouter.route("/update-image/:postId").patch(upload.single("postImage"), upda
 
 postRouter.route("/toggle-visibility/:postId").patch(togglePostVisibility);
 
-postRouter.route("/watch-history").get(getWatchHistory);
+postRouter.route("/history").get(getWatchHistory).delete(clearWatchHistory);
 
-postRouter.route("/clear-watch-history").delete(clearWatchHistory);
+postRouter.route("/saved").get(getSavedPosts);
+
+postRouter.route("/toggle-save/:postId").post(toggleSavePost);
