@@ -2,35 +2,47 @@ import { Icomments } from "../interfaces/commentInterface.js";
 import { connection } from "../server.js";
 
 export class SQLcomments extends Icomments {
-    // get comment likes, dislikes
-    async getComments(postId) {
-        const q1 = "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 1) AS commentLikes";
-        const q2 = "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 0) AS commentDislikes";
-        const q = `
-                SELECT 
-                    u.user_name, 
-                    u.user_firstName, 
-                    u.user_lastName, 
-                    u.user_id, 
-                    u.user_avatar, 
-                    c.comment_content,
-                    ${q1},
-                    ${q2}
-                FROM comments c 
-                NATURAL JOIN users u
-                WHERE post_id = ?
-            `;
-        const [result] = await connection.query(q, [postId]);
+    async getComments(postId, orderBy) {
+        try {
+            const validOrderBy = ["ASC", "DESC"];
+            if (!validOrderBy.includes(orderBy.toUpperCase())) {
+                throw new Error("INVALID_ORDERBY_VALUE");
+            }
 
-        if (!result?.length) {
-            return { message: "NO_COMMENTS_FOUND" };
+            const q1 = "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 1) AS commentLikes";
+            const q2 = "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 0) AS commentDislikes";
+            const q = `
+                    SELECT 
+                        u.user_name, 
+                        u.user_firstName, 
+                        u.user_lastName, 
+                        u.user_id, 
+                        u.user_avatar, 
+                        c.comment_id,
+                        c.comment_content,
+                        c.comment_createdAt,
+                        ${q1},
+                        ${q2}
+                    FROM comments c 
+                    NATURAL JOIN users u
+                    WHERE post_id = ?
+                    ORDER BY c.comment_createdAt ${orderBy.toUpperCase()}
+                `;
+            const [result] = await connection.query(q, [postId]);
+
+            if (!result?.length) {
+                return { message: "NO_COMMENTS_FOUND" };
+            }
+            return result;
+        } catch (err) {
+            throw new Error(err);
         }
-        return result;
     }
 
+    // only for checking if that comment exists or not
     async getComment(commentId) {
         try {
-            const q = "SELECT * FROM comments WHERE commentId = ? ";
+            const q = "SELECT * FROM comments WHERE comment_id = ? ";
             const [[comment]] = await connection.query(q, [commentId]);
 
             if (!comment) {

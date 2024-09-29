@@ -1,37 +1,33 @@
 export class Inotes {
-    async getRandomPosts() {
-        throw new Error("method getRandomPosts is not overwritten.");
+    async getNotes(userId, orderBy, limit) {
+        throw new Error("method getNotes is not overwritten.");
     }
 
-    async getNotes(userId) {
-        throw new Error("method getPosts is not overwritten.");
+    async getNote(noteId) {
+        throw new Error("method getNote is not overwritten.");
     }
 
-    async getNote(postId) {
-        throw new Error("method getPost is not overwritten.");
+    async addNote(noteId, ownerId, title, content) {
+        throw new Error("method addNote is not overwritten");
     }
 
-    async addNote(postId, ownerId, title, content, image) {
-        throw new Error("method addPost is not overwritten");
+    async deleteNote(noteId) {
+        throw new Error("method deleteNote is not overwritten.");
     }
 
-    async deleteNote(postId) {
-        throw new Error("method deletePost is not overwritten.");
+    async updateNote(noteId, title, content) {
+        throw new Error("method updateNote is not overwritten.");
     }
 
-    async updateNote(postId, title, content, image) {
-        throw new Error("method updatePostDetails is not overwritten.");
+    async toggleNoteVisibility(noteId, visibility) {
+        throw new Error("method toggleNoteVisibility is not overwritten.");
     }
 
-    async toggleNoteVisibility(NoteId) {
-        throw new Error("method togglePostVisibility is not overwritten.");
+    async markImportant(noteId) {
+        throw new Error("method markImportant is not overwritten.");
     }
 
-    async markImportant(NoteId) {
-        throw new Error("method togglePostVisibility is not overwritten.");
-    }
-
-    async markComplete(NoteId) {
-        throw new Error("method togglePostVisibility is not overwritten.");
+    async markComplete(noteId) {
+        throw new Error("method markComplete is not overwritten.");
     }
 }

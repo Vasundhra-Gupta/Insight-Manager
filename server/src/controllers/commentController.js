@@ -1,17 +1,19 @@
-import { BAD_REQUEST, SERVER_ERROR } from "../constants/errorCodes.js";
+import { OK, BAD_REQUEST, SERVER_ERROR } from "../constants/errorCodes.js";
 import validator from "validator";
+import { v4 as uuid } from "uuid";
 import getServiceObject from "../db/serviceObjects.js";
 
-const commentObject = getServiceObject("comments");
+export const commentObject = getServiceObject("comments");
 
 const getComments = async (req, res) => {
     try {
         const { postId } = req.params;
+        const { orderBy = "desc" } = req.query;
         if (!postId || !validator.isUUID(postId)) {
             return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
-        const comments = await commentObject.getComments(postId);
+        const comments = await commentObject.getComments(postId, orderBy);
         return res.status(OK).json(comments);
     } catch (err) {
         return res.status(SERVER_ERROR).json({

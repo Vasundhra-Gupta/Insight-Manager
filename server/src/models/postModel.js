@@ -12,7 +12,7 @@ export class SQLposts extends Iposts {
             const q = `
                 SELECT * 
                 FROM post_owner_view 
-                ORDER BY post_updatedAt ${orderBy}
+                ORDER BY post_updatedAt ${orderBy.toUpperCase()}
                 LIMIT ?
                 `;
             const [posts] = await connection.query(q, [limit]);
@@ -34,7 +34,7 @@ export class SQLposts extends Iposts {
             const q = `
                     SELECT * FROM post_owner_view 
                     WHERE owner_id = ?
-                    ORDER BY post_updatedAt ${orderBy}
+                    ORDER BY post_updatedAt ${orderBy.toUpperCase()}
                     LIMIT ?
                 `;
             const [posts] = await connection.query(q, [userId, limit]);
