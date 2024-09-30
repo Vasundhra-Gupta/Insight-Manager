@@ -23,11 +23,18 @@ export class Inotes {
         throw new Error("method toggleNoteVisibility is not overwritten.");
     }
 
-    async markImportant(noteId) {
-        throw new Error("method markImportant is not overwritten.");
+    async toggleMarkImportant(userId, noteId){
+        throw new Error("method toggleMarkImportant is not overwritten.");
     }
 
-    async markComplete(noteId) {
-        throw new Error("method markComplete is not overwritten.");
+    async getImportantNotes(noteId, orderBy, limit) {
+        throw new Error("method getImportantNotes is not overwritten.");
+    }
+
+    async toggleMarkComplete(userId, noteId){
+        throw new Error("method toggleMarkComplete is not overwritten.");
+    }
+    async getCompletedNotes(noteId, orderBy, limit) {
+        throw new Error("method getCompletedNotes is not overwritten.");
     }
 }
