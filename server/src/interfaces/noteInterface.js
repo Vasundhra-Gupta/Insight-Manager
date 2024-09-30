@@ -31,7 +31,7 @@ export class Inotes {
         throw new Error("method getImportantNotes is not overwritten.");
     }
 
-    async toggleMarkComplete(userId, noteId){
+    async toggleMarkCompleted(userId, noteId){
         throw new Error("method toggleMarkComplete is not overwritten.");
     }
     async getCompletedNotes(noteId, orderBy, limit) {

@@ -33,7 +33,7 @@ const getNote = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_OR_INVALID_NOTEID" });
         }
 
-        const note = noteObject.getNote(noteId);
+        const note = await noteObject.getNote(noteId);
 
         return res.status(OK).json(note);
     } catch (err) {
@@ -62,7 +62,7 @@ const addNote = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
         }
 
-        const note = noteObject.addNote(noteId, user_id, title, content);
+        const note = await noteObject.addNote(noteId, user_id, title, content);
 
         return res.status(OK).json(note);
     } catch (err) {
@@ -80,7 +80,7 @@ const deleteNote = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_OR_INVALID_NOTEID" });
         }
 
-        const note = noteObject.getNote(noteId);
+        const note = await noteObject.getNote(noteId);
 
         if (!note) {
             return res.status(BAD_REQUEST).json(note);
@@ -119,7 +119,7 @@ const updateNote = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
         }
 
-        const note = noteObject.getNote(noteId);
+        const note = await noteObject.getNote(noteId);
 
         if (!note) {
             return res.status(BAD_REQUEST).json(note);
@@ -153,7 +153,7 @@ const toggleNoteVisibility = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_OR_INVALID_NOTEID" });
         }
 
-        const note = noteObject.getNote(noteId);
+        const note = await noteObject.getNote(noteId);
 
         if (!note) {
             return res.status(BAD_REQUEST).json(note);
@@ -186,7 +186,7 @@ const toggleMarkImportant = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_OR_INVALID_NOTEID" });
         }
 
-        const note = noteObject.getNote(noteId);
+        const note = await noteObject.getNote(noteId);
 
         if (!note) {
             return res.status(BAD_REQUEST).json({ message: "NOTES_NOT_FOUND" });
@@ -204,12 +204,13 @@ const toggleMarkImportant = async (req, res) => {
 const getImportantNotes = async (req, res) => {
     try {
         const { user_id } = req.user;
+        const { orderBy = "desc", limit = 10 } = req.query;
 
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_OWNER_ID" });
         }
 
-        const impNotes = await noteObject.getImportantNotes(user_id);
+        const impNotes = await noteObject.getImportantNotes(user_id, orderBy, limit);
         return res.status(OK).json(impNotes);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -219,7 +220,7 @@ const getImportantNotes = async (req, res) => {
     }
 };
 
-const toggleMarkComplete = async (req, res) => {
+const toggleMarkCompleted = async (req, res) => {
     try {
         const { user_id } = req.user;
         const { noteId } = req.params;
@@ -238,7 +239,7 @@ const toggleMarkComplete = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "NOTES_NOT_FOUND" });
         }
 
-        const response = await noteObject.toggleMarkComplete(user_id, noteId);
+        const response = await noteObject.toggleMarkCompleted(user_id, noteId);
         return res.status(OK).json(response);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -251,12 +252,13 @@ const toggleMarkComplete = async (req, res) => {
 const getCompletedNotes = async (req, res) => {
     try {
         const { user_id } = req.user;
+        const { orderBy = "desc", limit = 10 } = req.query;
 
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_OWNER_ID" });
         }
 
-        const completedNotes = await noteObject.getImportantNotes(user_id);
+        const completedNotes = await noteObject.getCompletedNotes(user_id, orderBy, limit);
         return res.status(OK).json(completedNotes);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -275,6 +277,6 @@ export {
     toggleNoteVisibility,
     toggleMarkImportant,
     getImportantNotes,
-    toggleMarkComplete,
+    toggleMarkCompleted,
     getCompletedNotes,
 };

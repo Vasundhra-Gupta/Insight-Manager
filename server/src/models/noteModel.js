@@ -124,6 +124,10 @@ export class SQLnotes extends Inotes {
 
     async getImportantNotes(userId, orderBy, limit) {
         try {
+            const validOrderBy = ["ASC", "DESC"];
+            if (!validOrderBy.includes(orderBy.toUpperCase())) {
+                throw new Error("INVALID_ORDERBY_VALUE");
+            }
             const q = `
                 SELECT *
                 FROM imp_notes i
@@ -142,9 +146,9 @@ export class SQLnotes extends Inotes {
         }
     }
 
-    async toggleMarkComplete(userId, noteId) {
+    async toggleMarkCompleted(userId, noteId) {
         try{
-            const q= "CALL toggleMarkComplete( ?, ?)";
+            const q= "CALL toggleMarkCompleted( ?, ?)";
             const [[[response]]] = await connection.query(q, [userId, noteId])
             return response;
         }catch(err){
@@ -154,6 +158,10 @@ export class SQLnotes extends Inotes {
 
     async getCompletedNotes(userId, orderBy, limit) {
         try {
+            const validOrderBy = ["ASC", "DESC"];
+            if (!validOrderBy.includes(orderBy.toUpperCase())) {
+                throw new Error("INVALID_ORDERBY_VALUE");
+            }
             const q = `
                 SELECT *
                 FROM completed_notes c
