@@ -10,4 +10,8 @@ export class Ilikes {
     async toggleCommentLike(commentId, userId, likedStatus) {
         throw new Error("Method toggleCommentLike not overwritten.");
     }
+
+    async toggleNoteVote(noteId, userId, voteStatus) {
+        throw new Error("Method toggleNoteVote not overwritten.");
+    }
 }

@@ -16,13 +16,11 @@ export class SQLlikes extends Ilikes {
                         v.owner_firstName, 
                         v.owner_lastName, 
                         v.post_id, 
-                        v.post_visibility, 
                         v.post_updatedAt, 
                         v.post_title, 
                         v.post_content, 
                         v.post_views,
-                        v.post_image,
-                        pl.is_liked
+                        v.post_image
                     FROM post_owner_view v
                     JOIN post_likes pl
                     WHERE v.post_id = pl.post_id AND pl.is_liked = 1 AND pl.user_id = ? 
@@ -30,7 +28,7 @@ export class SQLlikes extends Ilikes {
                     LIMIT ?
                 `;
             const [response] = await connection.query(q, [userId, limit]);
-            if (!response) {
+            if (!response?.length) {
                 return { message: "NO_LIKED_POSTS" };
             }
             return response;
@@ -53,6 +51,16 @@ export class SQLlikes extends Ilikes {
         try {
             const q = "CALL toggleCommentLike(?, ?, ?)";
             const [[[response]]] = await connection.query(q, [userId, commentId, likedStatus]);
+            return response;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async toggleNoteVote(noteId, userId, voteStatus) {
+        try {
+            const q = "CALL toggleNoteVote(?, ?, ?)";
+            const [[[response]]] = await connection.query(q, [userId, noteId, voteStatus]);
             return response;
         } catch (err) {
             throw new Error(err);

@@ -30,7 +30,7 @@ const getFollowers = async (req, res) => {
 const getFollowings = async (req, res) => {
     try {
         const { channelId } = req.params;
-        if (!channelId || !isValiduuid(channelId)) {
+        if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({ message: "CHANNELID_MISSING_OR_INVALID" });
         }
 
@@ -54,7 +54,7 @@ const toggleFollow = async (req, res) => {
         const { channelId } = req.params;
         const { user_id } = req.user;
 
-        if (!channelId || !isValiduuid(channelId)) {
+        if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({ message: "CHANNELID_MISSING_OR_INVALID" });
         }
         if (!user_id) {

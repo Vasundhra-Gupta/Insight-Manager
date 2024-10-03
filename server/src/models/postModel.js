@@ -16,7 +16,7 @@ export class SQLposts extends Iposts {
                 LIMIT ?
                 `;
             const [posts] = await connection.query(q, [limit]);
-            if (!posts) {
+            if (!posts?.length) {
                 return { message: "NO_POSTS_FOUND" };
             }
             return posts;
@@ -38,7 +38,7 @@ export class SQLposts extends Iposts {
                     LIMIT ?
                 `;
             const [posts] = await connection.query(q, [userId, limit]);
-            if (!posts) {
+            if (!posts?.length) {
                 return { message: "NO_POSTS_FOUND" };
             }
             return posts;
@@ -91,7 +91,8 @@ export class SQLposts extends Iposts {
             if (post?.message) {
                 throw new Error("POST_CREATION_DB_ISSUE");
             }
-            return post;
+            const { post_likes, post_dislikes, post_views, isLiked, isDisliked, isSaved, ...remainingPostDetails } = post;
+            return remainingPostDetails;
         } catch (err) {
             throw new Error(err);
         }

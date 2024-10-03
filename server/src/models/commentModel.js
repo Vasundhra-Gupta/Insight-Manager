@@ -57,7 +57,7 @@ export class SQLcomments extends Icomments {
 
     async createComment(commentId, userId, postId, commentContent) {
         try {
-            const q = "INSERT INTO comments VALUES (?, ?, ?, ?)";
+            const q = "INSERT INTO comments(comment_id, user_id, post_id, comment_content) VALUES (?, ?, ?, ?)";
             await connection.query(q, [commentId, userId, postId, commentContent]);
 
             const comment = await this.getComment(commentId);

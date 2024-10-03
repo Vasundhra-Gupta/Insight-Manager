@@ -1,5 +1,5 @@
 export class Inotes {
-    async getNotes(userId, orderBy, limit) {
+    async getNotes(specifier, userId, orderBy, limit) {
         throw new Error("method getNotes is not overwritten.");
     }
 
@@ -7,7 +7,7 @@ export class Inotes {
         throw new Error("method getNote is not overwritten.");
     }
 
-    async addNote(noteId, ownerId, title, content) {
+    async addNote(noteId, userId, title, content) {
         throw new Error("method addNote is not overwritten");
     }
 
@@ -19,11 +19,11 @@ export class Inotes {
         throw new Error("method updateNote is not overwritten.");
     }
 
-    async toggleNoteVisibility(noteId, visibility) {
+    async toggleNoteVisibility(noteId, isPublic) {
         throw new Error("method toggleNoteVisibility is not overwritten.");
     }
 
-    async toggleMarkImportant(userId, noteId){
+    async toggleMarkImportant(isImp, noteId) {
         throw new Error("method toggleMarkImportant is not overwritten.");
     }
 
@@ -31,7 +31,7 @@ export class Inotes {
         throw new Error("method getImportantNotes is not overwritten.");
     }
 
-    async toggleMarkCompleted(userId, noteId){
+    async toggleMarkCompleted(isComplete, noteId) {
         throw new Error("method toggleMarkComplete is not overwritten.");
     }
     async getCompletedNotes(noteId, orderBy, limit) {

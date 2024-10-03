@@ -399,6 +399,7 @@ const updateCoverImage = async (req, res) => {
     }
 };
 
+
 export {
     registerUser,
     loginUser,

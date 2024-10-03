@@ -2,6 +2,7 @@ import getServiceObject from "../db/serviceObjects.js";
 import { OK, BAD_REQUEST, SERVER_ERROR } from "../constants/errorCodes.js";
 import { v4 as uuid } from "uuid";
 import { uploadOnCloudinary, deleteFromCloudinary, getCurrentTimestamp } from "../utils/index.js";
+import validator from "validator";
 
 export const postObject = getServiceObject("posts");
 

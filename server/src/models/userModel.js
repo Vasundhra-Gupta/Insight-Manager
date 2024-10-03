@@ -103,12 +103,13 @@ export class SQLusers extends Iusers {
         try {
             const q1 = "(SELECT COUNT(p.post_id) FROM posts p where p.post_ownerId = u.user_id) as totalPosts";
 
-            const q2 = "(SELECT COUNT(f1.follower_id) FROM followers f1 WHERE f1.following_id = u.user_id) AS totalFollowers";
+            // ⭐no need since we used triggers along with followers & followings column in the users table
+            // const q2 = "(SELECT COUNT(f1.follower_id) FROM followers f1 WHERE f1.following_id = u.user_id) AS totalFollowers";
 
-            const q3 = "(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowing";
+            // const q3 = "(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowing";
 
-            // sum(x) returns string if x is of the type bigint
-            const q4 = "(SELECT CAST(SUM(v.post_views) AS UNSIGNED) FROM post_owner_view v WHERE v.owner_id = ?) AS totalChannelViews";
+            // sum(x) returns string if x is of the type bigint   // SUM() returns null if no rows matches the condn not 0
+            const q4 = "(SELECT CAST(IFNULL(SUM(v.post_views),0) AS UNSIGNED) FROM post_owner_view v WHERE v.owner_id = ?) AS totalChannelViews";
 
             // will autohandle the case when user not logged in (currentUserId === undefined) as the AND condn is not true
             const q5 = "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
@@ -123,8 +124,8 @@ export class SQLusers extends Iusers {
                         u.user_coverImage, 
                         u.user_avatar, 
                         ${q1}, 
-                        ${q2},
-                        ${q3}, 
+                        u.user_followers,
+                        u.user_followings,
                         ${q4}, 
                         ${q5} 
                     FROM users u 
