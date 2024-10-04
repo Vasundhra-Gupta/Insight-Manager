@@ -399,6 +399,38 @@ const updateCoverImage = async (req, res) => {
     }
 };
 
+const getWatchHistory = async (req, res) => {
+    try {
+        const { orderBy = "desc", limit = 10 } = req.query;
+        const { user_id } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+        }
+        const response = await postObject.getWatchHistory(user_id, orderBy, Number(limit));
+        return res.status(OK).json(response);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while getting the watch history",
+            error: err.message,
+        });
+    }
+};
+
+const clearWatchHistory = async (req, res) => {
+    try {
+        const { user_id } = req.user;
+        if (!user_id) {
+            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
+        }
+        const response = await postObject.clearWatchHistory(user_id);
+        return res.status(OK).json(response);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while clearing the watch history",
+            error: err.message,
+        });
+    }
+};
 
 export {
     registerUser,
@@ -412,4 +444,6 @@ export {
     updateCoverImage,
     getChannelProfile,
     getCurrentUser,
+    getWatchHistory,
+    clearWatchHistory,
 };

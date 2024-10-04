@@ -11,15 +11,13 @@ import {
     updatePostDetails,
     updatePostImage,
     togglePostVisibility,
-    getWatchHistory,
-    clearWatchHistory,
     getSavedPosts,
     toggleSavePost,
 } from "../controllers/postController.js";
 
 postRouter.route("/all").get(getRandomPosts);
 
-postRouter.route("/user/:userId").get(getPosts);
+postRouter.route("/channel/:channelId").get(getPosts);
 
 postRouter.route("/post/:postId").get(optionalVerifyJwt, getPost);
 
@@ -34,8 +32,6 @@ postRouter.route("/update-details/:postId").patch(updatePostDetails);
 postRouter.route("/update-image/:postId").patch(upload.single("postImage"), updatePostImage);
 
 postRouter.route("/toggle-visibility/:postId").patch(togglePostVisibility);
-
-postRouter.route("/history").get(getWatchHistory).delete(clearWatchHistory);
 
 postRouter.route("/saved").get(getSavedPosts);
 

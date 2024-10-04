@@ -58,14 +58,10 @@ const addComment = async (req, res) => {
 
 const deleteComment = async (req, res) => {
     try {
-        const { user_id } = req.user;
         const { commentId } = req.params;
 
         if (!commentId || !validator.isUUID(commentId)) {
             return res.status(BAD_REQUEST).json({ message: "COMMENTID_MISSING_OR_INVALID" });
-        }
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
         }
 
         const result = await commentObject.deleteComment(commentId);

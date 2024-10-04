@@ -22,12 +22,12 @@ const getRandomPosts = async (req, res) => {
 
 const getPosts = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { channelId } = req.params;
         const { orderBy = "desc", limit = 10 } = req.query;
-        if (!userId || !validator.isUUID(userId)) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING_OR_INVALID" });
+        if (!channelId || !validator.isUUID(channelId)) {
+            return res.status(BAD_REQUEST).json({ message: "CHANNELID_MISSING_OR_INVALID" });
         }
-        const posts = await postObject.getPosts(userId, limit, orderBy);
+        const posts = await postObject.getPosts(channelId, limit, orderBy);
         return res.status(OK).json(posts);
     } catch (err) {
         res.status(SERVER_ERROR).json({
@@ -61,39 +61,6 @@ const getPost = async (req, res) => {
     } catch (err) {
         res.status(SERVER_ERROR).json({
             message: "something wrong happened while getting the post",
-            error: err.message,
-        });
-    }
-};
-
-const getWatchHistory = async (req, res) => {
-    try {
-        const { orderBy = "desc", limit = 10 } = req.query;
-        const { user_id } = req.user;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
-        }
-        const response = await postObject.getWatchHistory(user_id, orderBy, Number(limit));
-        return res.status(OK).json(response);
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: "something went wrong while getting the watch history",
-            error: err.message,
-        });
-    }
-};
-
-const clearWatchHistory = async (req, res) => {
-    try {
-        const { user_id } = req.user;
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
-        }
-        const response = await postObject.clearWatchHistory(user_id);
-        return res.status(OK).json(response);
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: "something went wrong while clearing the watch history",
             error: err.message,
         });
     }
@@ -194,8 +161,6 @@ const updatePostDetails = async (req, res) => {
         if (!post) {
             return res.status(BAD_REQUEST).json(post);
         }
-        console.log(post);
-        console.log(post.post_ownerId, "\n", user_id);
 
         if (post.post_ownerId !== user_id) {
             return res.status(BAD_REQUEST).json({ message: "NOT_THE_OWNER_TO_UPDATE_POSTDETAILS" });
@@ -345,8 +310,6 @@ export {
     getRandomPosts,
     getPosts,
     getPost,
-    clearWatchHistory,
-    getWatchHistory,
     addPost,
     updatePostDetails,
     updatePostImage,

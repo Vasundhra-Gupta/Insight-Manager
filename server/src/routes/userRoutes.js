@@ -14,6 +14,8 @@ import {
     updateCoverImage,
     getChannelProfile,
     getCurrentUser,
+    getWatchHistory,
+    clearWatchHistory,
 } from "../controllers/userController.js";
 
 userRouter.route("/register").post(
@@ -30,23 +32,25 @@ userRouter.route("/register").post(
     registerUser
 );
 
-userRouter.route("/profile/:input").get(optionalVerifyJwt, getChannelProfile);    // because getUser is adaptable for username, email & uuid 
+userRouter.route("/channel/:input").get(optionalVerifyJwt, getChannelProfile); // because getUser is adaptable for username, email & uuid
 
 userRouter.route("/login").post(loginUser);
 
 userRouter.use(verifyJwt);
 
-userRouter.route("/logout").get(logoutUser);
+userRouter.route("/logout").patch(logoutUser);
 
-userRouter.route("/delete-account").delete(deleteAccount);
+userRouter.route("/delete").delete(deleteAccount);
 
-userRouter.route("/current-user").get(getCurrentUser);
+userRouter.route("/current").get(getCurrentUser);
 
 userRouter.route("/update-account").patch(updateAccountDetails);
 
-userRouter.route("/update-profile").patch(updateChannelDetails);
+userRouter.route("/update-channel").patch(updateChannelDetails);
 
 userRouter.route("/update-password").patch(updatePassword);
+
+postRouter.route("/history").get(getWatchHistory).delete(clearWatchHistory);
 
 userRouter.route("/update-avatar").patch(upload.single("avatar"), updateAvatar);
 

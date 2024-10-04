@@ -4,8 +4,8 @@ import { verifyJwt } from "../middlewares/authMiddleware.js";
 
 import { getFollowers, getFollowings, toggleFollow } from "../controllers/followerController.js";
 
-followerRouter.route("/followedBy/:channelId").get(getFollowers);
-
 followerRouter.route("/follows/:channelId").get(getFollowings);
 
-followerRouter.route("/toggle/:channelId").post(verifyJwt, toggleFollow);
+followerRouter.route("/toggle-follow/:channelId").post(verifyJwt, toggleFollow);
+
+followerRouter.route("/:channelId").get(getFollowers);
