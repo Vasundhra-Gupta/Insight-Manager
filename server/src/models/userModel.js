@@ -239,6 +239,55 @@ export class SQLusers extends Iusers {
         }
     }
 
+    async getWatchHistory(userId, orderBy, limit) {
+        try {
+            const validOrderBy = ["ASC", "DESC"];
+            if (!validOrderBy.includes(orderBy.toUpperCase())) {
+                throw new Error("INVALID_ORDERBY_VALUE");
+            }
+
+            const q = `
+                    SELECT * 
+                    FROM watch_history 
+                    WHERE user_id = ?
+                    ORDER BY watchedAt ${orderBy}
+                    LIMIT ?
+                `;
+            const [watchHistory] = await connection.query(q, [userId, limit]);
+
+            if (!watchHistory.length) {
+                return { message: "EMPTY_WATCH_HISTORY" };
+            }
+
+            return watchHistory;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async clearWatchHistory(userId) {
+        try {
+            const q = "DELETE FROM watch_history WHERE user_id = ?";
+            const response = await connection.query(q, [userId]);
+            if (response.affectedRows === 0) {
+                throw new Error({ message: "CLEARING_WATCH_HISTORY_DB_ISSUE" });
+            }
+            return { message: "WATCH_HISTORY_CLEARED_SUCCESSFULLY" };
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
+    async updateWatchHistory(postId, userId) {
+        try {
+            const q = `CALL updateWatchHistory (?, ?)`;
+            const [[[response]]] = await connection.query(q, [postId, userId]);
+            return response;
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+
     // async deleteUsers() {
     //     try {
     //         // const q = "TRUNCATE TABLE users";   // good error

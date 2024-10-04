@@ -104,11 +104,11 @@ const loginUser = async (req, res) => {
 
         return res
             .status(OK)
-            .cookie("accessToken", accessToken, {
+            .cookie("notes_accessToken", accessToken, {
                 ...COOKIE_OPTIONS,
                 maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE), // cause .env saves everything in strings (so store the final value in .env as 60000 not as 60*1000)
             })
-            .cookie("refreshToken", refreshToken, {
+            .cookie("notes_refreshToken", refreshToken, {
                 ...COOKIE_OPTIONS,
                 maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
             })
@@ -155,8 +155,8 @@ const deleteAccount = async (req, res) => {
         await userObject.deleteUser(user.user_id);
         return res
             .status(OK)
-            .clearCookie("accessToken", COOKIE_OPTIONS)
-            .clearCookie("refreshToken", COOKIE_OPTIONS)
+            .clearCookie("notes_accessToken", COOKIE_OPTIONS)
+            .clearCookie("notes_refreshToken", COOKIE_OPTIONS)
             .json({ message: "DELETION_SUCCESSFULL" });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -183,8 +183,8 @@ const logoutUser = async (req, res) => {
         await userObject.logoutUser(user_id);
         return res
             .status(OK)
-            .clearCookie("accessToken", COOKIE_OPTIONS)
-            .clearCookie("refreshToken", COOKIE_OPTIONS)
+            .clearCookie("notes_accessToken", COOKIE_OPTIONS)
+            .clearCookie("notes_refreshToken", COOKIE_OPTIONS)
             .json({ message: "LOGGED_OUT_SUCCESSFULLY" });
     } catch (err) {
         return res.status(SERVER_ERROR).json({

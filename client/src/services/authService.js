@@ -82,6 +82,7 @@ class AuthService {
 
     async getCurrentUser() {
         try {
+            console.log("got a req");
             const res = await fetch("/api/v1/users/current", {
                 method: "GET",
                 credentials: "include",

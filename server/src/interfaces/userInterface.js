@@ -51,6 +51,10 @@ export class Iusers {
         throw new Error("Method clearWatchHistory is not overwritten.");
     }
 
+    async updateWatchHistory(postId, userId) {
+        throw new Error("Method updateWatchHistory is not overwritten.");
+    }
+
     // async deleteUsers() {
     //     throw new Error("Method deleteUsers not overwritten.");
     // }

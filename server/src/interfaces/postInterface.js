@@ -23,10 +23,6 @@ export class Iposts {
         throw new Error("Method updatePostViews is not overwritten.");
     }
 
-    async updateWatchHistory(postId, userId) {
-        throw new Error("Method updateWatchHistory is not overwritten.");
-    }
-
     async updatePostDetails(postId, title, content, category, updatedAt) {
         throw new Error("Method updatePostDetails is not overwritten.");
     }
