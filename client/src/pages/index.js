@@ -6,5 +6,18 @@ import ProfilePage from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
 import SupportPage from "./SupportPage";
 import AddPostPage from "./AddPostPage";
+import NotFoundPage from "./NotFoundPage";
+import ServerErrorPage from "./ServerErrorPage";
 
-export { HomePage, LoginPage, RegisterPage, PostPage, ProfilePage, SettingsPage, SupportPage, AddPostPage };
+export {
+    HomePage,
+    LoginPage,
+    RegisterPage,
+    PostPage,
+    ProfilePage,
+    SettingsPage,
+    SupportPage,
+    AddPostPage,
+    NotFoundPage,
+    ServerErrorPage,
+};

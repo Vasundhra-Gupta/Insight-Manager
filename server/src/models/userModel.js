@@ -43,14 +43,23 @@ export class SQLusers extends Iusers {
             const q =
                 "INSERT INTO users (user_id, user_name, user_firstName, user_lastName, user_avatar, user_coverImage, user_email, user_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-            await connection.query(q, [userId, userName, firstName, lastName, avatar, coverImage, email, password]);
+            await connection.query(q, [
+                userId,
+                userName,
+                firstName,
+                lastName,
+                avatar,
+                coverImage,
+                email,
+                password,
+            ]);
 
             const user = await this.getUser(userId);
 
             if (user?.message) {
                 throw new Error({ message: "USER_CREATION_DB_ISSUE" });
             }
-            const { user_password, refresh_token, ...createdUser } = user; // to exclude the password from the response
+            const { refresh_token, ...createdUser } = user; // to exclude the password from the response
             return createdUser;
         } catch (err) {
             throw new Error(err);
@@ -101,7 +110,8 @@ export class SQLusers extends Iusers {
 
     async getChannelProfile(channelId, currentUserId) {
         try {
-            const q1 = "(SELECT COUNT(p.post_id) FROM posts p where p.post_ownerId = u.user_id) as totalPosts";
+            const q1 =
+                "(SELECT COUNT(p.post_id) FROM posts p where p.post_ownerId = u.user_id) as totalPosts";
 
             // ⭐no need since we used triggers along with followers & followings column in the users table
             // const q2 = "(SELECT COUNT(f1.follower_id) FROM followers f1 WHERE f1.following_id = u.user_id) AS totalFollowers";
@@ -109,10 +119,12 @@ export class SQLusers extends Iusers {
             // const q3 = "(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowing";
 
             // sum(x) returns string if x is of the type bigint   // SUM() returns null if no rows matches the condn not 0
-            const q4 = "(SELECT CAST(IFNULL(SUM(v.post_views),0) AS UNSIGNED) FROM post_owner_view v WHERE v.owner_id = ?) AS totalChannelViews";
+            const q4 =
+                "(SELECT CAST(IFNULL(SUM(v.post_views),0) AS UNSIGNED) FROM post_owner_view v WHERE v.owner_id = ?) AS totalChannelViews";
 
             // will autohandle the case when user not logged in (currentUserId === undefined) as the AND condn is not true
-            const q5 = "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
+            const q5 =
+                "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
 
             // ⭐ SUB-QUERE example in SELECT not in WHERE
             const q = `
@@ -146,7 +158,8 @@ export class SQLusers extends Iusers {
 
     async updateAccountDetails(userId, firstName, lastName, email) {
         try {
-            const q = "UPDATE users SET user_firstName=?, user_lastName = ?, user_email=? WHERE user_id= ?";
+            const q =
+                "UPDATE users SET user_firstName=?, user_lastName = ?, user_email=? WHERE user_id= ?";
 
             await connection.query(q, [firstName, lastName, email, userId]);
 

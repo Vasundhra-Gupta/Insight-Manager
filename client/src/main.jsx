@@ -8,8 +8,8 @@ import {
     createRoutesFromElements,
     RouterProvider,
 } from "react-router-dom";
-import { LoginPage, HomePage, RegisterPage, PostPage, ProfilePage } from "./pages";
-import { UserContextProvider } from "./context/userContext";
+import { LoginPage, HomePage, RegisterPage, PostPage, ProfilePage, ServerErrorPage,NotFoundPage } from "./pages";
+import { UserContextProvider } from "./context/UserContext";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -21,6 +21,8 @@ const router = createBrowserRouter(
             <Route path="channel/:username" element={<ProfilePage />}>
                 {/* <Route path="" element={<ChannelPosts/>}/> */}
             </Route>
+            <Route path="server-error" element={<ServerErrorPage />} />
+            <Route path="*" element={<NotFoundPage />} />
         </Route>
     )
 );

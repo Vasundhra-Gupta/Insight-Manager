@@ -1,118 +1,280 @@
 import { useState } from "react";
 import { authService } from "../services/authService";
 import useUserContext from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
     const [inputs, setInputs] = useState({
         firstName: "",
         lastName: "",
         userName: "",
-        userEmail: "",
+        email: "",
         password: "",
+        avatar: null,
+        coverImage: null,
     });
-    const [error, setError] = useState("");
+    const nullErrors = {
+        root: "",
+        firstName: "",
+        lastName: "",
+        userName: "",
+        email: "",
+        password: "",
+        avatar: "",
+        coverImage: "",
+    };
+    const [error, setError] = useState(nullErrors);
+    const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
     const { user, setUser } = useUserContext();
+    const navigate = useNavigate();
 
     async function handleChange(e) {
         const { value, name } = e.target;
-        setInputs((prev) => {
-            return { ...prev, [name]: value };
-        });
+        setInputs((prev) => ({ ...prev, [name]: value }));
     }
+
+    async function handleFileChange(e) {
+        // because files are the last field (case when no further blur)
+        const { name, files } = e.target;
+        if (files[0]) {
+            setInputs((prev) => ({ ...prev, [name]: files[0] }));
+            const file = files[0];
+            const extension = file.name.split(".").pop().toLowerCase();
+            const fileSize = file.size / (1024 * 1024);
+            const maxSizeMB = 100;
+            const allowedExtensions = ["png", "jpg", "jpeg"];
+            if (!allowedExtensions.includes(extension) || fileSize > maxSizeMB) {
+                return setError((prevError) => ({
+                    ...prevError,
+                    [name]: "only PNG, JPG/JPEG files are allowed & File size should be less than 100MB.",
+                }));
+            }
+            setError((prevError) => ({ ...prevError, [name]: "" }));
+        } else {
+            name === "avatar"
+                ? setError((prevError) => ({ ...prevError, avatar: "avatar is required." }))
+                : setError((prevError) => ({ ...prevError, coverImage: "" }));
+        }
+    }
+
+    const handleBlur = (e) => {
+        let { name, value, type, files } = e.target;
+
+        if ((type === "text" || type === "password") && value) {
+            if (name === "email") {
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
+                    ? setError((prevError) => ({ ...prevError, [name]: "" }))
+                    : setError((prevError) => ({
+                          ...prevError,
+                          [name]: "please enter a valid email.",
+                      }));
+            }
+
+            if (name === "firstName" || name === "lastName") {
+                /^[a-zA-Z]+$/.test(value)
+                    ? setError((prevError) => ({ ...prevError, [name]: "" }))
+                    : setError((prevError) => ({
+                          ...prevError,
+                          [name]: "only letters are allowed.",
+                      }));
+            }
+
+            if (name === "userName") {
+                /^[a-zA-Z0-9_]+$/.test(value)
+                    ? setError((prevError) => ({ ...prevError, [name]: "" }))
+                    : setError((prevError) => ({
+                          ...prevError,
+                          [name]: "only numbers, letters and underscores are allowed.",
+                      }));
+            }
+
+            if (name === "password") {
+                value.length >= 8 && value.length <= 12
+                    ? setError((prevError) => ({ ...prevError, [name]: "" }))
+                    : setError((prevError) => ({
+                          ...prevError,
+                          [name]: "password must be 8-12 characters.",
+                      }));
+            }
+        } else if (type === "file") {
+            if (files[0]) {
+                const file = files[0];
+                const extension = file.name.split(".").pop().toLowerCase();
+                const fileSize = file.size / (1024 * 1024);
+                const maxSizeMB = 100;
+                const allowedExtensions = ["png", "jpg", "jpeg"];
+                if (!allowedExtensions.includes(extension) || fileSize > maxSizeMB) {
+                    return setError((prevError) => ({
+                        ...prevError,
+                        [name]: "only PNG, JPG/JPEG files are allowed & File size should be less than 100MB.",
+                    }));
+                }
+                setError((prevError) => ({ ...prevError, [name]: "" }));
+            } else {
+                name === "avatar"
+                    ? setError((prevError) => ({ ...prevError, avatar: "avatar is required." }))
+                    : setError((prevError) => ({ ...prevError, coverImage: "" }));
+            }
+        }
+    };
 
     async function handleSubmit(e) {
         e.preventDefault();
         setLoading(true);
-        if (!inputs.firstName || inputs.userName || inputs.userEmail || inputs.password) {
-            setError("Please fill all the fields.");
+        setDisabled(true);
+        setError(nullErrors);
+        if (Object.values(error).some((err) => err !== "")) {
+            return; // The some() method returns true if at least one element satisfies the condition.
         }
-        const res = authService.register(inputs);
+        try {
+            const res = await authService.register(inputs);
+            if (res && !res.message) {
+                setUser(res);
+                navigate("/");
+            } else if (res.message) {
+                setError((prev) => ({ ...prev, root: res.message }));
+            }
+        } catch (err) {
+            navigate("/server-error");
+        } finally {
+            setDisabled(false);
+            setError(nullErrors);
+            setLoading(false);
+        }
     }
 
+    function onMouseOver() {
+        if (
+            Object.entries(inputs).some(
+                ([key, value]) => !value && key !== "coverImage" && key !== "lastName"
+            ) ||
+            Object.values(error).some((err) => err !== "")
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
+    const inputFields = [
+        {
+            type: "text",
+            name: "userName",
+            label: "Username",
+            value: inputs.userName,
+            placeholder: "Enter user name",
+            required: true,
+        },
+        {
+            type: "text",
+            name: "firstName",
+            label: "FirstName",
+            value: inputs.firstName,
+            placeholder: "Enter first name",
+            required: true,
+        },
+        {
+            type: "text",
+            name: "lastName",
+            label: "LastName",
+            value: inputs.lastName,
+            placeholder: "Enter last name",
+            required: false,
+        },
+        {
+            type: "text",
+            name: "email",
+            label: "Email",
+            value: inputs.email,
+            placeholder: "Enter email",
+            required: true,
+        },
+        {
+            type: "password",
+            name: "password",
+            label: "Password",
+            value: inputs.password,
+            placeholder: "Create password",
+            required: true,
+        },
+    ];
+
+    const fileFields = [
+        {
+            name: "avatar",
+            label: "Avatar",
+            required: true,
+        },
+        {
+            name: "coverImage",
+            label: "CoverImage",
+            required: false,
+        },
+    ];
+
+    const inputElements = inputFields.map((field) => (
+        <div key={field.name}>
+            {error[field.name] && <div className="text-red-500">{error[field.name]}</div>}
+            <div>
+                <label htmlFor={field.name}>
+                    {field.required && <span className="text-red-500">* </span>}
+                    {field.label} :
+                </label>
+            </div>
+            <div>
+                <input
+                    type={field.type}
+                    name={field.name}
+                    id={field.name}
+                    value={inputs[field.name]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder={field.placeholder}
+                    className="bg-transparent border-[0.01rem]"
+                />
+            </div>
+        </div>
+    ));
+
+    const fileElements = fileFields.map((field) => (
+        <div key={field.name}>
+            {error[field.name] && <div className="text-red-500">{error[field.name]}</div>}
+            <div>
+                <label htmlFor={field.name}>
+                    {field.required && <span className="text-red-500">* </span>}
+                    {field.label} :
+                </label>
+            </div>
+            <div>
+                <input
+                    type="file"
+                    name={field.name}
+                    id={field.name}
+                    onChange={handleFileChange}
+                    onBlur={handleBlur}
+                    className="bg-transparent border-[0.01rem]"
+                />
+            </div>
+        </div>
+    ));
+
     return (
-        <div>
-            {error && <div className="text-red-500">{error}</div>}
+        <div className="bg-gray-800">
+            {error.root && <div className="text-red-500">{error.root}</div>}
             <form onSubmit={handleSubmit}>
+                {inputElements}
+
+                {fileElements}
+
                 <div>
-                    <div>
-                        <label htmlFor="firstName">First Name:</label>
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            name="firstName"
-                            id="firstName"
-                            value={inputs.firstName}
-                            onChange={handleChange}
-                            placeholder="Enter your First name"
-                            className="bg-transparent"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <label htmlFor="lastName">Last Name:</label>
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            name="lastName"
-                            id="lastName"
-                            value={inputs.lastName}
-                            onChange={handleChange}
-                            placeholder="Enter your Last name"
-                            className="bg-transparent"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <label htmlFor="userName">userName:</label>
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            name="userName"
-                            id="userName"
-                            value={inputs.userName}
-                            onChange={handleChange}
-                            placeholder="Enter user name"
-                            className="bg-transparent"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <label htmlFor="userEmail">userEmail:</label>
-                    </div>
-                    <div>
-                        <input
-                            type="email"
-                            name="userEmail"
-                            id="userEmail"
-                            value={inputs.userEmail}
-                            onChange={handleChange}
-                            placeholder="Enter your e-mail"
-                            className="bg-transparent"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <label htmlFor="password">Password:</label>
-                    </div>
-                    <div>
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            value={inputs.password}
-                            onChange={handleChange}
-                            placeholder="Create Password"
-                            className="bg-transparent"
-                        />
-                    </div>
+                    <button
+                        onMouseOver={onMouseOver}
+                        disabled={disabled}
+                        className="disabled:cursor-not-allowed bg-neutral-600"
+                    >
+                        {loading ? "Signing Up..." : "Sign Up"}
+                    </button>
                 </div>
             </form>
         </div>

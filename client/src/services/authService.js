@@ -15,16 +15,21 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in login service: ${err.message}`);
+            console.error(`error in login service: ${err.message}`);
+            throw err;
         }
     }
 
     async register(inputs) {
         try {
+            const formData = new FormData();
+            Object.entries(inputs).forEach(([key, value]) => {
+                formData.append(key, value);
+            });
+
             const res = await fetch("/api/v1/users/register", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(inputs),
+                body: formData,
             });
 
             const data = await res.json();
@@ -32,10 +37,18 @@ class AuthService {
 
             if (res.status === 500) {
                 throw new Error(data.message);
+            } else if (res.status === 400) {
+                return data;
+            } else {
+                const data1 = await this.login({
+                    loginInput: inputs.userName,
+                    password: inputs.password,
+                });
+                return data1;
             }
-            return data;
         } catch (err) {
-            return console.error(`error in register service: ${err.message}`);
+            console.error(`error in register service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -54,7 +67,8 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in logout service: ${err.message}`);
+            console.error(`error in logout service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -73,7 +87,8 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in deleteAccount service: ${err.message}`);
+            console.error(`error in deleteAccount service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -92,7 +107,8 @@ class AuthService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getCurrentUser service: ${err.message}`);
+            console.error(`error in getCurrentUser service: ${err.message}`);
+            throw err;
         }
     }
 

@@ -2,20 +2,28 @@ import { useState, useEffect } from "react";
 import { Layout } from "./components";
 import useUserContext from "./context/UserContext";
 import { authService } from "./services/authService";
+import { useNavigate } from "react-router-dom";
 
 export default function App() {
     const { user, setUser } = useUserContext();
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        authService.getCurrentUser().then((data) => {
-            if (data && !data.message) {
-                setUser(data);
-            } else {
-                setUser(null);
+        (async function currentUser() {
+            try {
+                const data = await authService.getCurrentUser();
+                if (data && !data.message) {
+                    setUser(data);
+                } else {
+                    setUser(null);
+                }
+            } catch (err) {
+                navigate("/server-error");
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-        });
+        })();
     }, []);
 
     return (
