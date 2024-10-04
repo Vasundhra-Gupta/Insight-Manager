@@ -1,3 +1,6 @@
+import useUserContext from "../context/UserContext";
+
 export default function HomePage() {
-    return <div>HomePage</div>;
+    const { user } = useUserContext();
+    return user ? <div>HomePage user logged in</div> : <div>HomePage user not logged in</div>;
 }

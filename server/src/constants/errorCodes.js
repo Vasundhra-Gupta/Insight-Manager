@@ -6,7 +6,7 @@ const FORBIDDEN = 403;
 const COOKIE_OPTIONS = {
     httpOnly: true,
     path: "/",
-    // secure: true,
+    secure: true,
     sameSite: "None",
 };
 

@@ -1,13 +1,10 @@
 class AuthService {
-    async login(loginInput, password) {
+    async login(inputs) {
         try {
             const res = await fetch("/api/v1/users/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    loginInput,
-                    password,
-                }),
+                body: JSON.stringify(inputs),
             });
 
             const data = await res.json();
@@ -82,7 +79,6 @@ class AuthService {
 
     async getCurrentUser() {
         try {
-            console.log("got a req");
             const res = await fetch("/api/v1/users/current", {
                 method: "GET",
                 credentials: "include",

@@ -5,9 +5,8 @@ import Layout from "./layout/Layout";
 
 import Button from "./general/Button";
 import Avatar from "./general/Avatar";
-import Input from "./general/Input";
 
 import LoginPopup from "./popups/LoginPopup";
 import DeleteAccountPopup from "./popups/DeleteAccountPopup";
 
-export { Header, Footer, Sidebar, Layout, LoginPopup, DeleteAccountPopup, Button, Avatar, Input };
+export { Header, Footer, Sidebar, Layout, LoginPopup, DeleteAccountPopup, Button, Avatar };

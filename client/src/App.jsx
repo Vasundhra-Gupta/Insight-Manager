@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Layout } from "./components";
-import useUserContext from "./context/userContext";
+import useUserContext from "./context/UserContext";
 import { authService } from "./services/authService";
 
 export default function App() {
