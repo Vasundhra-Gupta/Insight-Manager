@@ -3,45 +3,89 @@ import { connection } from "../server.js";
 
 export class SQLposts extends Iposts {
     // pending search query
-    async getRandomPosts(limit, orderBy) {
+    async getRandomPosts(limit, orderBy, page, category) {
         try {
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
-            const q = `
-                SELECT * 
-                FROM post_owner_view 
-                ORDER BY post_updatedAt ${orderBy.toUpperCase()}
-                LIMIT ?
-                `;
-            const [posts] = await connection.query(q, [limit]);
+
+            let q = `SELECT * FROM post_owner_view`;
+            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view";
+
+            if (category) {
+                q += `WHERE post_category = ?`;
+                countQ += `WHERE post_category = ?`;
+            }
+
+            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ?`;
+
+            const offset = (page - 1) * limit;
+            const queryParams = category ? [category, limit, offset] : [limit, offset];
+            const countParams = category ? [category] : [];
+
+            const [[{ totalPosts }]] = await connection.query(countQ, countParams);
+            const [posts] = await connection.query(q, queryParams);
+
             if (!posts?.length) {
                 return { message: "NO_POSTS_FOUND" };
             }
-            return posts;
+
+            const totalPages = Math.ceil(totalPosts / limit);
+            const hasNextPage = page < totalPages;
+            const hasPrevPage = page > 1;
+            return {
+                totalPosts,
+                totalPages,
+                hasNextPage,
+                hasPrevPage,
+                posts,
+            };
         } catch (err) {
             throw new Error(err);
         }
     }
 
-    async getPosts(userId, limit, orderBy) {
+    async getPosts(userId, limit, orderBy, page, category) {
         try {
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
-            const q = `
-                    SELECT * FROM post_owner_view 
-                    WHERE owner_id = ?
-                    ORDER BY post_updatedAt ${orderBy.toUpperCase()}
-                    LIMIT ?
-                `;
-            const [posts] = await connection.query(q, [userId, limit]);
+            let q = `SELECT * FROM post_owner_view`;
+            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view";
+
+            if (category) {
+                q += `WHERE owner_id = ? AND post_category = ?`;
+                countQ += `WHERE owner_id = ? AND post_category = ?`;
+            } else {
+                q += "WHERE owner_id = ?";
+                countQ += "WHERE owner_id = ?";
+            }
+
+            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ?`;
+
+            const offset = (page - 1) * limit;
+            const queryParams = category ? [userId, category, limit, offset] : [userId, limit, offset];
+            const countParams = category ? [userId, category] : [userId];
+
+            const [posts] = await connection.query(q, queryParams);
+            const [[{ totalPosts }]] = await connection.query(q, countParams);
+
             if (!posts?.length) {
                 return { message: "NO_POSTS_FOUND" };
             }
-            return posts;
+
+            const totalPages = Math.ceil(totalPosts / limit);
+            const hasNextPage = page < totalPages;
+            const hasPrevPage = page > 1;
+            return {
+                totalPosts,
+                totalPages,
+                hasNextPage,
+                hasPrevPage,
+                posts,
+            };
         } catch (err) {
             throw new Error(err);
         }
@@ -83,10 +127,10 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async createPost(postId, ownerId, title, content, image) {
+    async createPost(postId, ownerId, title, content, category, image) {
         try {
-            const q = "INSERT INTO posts (post_id, post_ownerId, post_title, post_content, post_image) VALUES (?, ?, ?, ?, ?)";
-            await connection.query(q, [postId, ownerId, title, content, image]);
+            const q = "INSERT INTO posts (post_id, post_ownerId, post_title, post_content, post_category, post_image) VALUES (?, ?, ?, ?, ?, ?)";
+            await connection.query(q, [postId, ownerId, title, content, category, image]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POST_CREATION_DB_ISSUE");
@@ -180,10 +224,10 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async updatePostDetails(postId, title, content, updatedAt) {
+    async updatePostDetails(postId, title, content, category, updatedAt) {
         try {
-            const q = "UPDATE posts SET post_title = ?, post_content = ?, post_updatedAt = ? WHERE post_id = ?";
-            await connection.query(q, [title, content, updatedAt, postId]);
+            const q = "UPDATE posts SET post_title = ?, post_content = ?,post_category = ?, post_updatedAt = ? WHERE post_id = ?";
+            await connection.query(q, [title, content, category, updatedAt, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POSTDETAILS_UPDATION_DB_ISSUE");

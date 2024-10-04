@@ -43,6 +43,14 @@ export class Iusers {
         throw new Error("Method updateCoverImage not overwritten.");
     }
 
+    async getWatchHistory(userId, orderBy, limit) {
+        throw new Error("Method getWatchHistory is not overwritten.");
+    }
+
+    async clearWatchHistory(userId) {
+        throw new Error("Method clearWatchHistory is not overwritten.");
+    }
+
     // async deleteUsers() {
     //     throw new Error("Method deleteUsers not overwritten.");
     // }

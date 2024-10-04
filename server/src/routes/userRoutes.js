@@ -50,7 +50,7 @@ userRouter.route("/update-channel").patch(updateChannelDetails);
 
 userRouter.route("/update-password").patch(updatePassword);
 
-postRouter.route("/history").get(getWatchHistory).delete(clearWatchHistory);
+userRouter.route("/history").get(getWatchHistory).delete(clearWatchHistory);
 
 userRouter.route("/update-avatar").patch(upload.single("avatar"), updateAvatar);
 

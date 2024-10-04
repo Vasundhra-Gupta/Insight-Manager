@@ -9,8 +9,8 @@ export const postObject = getServiceObject("posts");
 // pending searchTerm (query)
 const getRandomPosts = async (req, res) => {
     try {
-        const { limit = 10, orderBy = "desc" } = req.query;
-        const randomPosts = await postObject.getRandomPosts(limit, orderBy);
+        const { limit = 10, orderBy = "desc", page = 1, category = "" } = req.query;
+        const randomPosts = await postObject.getRandomPosts(limit, orderBy, page, category);
         return res.status(OK).json(randomPosts);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -23,11 +23,11 @@ const getRandomPosts = async (req, res) => {
 const getPosts = async (req, res) => {
     try {
         const { channelId } = req.params;
-        const { orderBy = "desc", limit = 10 } = req.query;
+        const { orderBy = "desc", limit = 10, page = 1, category = "" } = req.query;
         if (!channelId || !validator.isUUID(channelId)) {
             return res.status(BAD_REQUEST).json({ message: "CHANNELID_MISSING_OR_INVALID" });
         }
-        const posts = await postObject.getPosts(channelId, limit, orderBy);
+        const posts = await postObject.getPosts(channelId, limit, orderBy, page, category);
         return res.status(OK).json(posts);
     } catch (err) {
         res.status(SERVER_ERROR).json({
@@ -69,7 +69,7 @@ const getPost = async (req, res) => {
 const addPost = async (req, res) => {
     try {
         const { user_id } = req.user;
-        const { title, content } = req.body;
+        const { title, content, category } = req.body;
         const postId = uuid();
 
         if (!postId) {
@@ -80,7 +80,7 @@ const addPost = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
 
-        if (!title || !content) {
+        if (!title || !content || !category) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
         }
 
@@ -100,7 +100,7 @@ const addPost = async (req, res) => {
 
         const postImageURL = postImage.url;
 
-        const post = await postObject.createPost(postId, user_id, title, content, postImageURL);
+        const post = await postObject.createPost(postId, user_id, title, content, category, postImageURL);
 
         return res.status(OK).json(post);
     } catch (err) {
@@ -147,13 +147,13 @@ const updatePostDetails = async (req, res) => {
     try {
         const { postId } = req.params;
         const { user_id } = req.user;
-        const { title, content } = req.body;
+        const { title, content, category } = req.body;
 
         if (!postId || !validator.isUUID(postId)) {
             return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
-        if (!title || !content) {
+        if (!title || !content || !category) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
         }
 
@@ -169,7 +169,7 @@ const updatePostDetails = async (req, res) => {
         const now = new Date();
         const updatedAt = getCurrentTimestamp(now);
 
-        const updatedPost = await postObject.updatePostDetails(postId, title, content, updatedAt);
+        const updatedPost = await postObject.updatePostDetails(postId, title, content, category, updatedAt);
 
         return res.status(OK).json(updatedPost);
     } catch (err) {
@@ -234,7 +234,6 @@ const updatePostImage = async (req, res) => {
 
 const togglePostVisibility = async (req, res) => {
     try {
-        // const { visibility } = req.query;
         const { postId } = req.params;
         const { user_id } = req.user;
 
