@@ -62,7 +62,7 @@ const registerUser = async (req, res) => {
         }
         const avatarURL = avatar.url;
 
-        let coverImageURL="";
+        let coverImageURL = "";
         if (req.files?.coverImage) {
             const coverImageLocalPath = req.files.coverImage[0].path;
             if (!coverImageLocalPath) {
@@ -91,12 +91,10 @@ const registerUser = async (req, res) => {
 
         return res.status(OK).json(user);
     } catch (err) {
-        return res
-            .status(SERVER_ERROR)
-            .json({
-                message: "something went wrong while registering the user.",
-                error: err.message,
-            });
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while registering the user.",
+            error: err.message,
+        });
     }
 };
 
@@ -178,7 +176,7 @@ const deleteAccount = async (req, res) => {
             .status(OK)
             .clearCookie("notes_accessToken", COOKIE_OPTIONS)
             .clearCookie("notes_refreshToken", COOKIE_OPTIONS)
-            .json({ message: "DELETION_SUCCESSFULL" });
+            .json(user);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while delete the user account.",
@@ -190,7 +188,6 @@ const deleteAccount = async (req, res) => {
 const logoutUser = async (req, res) => {
     try {
         const { user_id } = req.user;
-
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
@@ -201,12 +198,12 @@ const logoutUser = async (req, res) => {
         //     return res.status(BAD_REQUEST).json(user);
         // }
 
-        await userObject.logoutUser(user_id);
+        const loggedOutUser = await userObject.logoutUser(user_id);
         return res
             .status(OK)
             .clearCookie("notes_accessToken", COOKIE_OPTIONS)
             .clearCookie("notes_refreshToken", COOKIE_OPTIONS)
-            .json({ message: "LOGGED_OUT_SUCCESSFULLY" });
+            .json(loggedOutUser);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while logging the user out.",

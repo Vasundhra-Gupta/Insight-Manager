@@ -8,8 +8,25 @@ import {
     createRoutesFromElements,
     RouterProvider,
 } from "react-router-dom";
-import { LoginPage, HomePage, RegisterPage, PostPage, ProfilePage, ServerErrorPage,NotFoundPage } from "./pages";
-import { UserContextProvider } from "./context/UserContext";
+import {
+    LoginPage,
+    HomePage,
+    RegisterPage,
+    PostPage,
+    ProfilePage,
+    ServerErrorPage,
+    NotFoundPage,
+    SettingsPage,
+    SupportPage,
+    Redirect,
+} from "./Pages";
+import { UserContextProvider } from "./Context/UserContext";
+import {
+    DeleteAccount,
+    UpdateAccountDetails,
+    UpdateChannelDetails,
+    UpdatePassword,
+} from "./Components";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -21,6 +38,20 @@ const router = createBrowserRouter(
             <Route path="channel/:username" element={<ProfilePage />}>
                 {/* <Route path="" element={<ChannelPosts/>}/> */}
             </Route>
+            <Route
+                path="settings/"
+                element={
+                    <Redirect path="/login">
+                        <SettingsPage />
+                    </Redirect>
+                }
+            >
+                <Route path="" element={<UpdateAccountDetails />} />
+                <Route path="channel" element={<UpdateChannelDetails />} />
+                <Route path="password" element={<UpdatePassword />} />
+                <Route path="delete-account" element={<DeleteAccount />} />
+            </Route>
+            <Route path="support" element={<SupportPage />} />
             <Route path="server-error" element={<ServerErrorPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Route>

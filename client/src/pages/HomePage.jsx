@@ -1,4 +1,4 @@
-import useUserContext from "../context/UserContext";
+import useUserContext from "../Context/UserContext";
 
 export default function HomePage() {
     const { user } = useUserContext();

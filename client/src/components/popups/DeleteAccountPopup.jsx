@@ -1,3 +1,5 @@
+import { DeleteAccount } from "..";
+
 export default function DeleteAccountPopup() {
-    return <div>DeleteAccountPopup</div>;
+    return <DeleteAccount className="fixed inset-0 backdrop-blur-sm" />;
 }

@@ -1,12 +1,36 @@
-import Header from "./layout/Header";
-import Footer from "./layout/Footer";
-import Sidebar from "./layout/Sidebar";
-import Layout from "./layout/Layout";
+import Header from "./Layout/Header";
+import Footer from "./Layout/Footer";
+import Sidebar from "./Layout/Sidebar";
+import Layout from "./Layout/Layout";
 
-import Button from "./general/Button";
-import Avatar from "./general/Avatar";
+import Button from "./General/Button";
+import Avatar from "./General/Avatar";
 
-import LoginPopup from "./popups/LoginPopup";
-import DeleteAccountPopup from "./popups/DeleteAccountPopup";
+import LoginPopup from "./Popups/LoginPopup";
+import DeleteAccountPopup from "./Popups/DeleteAccountPopup";
 
-export { Header, Footer, Sidebar, Layout, LoginPopup, DeleteAccountPopup, Button, Avatar };
+import DeleteAccount from "./User/DeleteAccount";
+import Logout from "./User/Logout";
+import Login from "./User/Login";
+import Register from "./User/Register";
+import UpdateAccountDetails from "./User/UpdateAccountDetails";
+import UpdateChannelDetails from "./User/UpdateChannelDetails";
+import UpdatePassword from "./User/UpdatePassword";
+
+export {
+    Header,
+    Footer,
+    Sidebar,
+    Layout,
+    Button,
+    Avatar,
+    LoginPopup,
+    DeleteAccountPopup,
+    DeleteAccount,
+    Logout,
+    Login,
+    Register,
+    UpdateAccountDetails,
+    UpdateChannelDetails,
+    UpdatePassword,
+};

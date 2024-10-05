@@ -1,3 +1,5 @@
+import { Login } from "..";
+
 export default function LoginPopup() {
-    return <div>LoginPopup</div>;
+    return <Login className="fixed inset-0 backdrop-blur-sm" />;
 }

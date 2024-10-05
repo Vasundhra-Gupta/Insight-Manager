@@ -90,6 +90,7 @@ export class SQLusers extends Iusers {
             if (user?.refresh_token !== "") {
                 throw new Error({ message: "REFRESH_TOKEN_NOT_DELETED_IN_DB" });
             }
+            return user;
         } catch (err) {
             throw new Error(err);
         }

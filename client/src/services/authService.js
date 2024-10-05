@@ -72,11 +72,13 @@ class AuthService {
         }
     }
 
-    async deleteAccount() {
+    async deleteAccount(password) {
         try {
             const res = await fetch("/api/v1/users/delete", {
                 method: "DELETE",
                 credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password }),
             });
 
             const data = await res.json();

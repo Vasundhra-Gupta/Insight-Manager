@@ -8,6 +8,7 @@ import SupportPage from "./SupportPage";
 import AddPostPage from "./AddPostPage";
 import NotFoundPage from "./NotFoundPage";
 import ServerErrorPage from "./ServerErrorPage";
+import Redirect from "./Redirect";
 
 export {
     HomePage,
@@ -20,4 +21,5 @@ export {
     AddPostPage,
     NotFoundPage,
     ServerErrorPage,
+    Redirect,
 };

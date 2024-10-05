@@ -1,5 +1,10 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 
 export default function SettingsPage() {
-  return <div>SettingsPage</div>;
+    return (
+        <div>
+            <div>SettingsPage</div>
+            <Outlet />
+        </div>
+    );
 }
