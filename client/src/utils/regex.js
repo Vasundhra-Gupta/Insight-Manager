@@ -27,13 +27,26 @@ export default function verifyExpression(name, value, setError) {
                   }));
         }
 
-        if (name === "password") {
+        if (name === "password" || "npassword") {
             value.length >= 8 && value.length <= 12
                 ? setError((prevError) => ({ ...prevError, [name]: "" }))
                 : setError((prevError) => ({
                       ...prevError,
-                      [name]: "password must be 8-12 characters.",
+                      [name]: "Password must be 8-12 characters.",
                   }));
+        }
+
+        if (name === "bio") {
+            value.length <= 100
+                ? setError((prevError) => ({ ...prevError, [name]: "" }))
+                : setError((prevError) => ({
+                      ...prevError,
+                      [name]: "Bio should not exceed 100 characters.",
+                  }));
+        }
+
+        if( name === "password"){
+
         }
     }
 }
