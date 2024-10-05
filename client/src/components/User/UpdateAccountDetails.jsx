@@ -62,7 +62,7 @@ export default function UpdateAccountDetails() {
             if (res && !res.message) {
                 setUser(res);
                 setInputs((prev) => ({ ...prev, password: "" }));
-            } else if (res.message) {
+            } else {
                 setError((prev) => ({ ...prev, password: res.message }));
             }
         } catch (err) {
@@ -131,9 +131,9 @@ export default function UpdateAccountDetails() {
 
     return (
         <div className="bg-slate-600">
-            {user ? (
-                <form onSubmit={handleSubmit}>
-                    <div className="flex flex-col gap-4">{inputElements}</div>
+            <form onSubmit={handleSubmit}>
+                <div className="flex flex-col gap-4">{inputElements}</div>
+                <div className="flex gap-2">
                     <Button
                         btnText={loading ? "Updating..." : "Update"}
                         disabled={disabled}
@@ -150,10 +150,8 @@ export default function UpdateAccountDetails() {
                         }}
                         disabled={loading}
                     />
-                </form>
-            ) : (
-                <div>login to control your channel settings</div>
-            )}
+                </div>
+            </form>
         </div>
     );
 }

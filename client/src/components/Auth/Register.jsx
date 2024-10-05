@@ -52,7 +52,9 @@ export default function Register() {
 
     const handleBlur = (e) => {
         let { name, value } = e.target;
-        verifyExpression(name, value, setError);
+        if (value) {
+            verifyExpression(name, value, setError);
+        }
     };
 
     async function handleSubmit(e) {
@@ -65,7 +67,7 @@ export default function Register() {
             if (res && !res.message) {
                 setUser(res);
                 navigate("/");
-            } else if (res.message) {
+            } else {
                 setError((prev) => ({ ...prev, root: res.message }));
             }
         } catch (err) {
@@ -163,10 +165,9 @@ export default function Register() {
                     className="bg-transparent border-[0.01rem]"
                 />
             </div>
-            {
-                field.name === "password" && 
+            {field.name === "password" && (
                 <div className="text-sm">password must be 8-12 characters.</div>
-            }
+            )}
         </div>
     ));
 

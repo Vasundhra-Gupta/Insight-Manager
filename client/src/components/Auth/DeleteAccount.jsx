@@ -21,7 +21,7 @@ export default function DeleteAccount({ className = "" }) {
             if (res && !res.message) {
                 setUser(null);
             } else {
-                setError(res.message);
+                setError(res?.message);
             }
         } catch (err) {
             navigate("/servor-error");

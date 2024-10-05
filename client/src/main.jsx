@@ -36,7 +36,8 @@ const router = createBrowserRouter(
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
             <Route path="channel/:username" element={<ProfilePage />}>
-                {/* <Route path="" element={<ChannelPosts/>}/> */}
+                {/* <Route path="" element={<ChannelPosts />} />
+                <Route path="about" element={<ChannelAbout />} /> */}
             </Route>
             <Route
                 path="settings/"

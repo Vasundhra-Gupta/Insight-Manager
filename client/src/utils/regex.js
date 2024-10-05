@@ -27,12 +27,12 @@ export default function verifyExpression(name, value, setError) {
                   }));
         }
 
-        if (name === "password" || "npassword") {
+        if (name === "password" || name === "newPassword") {
             value.length >= 8 && value.length <= 12
                 ? setError((prevError) => ({ ...prevError, [name]: "" }))
                 : setError((prevError) => ({
                       ...prevError,
-                      [name]: "Password must be 8-12 characters.",
+                      [name]: `${name} must be 8-12 characters.`,
                   }));
         }
 
@@ -43,10 +43,6 @@ export default function verifyExpression(name, value, setError) {
                       ...prevError,
                       [name]: "Bio should not exceed 100 characters.",
                   }));
-        }
-
-        if( name === "password"){
-
         }
     }
 }

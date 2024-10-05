@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useUserContext from "../../Context/UserContext";
-import Button from "../General/Button";
+import { Button } from "..";
 import verifyExpression from "../../Utils/regex";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../Services/userService";
@@ -14,8 +14,8 @@ export default function UpdateChannelDetails() {
     };
     const nullErrors = {
         userName: "",
-        password: "",
         bio: "", //100 characters
+        password: "",
     };
     const [inputs, setInputs] = useState(initialInputs);
     const [error, setError] = useState(nullErrors);
@@ -35,12 +35,13 @@ export default function UpdateChannelDetails() {
         }
     }
 
-    async function onMouseHover() {
-        //not from e??
+    async function onMouseOver() {
         if (
             Object.entries(inputs).some(([key, value]) => !value && key !== "bio") ||
-            // Object.entries(inputs).some(([key, value])=> )
-            !Object.entries(inputs).some(([key, value]) => value !== initialInputs && key !== "password")
+            Object.entries(error).some(([key, value]) => value !== "" && key !== "password") ||
+            !Object.entries(inputs).some(
+                ([key, value]) => value !== initialInputs[key] && key !== "password"
+            )
         ) {
             setDisabled(true);
         } else {
@@ -51,19 +52,21 @@ export default function UpdateChannelDetails() {
     async function handleSubmit(e) {
         e.preventDefault();
         setLoading(true);
+        setDisabled(true);
         setError(nullErrors);
         try {
             const res = await userService.updateChannelDetails(inputs);
             if (res && !res.message) {
                 setUser(res);
                 setInputs((prev) => ({ ...prev, password: "" }));
-            } else if (res.message) {
+            } else {
                 setError((prev) => ({ ...prev, password: res.message }));
             }
         } catch (err) {
             navigate("/server-error");
         } finally {
             setLoading(false);
+            setDisabled(false);
         }
     }
 
@@ -71,7 +74,7 @@ export default function UpdateChannelDetails() {
         {
             name: "userName",
             type: "text",
-            placeholder: "Enter your userName",
+            placeholder: "Enter your user name",
             label: "Username",
             required: true,
         },
@@ -84,60 +87,73 @@ export default function UpdateChannelDetails() {
         },
         {
             name: "bio",
-            type: "text",
-            placeholder: "Add bio",
+            placeholder: "Add channel bio",
             label: "Bio",
             required: false,
         },
     ];
 
-    const inputElements = inputFields.map((field) => {
+    const inputElements = inputFields.map((field) => (
         <div key={field.name}>
-            <div>
+            <div className="flex gap-x-1">
                 <label htmlFor={field.name}>
-                    {field.required && <span className="text-red-500">*</span>}
+                    {field.required && <span className="text-red-500">* </span>}
                     {field.label} :
                 </label>
-                {error[field.name] && <div className="text-red-500 text-sm">{error[field.name]}</div>}
+                {error[field.name] && (
+                    <div className="pt-[0.09rem] text-red-500 text-sm">{error[field.name]}</div>
+                )}
             </div>
-            <input
-                type={field.type}
-                name={field.name}
-                id={field.name}
-                value={inputs[field.name]}
-                placeholder={field.placeholder}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                required={field.required}
-            />
-        </div>;
-    });
+            {field.name !== "bio" ? (
+                <input
+                    type={field.type}
+                    name={field.name}
+                    id={field.name}
+                    value={inputs[field.name]}
+                    placeholder={field.placeholder}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required={field.required}
+                    className="bg-transparent border-[0.01rem]"
+                />
+            ) : (
+                <textarea
+                    name={field.name}
+                    id={field.name}
+                    value={inputs[field.name]}
+                    placeholder={field.placeholder}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required={field.required}
+                    className="bg-transparent border-[0.01rem]"
+                />
+            )}
+        </div>
+    ));
 
     return (
-        <div>
-            {user ? (
-                <form onSubmit={handleSubmit}>
-                    <div>{inputElements}</div>
+        <div className="bg-slate-800">
+            <form onSubmit={handleSubmit}>
+                <div className="flex flex-col gap-4">{inputElements}</div>
+                <div className="flex gap-2">
                     <Button
                         btnText="Cancel"
-                        onMouseHover={onMouseHover}
+                        onMouseOver={onMouseOver}
                         type="button"
                         disabled={loading}
-                        onclick={() => {
+                        onClick={() => {
                             setInputs(initialInputs);
                             setError(nullErrors);
                         }}
                     />
-                    <Button 
-                      btnText= {loading ? "Updating" : "Update"}
-                      type = "submit"
-                      disabled = {disabled}
-                      onMouseHover= {onMouseHover}
+                    <Button
+                        btnText={loading ? "Updating..." : "Update"}
+                        type="submit"
+                        disabled={disabled}
+                        onMouseOver={onMouseOver}
                     />
-                </form>
-            ) : (
-                <div>Please login to control channel details.</div>
-            )}
+                </div>
+            </form>
         </div>
     );
 }

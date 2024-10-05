@@ -38,7 +38,7 @@ export default function Login({ className = "" }) {
             if (res && !res.message) {
                 setUser(res);
                 navigate("/");
-            } else if (res.message) {
+            } else {
                 setUser(null);
                 setError(res.message);
             }

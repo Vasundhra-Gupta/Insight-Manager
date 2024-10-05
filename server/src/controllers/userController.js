@@ -332,7 +332,7 @@ const updatePassword = async (req, res) => {
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
         const updatedUser = await userObject.updatePassword(user_id, hashedNewPassword);
 
-        return res.status(OK).json({ message: "PASSWORD_UPDATED_SUCCESSFULLY" });
+        return res.status(OK).json(updatedUser);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while updating password.",

@@ -2,7 +2,7 @@ import HomePage from "./HomePage";
 import LoginPage from "./LoginPage";
 import RegisterPage from "./RegisterPage";
 import PostPage from "./PostPage";
-import ProfilePage from "./ProfilePage";
+import ChannelPage from "./ChannelPage";
 import SettingsPage from "./SettingsPage";
 import SupportPage from "./SupportPage";
 import AddPostPage from "./AddPostPage";
@@ -15,7 +15,7 @@ export {
     LoginPage,
     RegisterPage,
     PostPage,
-    ProfilePage,
+    ChannelPage,
     SettingsPage,
     SupportPage,
     AddPostPage,

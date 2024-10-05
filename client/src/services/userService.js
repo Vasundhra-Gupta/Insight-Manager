@@ -14,7 +14,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getChannelProfile service: ${err.message}`);
+            console.error(`error in getChannelProfile service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -35,7 +36,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updateAccountDetails service: ${err.message}`);
+            console.error(`error in updateAccountDetails service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -56,7 +58,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updateChannelDetails service: ${err.message}`);
+            console.error(`error in updateChannelDetails service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -79,7 +82,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updateAvatar service: ${err.message}`);
+            console.error(`error in updateAvatar service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -102,7 +106,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updateCoverImage service: ${err.message}`);
+            console.error(`error in updateCoverImage service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -126,7 +131,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updatePassword service: ${err.message}`);
+            console.error(`error in updatePassword service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -145,7 +151,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getWatchHistory service: ${err.message}`);
+            console.error(`error in getWatchHistory service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -164,7 +171,8 @@ class UserService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in clearWatchHistory service: ${err.message}`);
+            console.error(`error in clearWatchHistory service: ${err.message}`);
+            throw err;
         }
     }
 }

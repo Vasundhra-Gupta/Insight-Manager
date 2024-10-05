@@ -1,19 +1,17 @@
 import { useState } from "react";
-import useUserContext from "../../Context/UserContext";
 import Button from "../General/Button";
 import verifyExpression from "../../Utils/regex";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../Services/userService";
 
 export default function UpdatePassword() {
-    const { user, setUser } = useUserContext();
     const initialInputs = {
-        userPassword: "",
+        oldPassword: "",
         newPassword: "",
         confirmPassword: "",
     };
     const nullErrors = {
-        userPassword: "",
+        oldPassword: "",
         newPassword: "",
         confirmPassword: "",
     };
@@ -30,21 +28,13 @@ export default function UpdatePassword() {
 
     async function handleBlur(e) {
         const { name, value } = e.target;
-        if (value && name !== "password" && name !== "cpassword") {
+        if (value && name === "newPassword") {
             verifyExpression(name, value, setError);
-        }
-        if (value && name === "cpassword") {
-            if (inputs.confirmPassword != inputs.newPassword) {
-                setError((prev) => ({
-                    ...prev,
-                    [name]: "Password doesn't match with new password.",
-                }));
-            }
         }
     }
 
-    async function onMouseHover() {
-        if (Object.entries(inputs).some(([key, value]) => !value)) {
+    async function onMouseOver() {
+        if (Object.values(inputs).some((value) => !value)) {
             setDisabled(true);
         } else {
             setDisabled(false);
@@ -54,54 +44,72 @@ export default function UpdatePassword() {
     async function handleSubmit(e) {
         e.preventDefault();
         setLoading(true);
+        setDisabled(true);
         setError(nullErrors);
         try {
-            const res = await userService.updatePassword(inputs.newPassword, inputs.userPassword);
-            if (res.message === "PASSWORD_UPDATED_SUCCESSFULLY") {
-                //password updated successfully(popup)
-                // setInputs((prev) => ({ ...prev, password: "" }));
-            } else if (res.message) {
-                setError((prev) => ({ ...prev, password: res.message }));
+            if (inputs.newPassword !== inputs.confirmPassword) {
+                setError((prevError) => ({
+                    ...prevError,
+                    confirmPassword: "confirm password should match new password",
+                }));
+            } else if (inputs.oldPassword === inputs.newPassword) {
+                setError((prevError) => ({
+                    ...prevError,
+                    newPassword: "new password should not match old password",
+                }));
+            } else {
+                const res = await userService.updatePassword(
+                    inputs.newPassword,
+                    inputs.oldPassword
+                );
+                if (res && !res.message) {
+                    setInputs(initialInputs);
+                } else {
+                    setError((prev) => ({ ...prev, oldPassword: res.message }));
+                }
             }
         } catch (err) {
             navigate("/server-error");
         } finally {
+            setDisabled(false);
             setLoading(false);
         }
     }
 
     const inputFields = [
         {
-            name: "userPassword",
+            name: "oldPassword",
             type: "password",
-            placeholder: "Enter your current Password",
+            placeholder: "Enter current Password",
             label: "Old Password",
             required: true,
         },
         {
-            name: "npassword",
+            name: "newPassword",
             type: "password",
             placeholder: "Create new password",
             label: "New Password",
             required: true,
         },
         {
-            name: "cpassword",
+            name: "confirmPassword",
             type: "password",
-            placeholder: "Confirm your password",
+            placeholder: "Confirm new password",
             label: "Confirm Password",
             required: true,
         },
     ];
 
-    const inputElements = inputFields.map((field) => {
+    const inputElements = inputFields.map((field) => (
         <div key={field.name}>
-            <div>
+            <div className="flex gap-x-1">
                 <label htmlFor={field.name}>
                     {field.required && <span className="text-red-500">*</span>}
-                    {field.label} :{field.name === "npassword" && <div className="text-sm text-white">Password must be 8-12 characters.</div>}
+                    {field.label} :
                 </label>
-                {error[field.name] && <div className="text-red-500 text-md">{error[field.name]}</div>}
+                {error[field.name] && (
+                    <div className="pt-[0.09rem] text-red-500 text-sm">{error[field.name]}</div>
+                )}
             </div>
             <input
                 type={field.type}
@@ -112,35 +120,37 @@ export default function UpdatePassword() {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 required={field.required}
+                className="bg-transparent border-[0.01rem]"
             />
-        </div>;
-    });
+            {field.name === "newPassword" && (
+                <div className="text-sm text-white">Password must be 8-12 characters.</div>
+            )}
+        </div>
+    ));
 
     return (
-        <div>
-            {user ? (
-                <form onSubmit={handleSubmit}>
-                    <div>{inputElements}</div>
+        <div className="bg-slate-600">
+            <form onSubmit={handleSubmit}>
+                <div className="flex flex-col gap-4">{inputElements}</div>
+                <div className="flex gap-2">
                     <Button
                         btnText="Cancel"
-                        onMouseHover={onMouseHover}
+                        onMouseOver={onMouseOver}
                         type="button"
                         disabled={loading}
-                        onclick={() => {
+                        onClick={() => {
                             setInputs(initialInputs);
                             setError(nullErrors);
                         }}
                     />
-                    <Button 
-                      btnText= {loading ? "Updating" : "Update"} 
-                      type="submit" 
-                      disabled={disabled} 
-                      onMouseHover={onMouseHover} 
+                    <Button
+                        btnText={loading ? "Updating..." : "Update"}
+                        type="submit"
+                        disabled={disabled}
+                        onMouseOver={onMouseOver}
                     />
-                </form>
-            ) : (
-                <div>Please login to change password.</div>
-            )}
+                </div>
+            </form>
         </div>
     );
 }
