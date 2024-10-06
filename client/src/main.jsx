@@ -13,7 +13,7 @@ import {
     HomePage,
     RegisterPage,
     PostPage,
-    ProfilePage,
+    ChannelPage,
     ServerErrorPage,
     NotFoundPage,
     SettingsPage,
@@ -35,7 +35,7 @@ const router = createBrowserRouter(
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
-            <Route path="channel/:username" element={<ProfilePage />}>
+            <Route path="channel/:username" element={<ChannelPage />}>
                 {/* <Route path="" element={<ChannelPosts />} />
                 <Route path="about" element={<ChannelAbout />} /> */}
             </Route>

@@ -1,3 +1,1 @@
-export default function UpdateCoverImage() {
-    return <div>UpdateCoverImage</div>;
-}
+export default function UpdateCoverImage() {}

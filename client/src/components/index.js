@@ -4,10 +4,11 @@ import Sidebar from "./Layout/Sidebar";
 import Layout from "./Layout/Layout";
 
 import Button from "./General/Button";
-import Avatar from "./General/Avatar";
+import Image from "./General/Image";
 
 import LoginPopup from "./Popups/LoginPopup";
 import DeleteAccountPopup from "./Popups/DeleteAccountPopup";
+import UpdateAvatarPopup from "./Popups/UpdateAvatarPopup";
 
 import DeleteAccount from "./Auth/DeleteAccount";
 import Logout from "./Auth/Logout";
@@ -25,9 +26,10 @@ export {
     Sidebar,
     Layout,
     Button,
-    Avatar,
+    Image,
     LoginPopup,
     DeleteAccountPopup,
+    UpdateAvatarPopup,
     DeleteAccount,
     Logout,
     Login,
@@ -35,4 +37,6 @@ export {
     UpdateAccountDetails,
     UpdateChannelDetails,
     UpdatePassword,
+    UpdateAvatar,
+    UpdateCoverImage,
 };
