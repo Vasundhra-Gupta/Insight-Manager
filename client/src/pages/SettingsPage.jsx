@@ -1,9 +1,8 @@
 import { Outlet } from "react-router-dom";
-import { Image, Button, UpdateAvatarPopup } from "../components";
+import { Image, Button, UpdateAvatarPopup, UpdateCoverImagePopup } from "../Components";
 import useUserContext from "../Context/UserContext";
 import { icons } from "../assets/icons";
 import { useState } from "react";
-import UpdateCoverImagePopup from "../components/popups/UpdateCoverImagePopup";
 
 export default function SettingsPage() {
     const { user, setUser } = useUserContext();
@@ -14,21 +13,19 @@ export default function SettingsPage() {
             <div>SettingsPage</div>
             <div className="w-full">
                 {/* coverImage */}
-               <div className="w-fit relative ">
+                <div className="w-full relative">
                     <Image
                         altText="user coverImage"
                         src={user.user_coverImage}
-                        className="h-[200px] w-full"
+                        className="h-[190px] w-full"
                     />
 
                     <Button
                         btnText={icons.upload}
-                        onClick={()=> setUpdateCoverImagePopup(true)}
+                        onClick={() => setUpdateCoverImagePopup(true)}
                         className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] size-[35px] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
                     />
-
-               </div>
-
+                </div>
 
                 {/* avatar */}
                 <div className="w-fit relative ">
@@ -59,7 +56,7 @@ export default function SettingsPage() {
                     <UpdateAvatarPopup setUpdateAvatarPopup={setUpdateAvatarPopup} />
                 )}
                 {updateCoverImagePopup && (
-                    <UpdateCoverImagePopup setUpdateCoverImagePopup={setUpdateCoverImagePopup}/>
+                    <UpdateCoverImagePopup setUpdateCoverImagePopup={setUpdateCoverImagePopup} />
                 )}
             </div>
             <Outlet />

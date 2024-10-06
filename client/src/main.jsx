@@ -19,6 +19,8 @@ import {
     SettingsPage,
     SupportPage,
     Redirect,
+    WatchHistoryPage,
+    LikedPostsPage,
 } from "./Pages";
 import { UserContextProvider } from "./Context/UserContext";
 import {
@@ -35,6 +37,8 @@ const router = createBrowserRouter(
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
+            <Route path="history" element={<WatchHistoryPage />} />
+            <Route path="liked-posts" element={<LikedPostsPage />} />
             <Route path="channel/:username" element={<ChannelPage />}>
                 {/* <Route path="" element={<ChannelPosts />} />
                 <Route path="about" element={<ChannelAbout />} /> */}

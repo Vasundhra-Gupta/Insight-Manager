@@ -9,6 +9,7 @@ import Image from "./General/Image";
 import LoginPopup from "./Popups/LoginPopup";
 import DeleteAccountPopup from "./Popups/DeleteAccountPopup";
 import UpdateAvatarPopup from "./Popups/UpdateAvatarPopup";
+import UpdateCoverImagePopup from "./Popups/UpdateCoverImagePopup";
 
 import DeleteAccount from "./Auth/DeleteAccount";
 import Logout from "./Auth/Logout";
@@ -30,6 +31,7 @@ export {
     LoginPopup,
     DeleteAccountPopup,
     UpdateAvatarPopup,
+    UpdateCoverImagePopup,
     DeleteAccount,
     Logout,
     Login,

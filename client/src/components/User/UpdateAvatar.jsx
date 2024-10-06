@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Button, Image } from "..";
 import { icons } from "../../assets/icons";
 import fileRestrictions from "../../Utils/fileRestrictions";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     const { user, setUser } = useUserContext();
@@ -14,14 +15,16 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     const [avatarPreview, setAvatarPreview] = useState(user.user_avatar);
     const [avatar, setAvatar] = useState(null);
     const [disabled, setDisabled] = useState(false);
+    const navigate = useNavigate();
     const ref = useRef();
 
     async function handleChange(e) {
         const { files, name } = e.target;
         if (files[0]) {
-            setAvatar(files[0]);
-            fileRestrictions(files[0], name, setError);
             const file = files[0];
+            setAvatar(file);
+            fileRestrictions(file, name, setError);
+
             const reader = new FileReader();
 
             reader.onloadend = () => {
@@ -62,7 +65,11 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     }
 
     return (
-        <div className={`relative flex flex-col items-center justify-center ${className}`}>
+        <div className={`relative w-[230px] flex flex-col items-center justify-center ${className}`}>
+            <div className="w-full text-center text-2xl font-semibold mb-4 text-black">
+                Update Avatar
+            </div>
+
             <form onSubmit={handleSubmit}>
                 <input
                     type="file"
@@ -89,7 +96,7 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                     />
                 </div>
 
-                {/* select btn */}
+                {/* preview */}
                 <div className="w-full flex items-center justify-center">
                     <Button
                         btnText={
@@ -108,7 +115,7 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                 </div>
 
                 {error.avatar && (
-                    <div className="texxt-sm text-red-500 w-full text-center">{error.avatar}</div>
+                    <div className="text-sm text-red-500 w-full text-center">{error.avatar}</div>
                 )}
 
                 {/* upload btn */}

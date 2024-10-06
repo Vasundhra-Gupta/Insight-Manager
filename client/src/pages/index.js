@@ -9,6 +9,8 @@ import AddPostPage from "./AddPostPage";
 import NotFoundPage from "./NotFoundPage";
 import ServerErrorPage from "./ServerErrorPage";
 import Redirect from "./Redirect";
+import WatchHistoryPage from "./WatchHistoryPage";
+import LikedPostsPage from "./LikedPostsPage";
 
 export {
     HomePage,
@@ -22,4 +24,6 @@ export {
     NotFoundPage,
     ServerErrorPage,
     Redirect,
+    WatchHistoryPage,
+    LikedPostsPage,
 };
