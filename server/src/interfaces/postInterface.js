@@ -1,9 +1,9 @@
 export class Iposts {
-    async getRandomPosts(limit, orderBy) {
+    async getRandomPosts(limit, orderBy, page, category) {
         throw new Error("Method getRandomPosts is not overwritten.");
     }
 
-    async getPosts(userId, limit, orderBy) {
+    async getPosts(userId, limit, orderBy, page, category) {
         throw new Error("Method getPosts is not overwritten.");
     }
 
@@ -39,7 +39,7 @@ export class Iposts {
         throw new Error("Method toggleSavePost is not overwritten.");
     }
 
-    async getSavedPosts(userId) {
+    async getSavedPosts(userId, orderBy) {
         throw new Error("Method getSavedPosts is not overwritten.");
     }
 }
