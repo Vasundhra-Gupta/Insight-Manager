@@ -25,7 +25,7 @@ export default function PostCardView({ post }) {
 
             <div className="flex items-center justify-start gap-y-4">
                 <div>
-                    <Link to={`/channel/${post_ownerId}`}>
+                    <Link to={`/channel/${post_ownerId}`} >
                         <Image altText="post owner avatar" src={post_owner_avatar} />
                     </Link>
                 </div>
