@@ -13,7 +13,8 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getComments service: ${err.message}`);
+            console.error(`error in getComments service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -33,7 +34,8 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in addComment service: ${err.message}`);
+            console.error(`error in addComment service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -53,7 +55,8 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updateComment service: ${err.message}`);
+            console.error(`error in updateComment service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -72,7 +75,8 @@ class CommentService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in deleteComment service: ${err.message}`);
+            console.error(`error in deleteComment service: ${err.message}`);
+            throw err;
         }
     }
 }

@@ -16,7 +16,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getRandomPosts service: ${err.message}`);
+            console.error(`error in getRandomPosts service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -34,7 +35,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getPosts service: ${err.message}`);
+            console.error(`error in getPosts service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -53,7 +55,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getPost service: ${err.message}`);
+            console.error(`error in getPost service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -73,7 +76,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updatePostDetails service: ${err.message}`);
+            console.error(`error in updatePostDetails service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -96,7 +100,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in updatePostImage service: ${err.message}`);
+            console.error(`error in updatePostImage service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -115,7 +120,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in deletePost service: ${err.message}`);
+            console.error(`error in deletePost service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -140,7 +146,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in addPost service: ${err.message}`);
+            console.error(`error in addPost service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -159,7 +166,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in togglePostVisibility service: ${err.message}`);
+            console.error(`error in togglePostVisibility service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -178,7 +186,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getSavedPosts service: ${err.message}`);
+            console.error(`error in getSavedPosts service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -197,7 +206,8 @@ class PostService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in toggleSavePost service: ${err.message}`);
+            console.error(`error in toggleSavePost service: ${err.message}`);
+            throw err;
         }
     }
 }

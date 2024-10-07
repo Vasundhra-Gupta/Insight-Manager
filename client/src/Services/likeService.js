@@ -14,7 +14,8 @@ class LikeService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in togglePostLike service: ${err.message}`);
+            console.error(`error in togglePostLike service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -33,7 +34,8 @@ class LikeService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in toggleCommentLike service: ${err.message}`);
+            console.error(`error in toggleCommentLike service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -52,7 +54,8 @@ class LikeService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getLikedPosts service: ${err.message}`);
+            console.error(`error in getLikedPosts service: ${err.message}`);
+            throw err;
         }
     }
 }
