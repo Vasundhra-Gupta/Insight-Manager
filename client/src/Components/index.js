@@ -4,7 +4,6 @@ import Sidebar from "./Layout/Sidebar";
 import Layout from "./Layout/Layout";
 
 import Button from "./General/Button";
-import Image from "./General/Image";
 
 import LoginPopup from "./Popups/LoginPopup";
 import DeleteAccountPopup from "./Popups/DeleteAccountPopup";
@@ -21,13 +20,15 @@ import UpdatePassword from "./User/UpdatePassword";
 import UpdateAvatar from "./User/UpdateAvatar";
 import UpdateCoverImage from "./User/UpdateCoverImage";
 
+import PostCardView from "./Post/PostCardView";
+import PostListView from "./Post/PostListView";
+
 export {
     Header,
     Footer,
     Sidebar,
     Layout,
     Button,
-    Image,
     LoginPopup,
     DeleteAccountPopup,
     UpdateAvatarPopup,
@@ -41,4 +42,6 @@ export {
     UpdatePassword,
     UpdateAvatar,
     UpdateCoverImage,
+    PostCardView,
+    PostListView,
 };

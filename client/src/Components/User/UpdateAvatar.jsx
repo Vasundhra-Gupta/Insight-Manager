@@ -1,7 +1,7 @@
 import useUserContext from "../../Context/UserContext";
 import { userService } from "../../Services/userService";
 import { useState, useRef } from "react";
-import { Button, Image } from "..";
+import { Button } from "..";
 import { icons } from "../../assets/icons";
 import fileRestrictions from "../../Utils/fileRestrictions";
 import { useNavigate } from "react-router-dom";
@@ -65,7 +65,9 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     }
 
     return (
-        <div className={`relative w-[230px] flex flex-col items-center justify-center ${className}`}>
+        <div
+            className={`relative w-[300px] bg-orange-200 p-4 rounded-xl ${className}`}
+        >
             <div className="w-full text-center text-2xl font-semibold mb-4 text-black">
                 Update Avatar
             </div>
@@ -81,28 +83,24 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                 />
 
                 {/* cross */}
-                <div>
-                    <Button
-                        type="button"
-                        btnText={
-                            <div className="size-[23px] fill-none stroke-slate-700">
-                                {icons.cross}
-                            </div>
-                        }
-                        onClick={() => {
-                            setUpdateAvatarPopup(false);
-                        }}
-                        className="absolute top-1 right-1 bg-transparent"
-                    />
-                </div>
+                <Button
+                    type="button"
+                    btnText={
+                        <div className="size-[23px] fill-none stroke-slate-700">{icons.cross}</div>
+                    }
+                    onClick={() => {
+                        setUpdateAvatarPopup(false);
+                    }}
+                    className="absolute top-1 right-1 bg-transparent"
+                />
 
                 {/* preview */}
                 <div className="w-full flex items-center justify-center">
                     <Button
                         btnText={
-                            <Image
+                            <img
                                 src={avatarPreview}
-                                altText="preview"
+                                alt="preview"
                                 className={`size-[150px] rounded-full border-[0.2rem] ${
                                     error.avatar ? "border-red-500" : "border-green-500"
                                 }`}
@@ -115,7 +113,7 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                 </div>
 
                 {error.avatar && (
-                    <div className="text-sm text-red-500 w-full text-center">{error.avatar}</div>
+                    <div className="text-sm mt-4 px-2 text-red-500 w-full text-center">{error.avatar}</div>
                 )}
 
                 {/* upload btn */}
