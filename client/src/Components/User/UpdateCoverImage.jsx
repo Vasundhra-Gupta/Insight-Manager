@@ -1,6 +1,6 @@
 import useUserContext from "../../Context/UserContext";
 import { useState, useRef } from "react";
-import { Button, Image } from "..";
+import { Button } from "..";
 import fileRestrictions from "../../Utils/fileRestrictions";
 import { icons } from "../../assets/icons";
 import { userService } from "../../Services/userService";
@@ -64,58 +64,57 @@ export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }
     }
 
     return (
-        <div className={`relative w-[300px] sm:w-[400px] md:w-[500px] ${className}`}>
-            <div className="w-full text-center text-2xl font-semibold mb-4 text-black">
+        <div
+            className={`relative bg-orange-200 rounded-xl w-[310px] sm:w-[350px] md:w-[440px] p-4 ${className}`}
+        >
+            <div className="text-black text-xl w-full bg-red-400 text-center font-medium mb-4">
                 Update Cover Image
             </div>
 
-            <form
-                onSubmit={handleSubmit}
-                className="flex flex-col items-center justify-center gap-4"
-            >
-                <input
-                    type="file"
-                    name="coverImage"
-                    id="coverImage"
-                    className="hidden"
-                    onChange={handleChange}
-                    ref={ref}
-                />
-
-                {/* preview */}
-                <div className="w-full flex items-center justify-center">
-                    <Button
-                        type="button"
-                        btnText={
-                            <Image
-                                altText="preview"
-                                src={coverImagePreview}
-                                className={`size-full rounded-xl border-[0.2rem] ${
-                                    error.coverImage ? "border-red-500" : "border-green-500"
-                                }`}
-                            />
-                        }
-                        onClick={() => ref.current.click()}
-                        className="size-fit rounded-xl overflow-hidden bg-red-400"
+            {/* preview */}
+            <Button
+                type="button"
+                btnText={
+                    <img
+                        alt="preview"
+                        src={coverImagePreview}
+                        className={`object-cover h-full w-full ${
+                            error.coverImage ? "border-red-500" : "border-green-500"
+                        } `}
                     />
-                </div>
+                }
+                onClick={() => ref.current.click()}
+                className="h-[160px] md:h-[200px] w-full overflow-hidden rounded-xl"
+            />
 
-                {error.coverImage && (
-                    <div className="text-sm text-red-500 w-full text-center">
-                        {error.coverImage}
+            <div className="">
+                <form onSubmit={handleSubmit} className="">
+                    <input
+                        type="file"
+                        name="coverImage"
+                        id="coverImage"
+                        className="hidden"
+                        onChange={handleChange}
+                        ref={ref}
+                    />
+
+                    <div className="w-full bg-green-400 flex flex-col items-center justify-center gap-4 mt-3">
+                        {error.coverImage && (
+                            <div className="w-full text-center text-sm text-red-500">
+                                {error.coverImage}
+                            </div>
+                        )}
+
+                        {/* sbumit btn */}
+                        <Button
+                            btnText={loading ? "Uploading..." : "Upload"}
+                            disabled={disabled}
+                            onMouseOver={onMouseOver}
+                            type="submit"
+                        />
                     </div>
-                )}
-
-                {/* sbumit btn */}
-                <div className="w-full flex items-center justify-center">
-                    <Button
-                        btnText={loading ? "Uploading..." : "Upload"}
-                        disabled={disabled}
-                        onMouseOver={onMouseOver}
-                        type="submit"
-                    />
-                </div>
-            </form>
+                </form>
+            </div>
 
             {/* cross */}
             <div>

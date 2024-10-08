@@ -14,10 +14,7 @@ export default function UpdateAvatarPopup({ setUpdateAvatarPopup }) {
             ref={ref}
             className="fixed inset-0 backdrop-blur-sm flex items-center justify-center"
         >
-            <UpdateAvatar
-                setUpdateAvatarPopup={setUpdateAvatarPopup}
-                className="bg-orange-200 w-fit h-fit p-4 rounded-xl"
-            />
+            <UpdateAvatar setUpdateAvatarPopup={setUpdateAvatarPopup} />
         </div>
     );
 }

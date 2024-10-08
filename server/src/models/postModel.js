@@ -10,17 +10,18 @@ export class SQLposts extends Iposts {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
 
-            let q = `SELECT * FROM post_owner_view`;
-            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view";
+            let q = `SELECT * FROM post_owner_view `;
+            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view ";
 
             if (category) {
-                q += `WHERE post_category = ?`;
-                countQ += `WHERE post_category = ?`;
+                q += `WHERE post_category = ? `;
+                countQ += `WHERE post_category = ? `;
             }
 
-            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ?`;
+            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
 
             const offset = (page - 1) * limit;
+
             const queryParams = category ? [category, limit, offset] : [limit, offset];
             const countParams = category ? [category] : [];
 
@@ -35,10 +36,7 @@ export class SQLposts extends Iposts {
             const hasNextPage = page < totalPages;
             const hasPrevPage = page > 1;
             return {
-                totalPosts,
-                totalPages,
-                hasNextPage,
-                hasPrevPage,
+                postsInfo: { totalPosts, totalPages, hasNextPage, hasPrevPage },
                 posts,
             };
         } catch (err) {
@@ -46,31 +44,35 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async getPosts(userId, limit, orderBy, page, category) {
+    async getPosts(channelId, limit, orderBy, page, category) {
         try {
+            console.log(limit, category, orderBy, page);
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
-            let q = `SELECT * FROM post_owner_view`;
-            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view";
+
+            let q = `SELECT * FROM post_owner_view `;
+            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view ";
 
             if (category) {
-                q += `WHERE owner_id = ? AND post_category = ?`;
-                countQ += `WHERE owner_id = ? AND post_category = ?`;
+                q += `WHERE owner_id = ? AND post_category = ? `;
+                countQ += `WHERE owner_id = ? AND post_category = ? `;
             } else {
-                q += "WHERE owner_id = ?";
-                countQ += "WHERE owner_id = ?";
+                q += "WHERE owner_id = ? ";
+                countQ += "WHERE owner_id = ? ";
             }
 
-            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ?`;
+            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
 
             const offset = (page - 1) * limit;
-            const queryParams = category ? [userId, category, limit, offset] : [userId, limit, offset];
-            const countParams = category ? [userId, category] : [userId];
+            const queryParams = category
+                ? [channelId, category, limit, offset]
+                : [channelId, limit, offset];
+            const countParams = category ? [channelId, category] : [channelId];
 
             const [posts] = await connection.query(q, queryParams);
-            const [[{ totalPosts }]] = await connection.query(q, countParams);
+            const [[{ totalPosts }]] = await connection.query(countQ, countParams);
 
             if (!posts?.length) {
                 return { message: "NO_POSTS_FOUND" };
@@ -114,7 +116,8 @@ export class SQLposts extends Iposts {
                     else isDisliked = 1;
                 }
 
-                const q2 = "SELECT COUNT(*) AS isSaved FROM saved_posts WHERE post_id = ? AND user_id = ?";
+                const q2 =
+                    "SELECT COUNT(*) AS isSaved FROM saved_posts WHERE post_id = ? AND user_id = ?";
                 const [[response2]] = await connection.query(q2, [postId, userId]);
                 if (response2?.isSaved) {
                     isSaved = 1;
@@ -129,13 +132,31 @@ export class SQLposts extends Iposts {
 
     async createPost(postId, ownerId, title, content, category, image) {
         try {
-            const q = "INSERT INTO posts (post_id, post_ownerId, post_title, post_content, post_category, post_image) VALUES (?, ?, ?, ?, ?, ?)";
-            await connection.query(q, [postId, ownerId, title, content, category, image]);
+            let categoryId;
+            if (category) {
+                const q =
+                    "SELECT category_id AS categoryId FROM categories WHERE category_name = ?";
+                [[{ categoryId }]] = await connection.query(q, [category]);
+                if (!categoryId) {
+                    throw new Error({ message: "FINDING_CATEGORY_ID_DB_ISSUE" });
+                }
+            }
+            const q =
+                "INSERT INTO posts (post_id, post_ownerId, post_title, post_content, post_category, post_image) VALUES (?, ?, ?, ?, ?, ?)";
+            await connection.query(q, [postId, ownerId, title, content, categoryId, image]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POST_CREATION_DB_ISSUE");
             }
-            const { post_likes, post_dislikes, post_views, isLiked, isDisliked, isSaved, ...remainingPostDetails } = post;
+            const {
+                post_likes,
+                post_dislikes,
+                post_views,
+                isLiked,
+                isDisliked,
+                isSaved,
+                ...remainingPostDetails
+            } = post;
             return remainingPostDetails;
         } catch (err) {
             throw new Error(err);
@@ -156,7 +177,8 @@ export class SQLposts extends Iposts {
 
     async updatePostViews(postId, userIdentifier) {
         try {
-            const q1 = "SELECT COUNT(*) AS isViewed FROM post_views WHERE post_id = ? AND user_identifier = ?";
+            const q1 =
+                "SELECT COUNT(*) AS isViewed FROM post_views WHERE post_id = ? AND user_identifier = ?";
             const [[response]] = await connection.query(q1, [postId, userIdentifier]);
             if (response?.isViewed) {
                 return;
@@ -177,7 +199,8 @@ export class SQLposts extends Iposts {
 
     async updatePostDetails(postId, title, content, category, updatedAt) {
         try {
-            const q = "UPDATE posts SET post_title = ?, post_content = ?,post_category = ?, post_updatedAt = ? WHERE post_id = ?";
+            const q =
+                "UPDATE posts SET post_title = ?, post_content = ?,post_category = ?, post_updatedAt = ? WHERE post_id = ?";
             await connection.query(q, [title, content, category, updatedAt, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {

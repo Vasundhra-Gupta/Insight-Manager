@@ -1,4 +1,5 @@
+import { formatDistanceToNow, parseISO } from "date-fns";
+
 export default function formatDate(timeStamp) {
-    let formattedTime;
-    return formattedTime;
+    return formatDistanceToNow(parseISO(timeStamp), { addSuffix: true });
 }

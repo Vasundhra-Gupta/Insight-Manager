@@ -1,30 +1,34 @@
 class PostService {
     async getRandomPosts(limit = 10, page = 1, orderBy = "desc") {
         try {
-            const formData = new FormData();
-            formData.append("coverImage", coverImage);
-
-            const res = await fetch(`/api/v1/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}`, {
-                method: "GET",
-            });
+            const res = await fetch(
+                `/api/v1/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}`,
+                {
+                    method: "GET",
+                }
+            );
 
             const data = await res.json();
             console.log(data);
-
+            
             if (res.status === 500) {
                 throw new Error(data.message);
             }
             return data;
         } catch (err) {
-            return console.error(`error in getRandomPosts service: ${err.message}`);
+            console.error(`error in getRandomPosts service: ${err.message}`);
+            throw err;
         }
     }
 
     async getPosts(channelId, limit = 10, page = 1, orderBy = "desc") {
         try {
-            const res = await fetch(`/api/v1/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`, {
-                method: "GET",
-            });
+            const res = await fetch(
+                `/api/v1/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`,
+                {
+                    method: "GET",
+                }
+            );
 
             const data = await res.json();
             console.log(data);
@@ -201,3 +205,5 @@ class PostService {
         }
     }
 }
+
+export const postService = new PostService();

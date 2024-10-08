@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Image, Button, UpdateAvatarPopup, UpdateCoverImagePopup } from "../Components";
+import { Button, UpdateAvatarPopup, UpdateCoverImagePopup } from "../Components";
 import useUserContext from "../Context/UserContext";
 import { icons } from "../assets/icons";
 import { useState } from "react";
@@ -14,11 +14,13 @@ export default function SettingsPage() {
             <div className="w-full">
                 {/* coverImage */}
                 <div className="w-full relative">
-                    <Image
-                        altText="user coverImage"
-                        src={user.user_coverImage}
-                        className="h-[190px] w-full"
-                    />
+                    <div className="h-[190px] w-full">
+                        <img
+                            alt="user coverImage"
+                            src={user.user_coverImage}
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
 
                     <Button
                         btnText={icons.upload}
@@ -29,11 +31,13 @@ export default function SettingsPage() {
 
                 {/* avatar */}
                 <div className="w-fit relative ">
-                    <Image
-                        altText="user avatar"
-                        src={user.user_avatar}
-                        className="rounded-full size-[120px]"
-                    />
+                    <div className="size-[120px]">
+                        <img
+                            alt="user avatar"
+                            src={user.user_avatar}
+                            className="rounded-full size-full object-cover"
+                        />
+                    </div>
 
                     <Button
                         btnText={icons.upload}

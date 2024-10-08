@@ -39,10 +39,13 @@ class LikeService {
 
     async getLikedPosts(limit = 10, page = 1, orderBy = "desc") {
         try {
-            const res = await fetch(`/api/v1/likes?limit=${limit}&page=${page}&orderBy=${orderBy}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/likes?limit=${limit}&page=${page}&orderBy=${orderBy}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
 
             const data = await res.json();
             console.log(data);
@@ -56,3 +59,5 @@ class LikeService {
         }
     }
 }
+
+export const likeService = new LikeService();
