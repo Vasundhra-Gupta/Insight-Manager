@@ -1,31 +1,45 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PostListView } from "../Components";
 import { postService } from "../Services/postService";
 import { useNavigate } from "react-router-dom";
+import { icons } from "../assets/icons";
 
 export default function HomePage() {
     const [posts, setPosts] = useState([]);
     const [postInfo, setPostInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
-    let postsFound = true;
+    const [postsFound, setPostsFound] = useState(true);
     const navigate = useNavigate();
+    const limit = 5;
 
-    const observer = useRef();
-    const callBackRef = useCallback(() => {}, []);
+    // pagination
+    let observer;
+    const paginateRef = useCallback(
+        function (lastPostNode) {
+            if (loading) return;
+            if (observer) observer.disconnect();
+            observer = new IntersectionObserver((entries) => {
+                const lastPost = entries[0];
+                if (lastPost.isIntersecting && postInfo.hasNextPage) {
+                    setPage((prev) => prev + 1);
+                }
+            });
+            if (lastPostNode) observer.observe(lastPostNode);
+        },
+        [postInfo.hasNextPage]
+    );
 
     useEffect(() => {
         (async function getPosts() {
-            setLoading(true);
             try {
-                const res = await postService.getRandomPosts();
+                setLoading(true);
+                const res = await postService.getRandomPosts(page, limit);
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostInfo(res.postsInfo);
                 } else if (res?.message && page === 1) {
-                    setPosts([]);
-                    setPosts({});
-                    postsFound = false;
+                    setPostsFound(false);
                 }
             } catch (err) {
                 navigate("/server-error");
@@ -37,17 +51,34 @@ export default function HomePage() {
 
     const postElements = posts?.map((post, index) =>
         index + 1 === posts.length ? (
-            <PostListView key={post.post_id} post={post} reference={callBackRef} />
+            <PostListView key={post.post_id} post={post} reference={paginateRef} />
         ) : (
             <PostListView key={post.post_id} post={post} reference={null} />
         )
     );
 
-    return loading ? (
-        <div>loading ...</div>
-    ) : postsFound ? (
-        <div className="p-4 flex flex-col items-start justify-start gap-4 h-full w-full">{postElements}</div>
-    ) : (
-        <div>No Posts Found !!</div>
+    if (!postsFound) {
+        return <div>no posts found!</div>;
+    }
+    return (
+        <div>
+            {postElements.length && (
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
+                    {postElements}
+                </div>
+            )}
+
+            {loading &&
+                (page === 1 ? (
+                    <div className="w-full text-center">loading firts batch...</div>
+                ) : (
+                    <div className="flex items-center justify-center my-2 w-full">
+                        <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                            {icons.loading}
+                        </div>
+                        <span className="text-xl ml-3">Please wait . . .</span>
+                    </div>
+                ))}
+        </div>
     );
 }

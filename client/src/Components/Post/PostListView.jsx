@@ -23,13 +23,13 @@ export default function PostListView({ post, reference }) {
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="cursor-pointer flex items-start justify-start h-[300px] w-full gap-x-4 pr-4 border-[0.01rem]"
+            className="cursor-pointer flex flex-col sm:flex-row items-start justify-start h-[300px] w-full gap-x-4 pr-4 border-[0.01rem]"
         >
-            <div className="h-full w-full bg-green-400 ">
+            <div className="h-full w-full">
                 <img alt="post image" src={post_image} className="h-full" />
             </div>
 
-            <div className="w-full bg-blue-500 flex flex-col items-start justify-start gap-y-4">
+            <div className="w-full flex flex-col items-start justify-start gap-y-4">
                 <div className="text-xl font-medium text-white">{post_title}</div>
                 <Link
                     to={`/channel/${owner_id}`}
@@ -56,8 +56,7 @@ export default function PostListView({ post, reference }) {
                 </div>
 
                 <div className="text-ellipsis line-clamp-2 text-sm text-[#e1e1e1]">
-                    {post_content} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque
-                    dolorem, eius optio dignissimos suscipit magnam.
+                    {post_content}
                 </div>
             </div>
         </div>
