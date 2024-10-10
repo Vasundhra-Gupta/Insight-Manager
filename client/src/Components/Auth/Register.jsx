@@ -32,6 +32,8 @@ export default function Register() {
     const { user, setUser } = useUserContext();
     const navigate = useNavigate();
 
+    /* Methods */
+
     async function handleChange(e) {
         const { value, name } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
@@ -57,6 +59,19 @@ export default function Register() {
         }
     };
 
+    function onMouseOver() {
+        if (
+            Object.entries(inputs).some(
+                ([key, value]) => !value && key !== "coverImage" && key !== "lastName"
+            ) ||
+            Object.entries(error).some(([key, value]) => value !== "" && key !== "root")
+        ) {
+            setDisabled(true);
+        } else {
+            setDisabled(false);
+        }
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
         setLoading(true);
@@ -78,18 +93,7 @@ export default function Register() {
         }
     }
 
-    function onMouseOver() {
-        if (
-            Object.entries(inputs).some(
-                ([key, value]) => !value && key !== "coverImage" && key !== "lastName"
-            ) ||
-            Object.entries(error).some(([key, value]) => value !== "" && key !== "root")
-        ) {
-            setDisabled(true);
-        } else {
-            setDisabled(false);
-        }
-    }
+    /* creating the input fields */
 
     const inputFields = [
         {
@@ -195,6 +199,7 @@ export default function Register() {
     return (
         <div className="bg-gray-800 w-full h-full">
             {error.root && <div className="text-red-500">{error.root}</div>}
+            
             <form onSubmit={handleSubmit} className="w-full h-full">
                 <div className="flex flex-col items-start justify-center gap-4">
                     {inputElements}

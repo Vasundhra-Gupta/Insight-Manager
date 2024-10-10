@@ -94,6 +94,7 @@ export default function Login({ className = "" }) {
     return (
         <div className={className}>
             {error && <div className="text-red-500">{error}</div>}
+
             <form onSubmit={handleSubmit} className="">
                 {inputElements}
 

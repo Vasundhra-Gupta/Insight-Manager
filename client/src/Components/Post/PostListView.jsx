@@ -31,6 +31,7 @@ export default function PostListView({ post, reference }) {
 
             <div className="w-full flex flex-col items-start justify-start gap-y-4">
                 <div className="text-xl font-medium text-white">{post_title}</div>
+
                 <Link
                     to={`/channel/${owner_id}`}
                     onClick={(e) => e.stopPropagation()}
@@ -43,10 +44,12 @@ export default function PostListView({ post, reference }) {
                             className="size-[50px] rounded-full"
                         />
                     </div>
+
                     <div>
                         <div className="text-xl font-medium text-white">
                             {owner_firstName} {owner_lastName}
                         </div>
+                        
                         <div className="text-[#dedddd]">@{owner_userName}</div>
                     </div>
                 </Link>

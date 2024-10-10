@@ -30,6 +30,7 @@ export default function HomePage() {
         [postInfo.hasNextPage]
     );
 
+    // fetching the posts
     useEffect(() => {
         (async function getPosts() {
             try {
@@ -49,6 +50,7 @@ export default function HomePage() {
         })();
     }, [page]);
 
+    // displaying posts
     const postElements = posts?.map((post, index) =>
         index + 1 === posts.length ? (
             <PostListView key={post.post_id} post={post} reference={paginateRef} />
@@ -70,7 +72,7 @@ export default function HomePage() {
 
             {loading &&
                 (page === 1 ? (
-                    <div className="w-full text-center">loading firts batch...</div>
+                    <div className="w-full text-center">loading first batch...</div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">

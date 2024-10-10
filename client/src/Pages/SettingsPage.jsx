@@ -8,9 +8,9 @@ export default function SettingsPage() {
     const { user, setUser } = useUserContext();
     const [updateAvatarPopup, setUpdateAvatarPopup] = useState(false);
     const [updateCoverImagePopup, setUpdateCoverImagePopup] = useState(false);
+
     return (
-        <div>
-            <div>SettingsPage</div>
+        <div className="w-full h-full overflow-scroll">
             <div className="w-full">
                 {/* coverImage */}
                 <div className="w-full relative">
@@ -22,11 +22,13 @@ export default function SettingsPage() {
                         />
                     </div>
 
-                    <Button
-                        btnText={icons.upload}
-                        onClick={() => setUpdateCoverImagePopup(true)}
-                        className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] size-[35px] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
-                    />
+                    <div>
+                        <Button
+                            btnText={icons.upload}
+                            onClick={() => setUpdateCoverImagePopup(true)}
+                            className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] size-[35px] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
+                        />
+                    </div>
                 </div>
 
                 {/* avatar */}
@@ -39,13 +41,16 @@ export default function SettingsPage() {
                         />
                     </div>
 
-                    <Button
-                        btnText={icons.upload}
-                        onClick={() => setUpdateAvatarPopup(true)}
-                        className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] size-[35px] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
-                    />
+                    <div>
+                        <Button
+                            btnText={icons.upload}
+                            onClick={() => setUpdateAvatarPopup(true)}
+                            className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] size-[35px] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
+                        />
+                    </div>
                 </div>
 
+                {/* channel info*/}
                 <div>
                     <div className="text-2xl font-medium">
                         {user.user_firstName} {user.user_lastName}
@@ -63,6 +68,8 @@ export default function SettingsPage() {
                     <UpdateCoverImagePopup setUpdateCoverImagePopup={setUpdateCoverImagePopup} />
                 )}
             </div>
+
+            {/* difference sections */}
             <Outlet />
         </div>
     );

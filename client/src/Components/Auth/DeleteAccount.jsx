@@ -41,38 +41,40 @@ export default function DeleteAccount({ className = "" }) {
 
     return (
         <div className={className}>
-            <div>
-                {error && <div className="text-red-500">{error}</div>}
-                <div>
-                    <div>
-                        <input
-                            type="checkbox"
-                            checked={check}
-                            onChange={(e) => {
-                                setCheck(e.target.checked);
-                            }}
-                            name="deleteCheckBox"
-                            id="deleteCheckBox"
-                        />
-                        <label htmlFor="deleteCheckBox">
-                            are you sure you want to delete the account permanently ?
-                        </label>
-                    </div>
+            {error && <div className="text-red-500">{error}</div>}
 
-                    <div>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                            }}
-                            name="password"
-                            id="password"
-                            placeholder="Enter your password to confirm delete"
-                            className="text-black"
-                        />
-                    </div>
+            <div>
+                <div>
+                    <input
+                        type="checkbox"
+                        checked={check}
+                        onChange={(e) => {
+                            setCheck(e.target.checked);
+                        }}
+                        name="deleteCheckBox"
+                        id="deleteCheckBox"
+                    />
+                    <label htmlFor="deleteCheckBox">
+                        are you sure you want to delete the account permanently ?
+                    </label>
                 </div>
+
+                <div>
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                        name="password"
+                        id="password"
+                        placeholder="Enter your password to confirm delete"
+                        className="text-black"
+                    />
+                </div>
+            </div>
+
+            <div>
                 <Button
                     onMouseOver={onMouseOver}
                     disabled={disabled}
