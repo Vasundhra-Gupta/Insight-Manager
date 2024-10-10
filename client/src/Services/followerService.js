@@ -13,7 +13,8 @@ class FollowerService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getFollowers service: ${err.message}`);
+            console.error(`error in getFollowers service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -31,7 +32,8 @@ class FollowerService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in getFollowings service: ${err.message}`);
+            console.error(`error in getFollowings service: ${err.message}`);
+            throw err;
         }
     }
 
@@ -50,7 +52,8 @@ class FollowerService {
             }
             return data;
         } catch (err) {
-            return console.error(`error in toggleFollow service: ${err.message}`);
+            console.error(`error in toggleFollow service: ${err.message}`);
+            throw err;
         }
     }
 }
