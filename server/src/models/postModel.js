@@ -82,10 +82,7 @@ export class SQLposts extends Iposts {
             const hasNextPage = page < totalPages;
             const hasPrevPage = page > 1;
             return {
-                totalPosts,
-                totalPages,
-                hasNextPage,
-                hasPrevPage,
+                postsInfo: { totalPosts, totalPages, hasNextPage, hasPrevPage },
                 posts,
             };
         } catch (err) {

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import formatDate from "../../Utils/formatDate";
+import {formatDateRelative} from "../../Utils/formatDate";
 
 export default function PostListView({ post, reference }) {
     const {
@@ -17,7 +17,7 @@ export default function PostListView({ post, reference }) {
     } = post;
 
     const navigate = useNavigate();
-    const formattedCreatedAt = formatDate(post_createdAt);
+    const formattedCreatedAt = formatDateRelative(post_createdAt);
 
     return (
         <div
@@ -33,7 +33,7 @@ export default function PostListView({ post, reference }) {
                 <div className="text-xl font-medium text-white">{post_title}</div>
 
                 <Link
-                    to={`/channel/${owner_id}`}
+                    to={`/channel/${owner_userName}`}
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-start justify-start gap-3"
                 >

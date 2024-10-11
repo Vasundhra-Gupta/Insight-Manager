@@ -3,6 +3,7 @@ import { OK, BAD_REQUEST, SERVER_ERROR } from "../constants/errorCodes.js";
 import { v4 as uuid } from "uuid";
 import { uploadOnCloudinary, deleteFromCloudinary, getCurrentTimestamp } from "../utils/index.js";
 import validator from "validator";
+import { userObject } from "./userController.js";
 
 export const postObject = getServiceObject("posts");
 
@@ -61,7 +62,7 @@ const getPost = async (req, res) => {
             if (!user_id) {
                 return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
             }
-            await postObject.updateWatchHistory(postId, user_id);
+            await userObject.updateWatchHistory(postId, user_id);
             userIdentifier = user_id;
         }
 

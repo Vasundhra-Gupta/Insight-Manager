@@ -13,7 +13,6 @@ import UpdateCoverImagePopup from "./Popups/UpdateCoverImagePopup";
 import DeleteAccount from "./Auth/DeleteAccount";
 import Logout from "./Auth/Logout";
 import Login from "./Auth/Login";
-import Register from "./Auth/Register";
 import UpdateAccountDetails from "./User/UpdateAccountDetails";
 import UpdateChannelDetails from "./User/UpdateChannelDetails";
 import UpdatePassword from "./User/UpdatePassword";
@@ -22,6 +21,9 @@ import UpdateCoverImage from "./User/UpdateCoverImage";
 
 import PostCardView from "./Post/PostCardView";
 import PostListView from "./Post/PostListView";
+
+import ChannelAbout from "./Channel/ChannelAbout";
+import ChannelPosts from "./Channel/ChannelPosts";
 
 export {
     Header,
@@ -36,7 +38,6 @@ export {
     DeleteAccount,
     Logout,
     Login,
-    Register,
     UpdateAccountDetails,
     UpdateChannelDetails,
     UpdatePassword,
@@ -44,4 +45,6 @@ export {
     UpdateCoverImage,
     PostCardView,
     PostListView,
+    ChannelAbout,
+    ChannelPosts,
 };

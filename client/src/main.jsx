@@ -8,6 +8,7 @@ import {
     createRoutesFromElements,
     RouterProvider,
 } from "react-router-dom";
+
 import {
     LoginPage,
     HomePage,
@@ -22,12 +23,17 @@ import {
     WatchHistoryPage,
     LikedPostsPage,
 } from "./Pages";
+
 import { UserContextProvider } from "./Context/UserContext";
+import { ChannelContextProvider } from "./Context/ChannelContext";
+
 import {
     DeleteAccount,
     UpdateAccountDetails,
     UpdateChannelDetails,
     UpdatePassword,
+    ChannelAbout,
+    ChannelPosts,
 } from "./Components";
 
 const router = createBrowserRouter(
@@ -39,9 +45,16 @@ const router = createBrowserRouter(
             <Route path="post/:postId" element={<PostPage />} />
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked-posts" element={<LikedPostsPage />} />
-            <Route path="channel/:username" element={<ChannelPage />}>
-                {/* <Route path="" element={<ChannelPosts />} />
-                <Route path="about" element={<ChannelAbout />} /> */}
+            <Route
+                path="channel/:userName"
+                element={
+                    <ChannelContextProvider>
+                        <ChannelPage />
+                    </ChannelContextProvider>
+                }
+            >
+                <Route path="" element={<ChannelPosts />} />
+                <Route path="about" element={<ChannelAbout />} />
             </Route>
             <Route
                 path="settings/"

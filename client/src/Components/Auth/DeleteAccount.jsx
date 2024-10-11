@@ -79,7 +79,7 @@ export default function DeleteAccount({ className = "" }) {
                     onMouseOver={onMouseOver}
                     disabled={disabled}
                     onClick={handleClick}
-                    btnText={loading ? "Deleting..." : "Delete Account"}
+                    btnText={loading ? "Deleting..." : "Delete"}
                 />
             </div>
         </div>

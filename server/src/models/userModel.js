@@ -130,15 +130,18 @@ export class SQLusers extends Iusers {
             // ⭐ SUB-QUERE example in SELECT not in WHERE
             const q = `
                     SELECT 
-                        u.user_id, 
-                        u.user_name, 
-                        u.user_firstName,
-                        u.user_lastName, 
-                        u.user_coverImage, 
-                        u.user_avatar, 
+                        u.user_id AS userId, 
+                        u.user_name AS userName, 
+                        u.user_firstName AS firstName,
+                        u.user_lastName AS lastName, 
+                        u.user_coverImage AS coverImage, 
+                        u.user_avatar "avatar", 
+                        u.user_bio "bio",
+                        u.user_createdAt "createdAt",
+                        u.user_email "email",
                         ${q1}, 
-                        u.user_followers,
-                        u.user_followings,
+                        u.user_followers "totalFollowers",
+                        u.user_followings "totalFollowings",
                         ${q4}, 
                         ${q5} 
                     FROM users u 

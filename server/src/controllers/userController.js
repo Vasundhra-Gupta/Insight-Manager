@@ -431,7 +431,7 @@ const getWatchHistory = async (req, res) => {
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
-        const response = await postObject.getWatchHistory(user_id, orderBy, Number(limit));
+        const response = await userObject.getWatchHistory(user_id, orderBy, Number(limit));
         return res.status(OK).json(response);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -447,7 +447,7 @@ const clearWatchHistory = async (req, res) => {
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
-        const response = await postObject.clearWatchHistory(user_id);
+        const response = await userObject.clearWatchHistory(user_id);
         return res.status(OK).json(response);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
