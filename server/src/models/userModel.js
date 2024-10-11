@@ -111,50 +111,23 @@ export class SQLusers extends Iusers {
 
     async getChannelProfile(channelId, currentUserId) {
         try {
+            let isFollowed = false;
             const q1 =
-                "(SELECT COUNT(p.post_id) FROM posts p where p.post_ownerId = u.user_id) as totalPosts";
+                "SELECT COUNT(*) AS isFollowed FROM followers where following_id = ? AND follower_id = ? "; // either 0 or 1
+            if (currentUserId) {
+                const [[response1]] = await connection.query(q1, [channelId, currentUserId]);
+                if (response1.isFollowed) {
+                    isFollowed = true;
+                }
+            }
 
-            // ⭐no need since we used triggers along with followers & followings column in the users table
-            // const q2 = "(SELECT COUNT(f1.follower_id) FROM followers f1 WHERE f1.following_id = u.user_id) AS totalFollowers";
-
-            // const q3 = "(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowing";
-
-            // sum(x) returns string if x is of the type bigint   // SUM() returns null if no rows matches the condn not 0
-            const q4 =
-                "(SELECT CAST(IFNULL(SUM(v.post_views),0) AS UNSIGNED) FROM post_owner_view v WHERE v.owner_id = ?) AS totalChannelViews";
-
-            // will autohandle the case when user not logged in (currentUserId === undefined) as the AND condn is not true
-            const q5 =
-                "(SELECT COUNT(*) FROM followers f3 where f3.following_id = u.user_id AND f3.follower_id = ? ) AS isFollowed"; // either 0 or 1
-
-            // ⭐ SUB-QUERE example in SELECT not in WHERE
-            const q = `
-                    SELECT 
-                        u.user_id AS userId, 
-                        u.user_name AS userName, 
-                        u.user_firstName AS firstName,
-                        u.user_lastName AS lastName, 
-                        u.user_coverImage AS coverImage, 
-                        u.user_avatar "avatar", 
-                        u.user_bio "bio",
-                        u.user_createdAt "createdAt",
-                        u.user_email "email",
-                        ${q1}, 
-                        u.user_followers "totalFollowers",
-                        u.user_followings "totalFollowings",
-                        ${q4}, 
-                        ${q5} 
-                    FROM users u 
-                    WHERE u.user_id = ?
-                `;
-
-            const [[response]] = await connection.query(q, [channelId, currentUserId, channelId]);
-
+            const q = "SELECT * FROM channel_view WHERE user_id = ?";
+            const [[response]] = await connection.query(q, [channelId]);
             if (!response) {
                 throw new Error({ message: "CHANNEL_FETCHING_DB_ISSUE" });
             }
 
-            return response;
+            return { ...response, isFollowed };
         } catch (err) {
             throw new Error(err);
         }

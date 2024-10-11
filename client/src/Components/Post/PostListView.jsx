@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import {formatDateRelative} from "../../Utils/formatDate";
+import { formatDateRelative } from "../../Utils/formatDate";
 
 export default function PostListView({ post, reference }) {
     const {
@@ -9,11 +9,10 @@ export default function PostListView({ post, reference }) {
         post_title,
         post_content,
         post_createdAt,
-        owner_id,
-        owner_firstName,
-        owner_lastName,
-        owner_userName,
-        owner_avatar,
+        firstName,
+        lastName,
+        userName,
+        avatar,
     } = post;
 
     const navigate = useNavigate();
@@ -33,24 +32,24 @@ export default function PostListView({ post, reference }) {
                 <div className="text-xl font-medium text-white">{post_title}</div>
 
                 <Link
-                    to={`/channel/${owner_userName}`}
+                    to={`/channel/${userName}`}
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-start justify-start gap-3"
                 >
                     <div className="pt-1">
                         <img
                             alt="post owner avatar"
-                            src={owner_avatar}
+                            src={avatar}
                             className="size-[50px] rounded-full"
                         />
                     </div>
 
                     <div>
                         <div className="text-xl font-medium text-white">
-                            {owner_firstName} {owner_lastName}
+                            {firstName} {lastName}
                         </div>
-                        
-                        <div className="text-[#dedddd]">@{owner_userName}</div>
+
+                        <div className="text-[#dedddd]">@{userName}</div>
                     </div>
                 </Link>
 

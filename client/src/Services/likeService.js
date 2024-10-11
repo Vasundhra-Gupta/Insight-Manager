@@ -1,10 +1,13 @@
 class LikeService {
-    async togglePostLike(postId) {
+    async togglePostLike(postId, likedStatus) {
         try {
-            const res = await fetch(`/api/v1/likes/toggle-post-like/${postId}`, {
-                method: "PATCH",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/likes/toggle-post-like/${postId}?likedStatus=${likedStatus}`,
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                }
+            );
 
             const data = await res.json();
             console.log(data);

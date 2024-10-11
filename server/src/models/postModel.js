@@ -10,12 +10,24 @@ export class SQLposts extends Iposts {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
 
-            let q = `SELECT * FROM post_owner_view `;
-            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view ";
+            let q = `
+                    SELECT 
+                        p.*,
+                        c.user_name AS userName,
+                        c.user_firstName AS firstName,
+                        c.user_lastName AS lastName,
+                        c.user_avatar AS avatar,
+                        c.user_coverImage AS coverImage 
+                    FROM post_view p 
+                    JOIN channel_view c 
+                    ON p.post_ownerId = c.user_id
+                `;
+
+            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_view p";
 
             if (category) {
-                q += `WHERE post_category = ? `;
-                countQ += `WHERE post_category = ? `;
+                q += `WHERE category_name = ? `;
+                countQ += `WHERE category_name = ? `;
             }
 
             q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
@@ -46,21 +58,32 @@ export class SQLposts extends Iposts {
 
     async getPosts(channelId, limit, orderBy, page, category) {
         try {
-            console.log(limit, category, orderBy, page);
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
 
-            let q = `SELECT * FROM post_owner_view `;
-            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_owner_view ";
+            let q = `
+                    SELECT 
+                        p.*,
+                        c.user_name AS userName,
+                        c.user_firstName AS firstName,
+                        c.user_lastName AS lastName,
+                        c.user_avatar AS avatar,
+                        c.user_coverImage AS coverImage
+                    FROM post_view p 
+                    JOIN channel_view c 
+                    ON p.post_ownerId = c.user_id
+                `;
+
+            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_view p";
 
             if (category) {
-                q += `WHERE owner_id = ? AND post_category = ? `;
-                countQ += `WHERE owner_id = ? AND post_category = ? `;
+                q += ` WHERE p.post_ownerId = ? AND p.category_name = ? `;
+                countQ += ` WHERE p.post_ownerId = ? AND p.category_name = ? `;
             } else {
-                q += "WHERE owner_id = ? ";
-                countQ += "WHERE owner_id = ? ";
+                q += " WHERE p.post_ownerId = ? ";
+                countQ += " WHERE p.post_ownerId = ? ";
             }
 
             q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
@@ -93,35 +116,53 @@ export class SQLposts extends Iposts {
     async getPost(postId, userId) {
         try {
             const q = `
-                    SELECT * FROM post_owner_view      -- quering from view directly
+                    SELECT 
+                        p.*,
+                        c.user_name AS userName,
+                        c.user_firstName AS firstName,
+                        c.user_lastName AS lastName,
+                        c.user_avatar AS avatar,
+                        c.user_coverImage AS coverImage
+                    FROM post_view p 
+                    JOIN channel_view c 
+                    ON c.user_id = p.post_ownerId
                     WHERE post_id = ?
                 `;
+
             const [[post]] = await connection.query(q, [postId]);
             if (!post) {
                 return { message: "POST_NOT_FOUND" };
             }
 
-            let isLiked = 0;
-            let isDisliked = 0;
-            let isSaved = 0;
+            let isLiked = false;
+            let isDisliked = false;
+            let isSaved = false;
+            let isFollowed = false;
 
             if (userId) {
                 const q1 = "SELECT is_liked FROM post_likes WHERE post_id = ? AND user_id = ?";
                 const [[response1]] = await connection.query(q1, [postId, userId]);
                 if (response1) {
-                    if (response1.is_liked) isLiked = 1;
-                    else isDisliked = 1;
+                    if (response1.is_liked) isLiked = true;
+                    else isDisliked = true;
                 }
 
                 const q2 =
                     "SELECT COUNT(*) AS isSaved FROM saved_posts WHERE post_id = ? AND user_id = ?";
                 const [[response2]] = await connection.query(q2, [postId, userId]);
                 if (response2?.isSaved) {
-                    isSaved = 1;
+                    isSaved = true;
+                }
+
+                const q3 =
+                    "SELECT COUNT(*) AS isFollowed FROM followers WHERE following_id = ? AND follower_id = ?";
+                const [[response3]] = await connection.query(q3, [post.post_ownerId, userId]);
+                if (response3?.isFollowed) {
+                    isFollowed = true;
                 }
             }
 
-            return { ...post, isLiked, isDisliked, isSaved };
+            return { ...post, isLiked, isDisliked, isSaved, isFollowed };
         } catch (err) {
             throw new Error(err);
         }

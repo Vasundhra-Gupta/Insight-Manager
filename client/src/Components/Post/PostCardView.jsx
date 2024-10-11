@@ -8,10 +8,10 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
         post_views,
         post_title,
         post_createdAt,
-        owner_userName,
-        owner_firstName,
-        owner_lastName,
-        owner_avatar,
+        userName,
+        firstName,
+        lastName,
+        avatar,
     } = post;
 
     const navigate = useNavigate();
@@ -31,10 +31,10 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
                 <div className="flex items-center justify-start gap-y-4">
                     <div>
                         <Link
-                            to={`/channel/${owner_userName}`}
+                            to={`/channel/${userName}`}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <img alt="post owner avatar" src={owner_avatar} />
+                            <img alt="post owner avatar" src={avatar} />
                         </Link>
                     </div>
 
@@ -42,7 +42,7 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
                         <div className="text-xl font-medium text-white">{post_title}</div>
 
                         <div className="text-lg font-medium text-white">
-                            {owner_firstName} {owner_lastName}
+                            {firstName} {lastName}
                         </div>
 
                         <div className="text-sm text-[#888787]">

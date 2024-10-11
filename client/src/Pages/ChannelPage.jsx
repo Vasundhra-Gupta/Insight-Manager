@@ -4,11 +4,13 @@ import { userService } from "../Services/userService";
 import { followerService } from "../Services/followerService";
 import { useParams, useNavigate, NavLink, Outlet } from "react-router-dom";
 import useChannelContext from "../Context/ChannelContext";
+import useUserContext from "../Context/UserContext";
 
 export default function ChannelPage() {
     const { userName } = useParams();
     const navigate = useNavigate();
     const { channel, setChannel } = useChannelContext();
+    const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -30,8 +32,17 @@ export default function ChannelPage() {
     }, [userName]);
 
     async function toggleFollow() {
-        const res = await followerService.toggleFollow(channel.userId);
-        // pending
+        try {
+            const res = await followerService.toggleFollow(channel.user_id);
+            if (
+                res &&
+                (res.message === "FOLLOWED_SUCCESSFULLY" || res.message === "UNFOLLOWED_SUCCESSFULLY")
+            ) {
+                setChannel((prev) => ({ ...prev, isFollowed: !prev.isFollowed }));
+            }
+        } catch (err) {
+            navigate("/server-error");
+        }
     }
 
     const tabs = [
@@ -59,7 +70,7 @@ export default function ChannelPage() {
             {/* owner coverImage */}
             <div className="w-full h-[200px] overflow-hidden">
                 <img
-                    src={channel.coverImage}
+                    src={channel.user_coverImage}
                     alt="channel coverImage"
                     className="object-cover h-full w-full"
                 />
@@ -72,7 +83,7 @@ export default function ChannelPage() {
                     <div className="relative -top-2">
                         <div className="size-[120px] rounded-full overflow-hidden border-[0.3rem] border-black">
                             <img
-                                src={channel.avatar}
+                                src={channel.user_avatar}
                                 alt="channel owner avatar"
                                 className="object-cover size-full"
                             />
@@ -82,25 +93,36 @@ export default function ChannelPage() {
                     {/* owner info */}
                     <div>
                         <div className="text-xl font-medium">
-                            {channel.firstName} {channel.lastName}
+                            {channel.user_firstName} {channel.user_lastName}
                         </div>
 
-                        <div className="text-[#dadada] text-[17px]">@{channel.userName}</div>
+                        <div className="text-[#dadada] text-[17px]">@{channel.user_name}</div>
 
                         <div className="flex gap-1 items-center justify-start text-[#a5a5a5] text-[15px]">
-                            {channel.totalFollowers} followers &bull; {channel.totalFollowings}{" "}
+                            {channel.totalFollowers} followers &bull; {channel.totalFollowings}
                             followings
                         </div>
                     </div>
                 </div>
 
                 {/* follow btn */}
-                <div className="bg-blue-400">
-                    <Button
-                        btnText={channel.isFollowed ? "UnFollow" : "Follow"}
-                        onClick={toggleFollow}
-                    />
-                </div>
+                {user.user_name === channel.user_name ? (
+                    <div className="bg-blue-400">
+                        <Button
+                            btnText="Edit"
+                            onClick={() => {
+                                navigate("/settings");
+                            }}
+                        />
+                    </div>
+                ) : (
+                    <div className="bg-blue-400">
+                        <Button
+                            btnText={channel.isFollowed ? "UnFollow" : "Follow"}
+                            onClick={toggleFollow}
+                        />
+                    </div>
+                )}
             </div>
 
             {/* tabs */}

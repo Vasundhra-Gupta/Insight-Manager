@@ -6,7 +6,7 @@ import { icons } from "../assets/icons";
 
 export default function HomePage() {
     const [posts, setPosts] = useState([]);
-    const [postInfo, setPostInfo] = useState({});
+    const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const [postsFound, setPostsFound] = useState(true);
@@ -21,13 +21,13 @@ export default function HomePage() {
             if (observer) observer.disconnect();
             observer = new IntersectionObserver((entries) => {
                 const lastPost = entries[0];
-                if (lastPost.isIntersecting && postInfo.hasNextPage) {
+                if (lastPost.isIntersecting && postsInfo.hasNextPage) {
                     setPage((prev) => prev + 1);
                 }
             });
             if (lastPostNode) observer.observe(lastPostNode);
         },
-        [postInfo.hasNextPage]
+        [postsInfo.hasNextPage]
     );
 
     // fetching the posts
@@ -38,7 +38,7 @@ export default function HomePage() {
                 const res = await postService.getRandomPosts(page, limit);
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
-                    setPostInfo(res.postsInfo);
+                    setPostsInfo(res.postsInfo);
                 } else if (res?.message && page === 1) {
                     setPostsFound(false);
                 }
@@ -64,7 +64,7 @@ export default function HomePage() {
     }
     return (
         <div>
-            {postElements.length && (
+            {postElements.length > 0 && (
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
                     {postElements}
                 </div>
