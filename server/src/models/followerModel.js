@@ -21,7 +21,7 @@ export class SQLfollowers extends Ifollowers {
 
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -43,7 +43,7 @@ export class SQLfollowers extends Ifollowers {
             const [response] = await connection.query(q, [channelId]);
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -76,7 +76,7 @@ export class SQLfollowers extends Ifollowers {
             const [[[response]]] = await connection.query(q, [channelId, userId]);
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 }

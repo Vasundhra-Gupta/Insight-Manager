@@ -33,7 +33,7 @@ export class SQLlikes extends Ilikes {
             }
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -43,7 +43,7 @@ export class SQLlikes extends Ilikes {
             const [[[response]]] = await connection.query(q, [userId, postId, likedStatus]);
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -53,7 +53,7 @@ export class SQLlikes extends Ilikes {
             const [[[response]]] = await connection.query(q, [userId, commentId, likedStatus]);
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -63,7 +63,7 @@ export class SQLlikes extends Ilikes {
             const [[[response]]] = await connection.query(q, [userId, noteId, voteStatus]);
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 }

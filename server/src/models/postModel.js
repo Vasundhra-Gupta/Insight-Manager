@@ -20,17 +20,17 @@ export class SQLposts extends Iposts {
                         c.user_coverImage AS coverImage 
                     FROM post_view p 
                     JOIN channel_view c 
-                    ON p.post_ownerId = c.user_id
+                    ON p.post_ownerId = c.user_id 
                 `;
 
-            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_view p";
+            let countQ = "SELECT COUNT(*) AS totalPosts FROM post_view p ";
 
             if (category) {
-                q += `WHERE category_name = ? `;
-                countQ += `WHERE category_name = ? `;
+                q += ` WHERE p.category_name = ? `;
+                countQ += ` WHERE p.category_name = ? `;
             }
 
-            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
+            q += ` ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
 
             const offset = (page - 1) * limit;
 
@@ -52,7 +52,7 @@ export class SQLposts extends Iposts {
                 posts,
             };
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -109,7 +109,7 @@ export class SQLposts extends Iposts {
                 posts,
             };
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -164,7 +164,7 @@ export class SQLposts extends Iposts {
 
             return { ...post, isLiked, isDisliked, isSaved, isFollowed };
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -197,7 +197,7 @@ export class SQLposts extends Iposts {
             } = post;
             return remainingPostDetails;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -209,7 +209,7 @@ export class SQLposts extends Iposts {
                 throw new Error("POST_DELETION_DB_ISSUE");
             }
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -231,7 +231,7 @@ export class SQLposts extends Iposts {
             }
             return { message: "VIEW_INCREMENTED_SUCCESSFULLY" };
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -246,7 +246,7 @@ export class SQLposts extends Iposts {
             }
             return post;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -260,7 +260,7 @@ export class SQLposts extends Iposts {
             }
             return post;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -274,7 +274,7 @@ export class SQLposts extends Iposts {
             }
             return post;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -284,7 +284,7 @@ export class SQLposts extends Iposts {
             const [[[response]]] = await connection.query(q, [userId, postId]);
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -309,7 +309,7 @@ export class SQLposts extends Iposts {
 
             return savedPosts;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 }

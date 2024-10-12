@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, NavLink } from "react-router-dom";
 import { postService } from "../Services/postService";
-import { Button } from "../Components";
+import { Button, Comments, Recemendations } from "../Components";
 import { formatDateRelative } from "../Utils/formatDate";
-import { icons } from "../assets/icons";
+import { icons } from "../Assets/icons";
 import { likeService } from "../Services/likeService";
 import { followerService } from "../Services/followerService";
 
@@ -30,50 +30,58 @@ export default function PostPage() {
     }, [postId]);
 
     async function toggleLike() {
-        const res = await likeService.togglePostLike(postId, true);
-        if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
-            setPost((prev) => {
-                if (prev.isLiked) {
-                    return {
-                        ...prev,
-                        total_likes: prev.total_likes - 1,
-                        isLiked: false,
-                    };
-                } else {
-                    return {
-                        ...prev,
-                        total_likes: prev.total_likes + 1,
-                        total_dislikes: prev.isDisliked
-                            ? prev.total_dislikes - 1
-                            : prev.total_dislikes,
-                        isLiked: true,
-                        isDisliked: false,
-                    };
-                }
-            });
+        try {
+            const res = await likeService.togglePostLike(postId, true);
+            if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
+                setPost((prev) => {
+                    if (prev.isLiked) {
+                        return {
+                            ...prev,
+                            total_likes: prev.total_likes - 1,
+                            isLiked: false,
+                        };
+                    } else {
+                        return {
+                            ...prev,
+                            total_likes: prev.total_likes + 1,
+                            total_dislikes: prev.isDisliked
+                                ? prev.total_dislikes - 1
+                                : prev.total_dislikes,
+                            isLiked: true,
+                            isDisliked: false,
+                        };
+                    }
+                });
+            }
+        } catch (err) {
+            navigate("/server-error");
         }
     }
 
     async function toggleDislike() {
-        const res = await likeService.togglePostLike(postId, false);
-        if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
-            setPost((prev) => {
-                if (prev.isDisliked) {
-                    return {
-                        ...prev,
-                        total_dislikes: prev.total_dislikes - 1,
-                        isDisliked: false,
-                    };
-                } else {
-                    return {
-                        ...prev,
-                        total_dislikes: prev.total_dislikes + 1,
-                        total_likes: prev.isLiked ? prev.total_likes - 1 : prev.total_likes,
-                        isDisliked: true,
-                        isLiked: false,
-                    };
-                }
-            });
+        try {
+            const res = await likeService.togglePostLike(postId, false);
+            if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
+                setPost((prev) => {
+                    if (prev.isDisliked) {
+                        return {
+                            ...prev,
+                            total_dislikes: prev.total_dislikes - 1,
+                            isDisliked: false,
+                        };
+                    } else {
+                        return {
+                            ...prev,
+                            total_dislikes: prev.total_dislikes + 1,
+                            total_likes: prev.isLiked ? prev.total_likes - 1 : prev.total_likes,
+                            isDisliked: true,
+                            isLiked: false,
+                        };
+                    }
+                });
+            }
+        } catch (err) {
+            navigate("/server-error");
         }
     }
 
@@ -113,7 +121,7 @@ export default function PostPage() {
     return loading ? (
         <div>loading...</div>
     ) : (
-        <div className="w-full h-full overflow-y-scroll">
+        <div className="w-full h-full overflow-y-scroll flex items-start justify-start gap-6">
             <div>
                 <div>
                     <div>
@@ -211,7 +219,7 @@ export default function PostPage() {
                                                 post.isSaved
                                                     ? "fill-white stroke-black"
                                                     : "fill-none stroke-white"
-                                            } size-[20px] `}
+                                            } size-[20px]`}
                                         >
                                             {icons.save}
                                         </div>
@@ -227,12 +235,14 @@ export default function PostPage() {
 
                 {/* comments */}
                 <div>
-                    <Comments />
+                    <Comments postId={postId} />
                 </div>
             </div>
 
-            {/* recemmondations */}
-            <div></div>
+            {/* recemendations */}
+            <div>
+                <Recemendations category={post.category_name} />
+            </div>
         </div>
     );
 }

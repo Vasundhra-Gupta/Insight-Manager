@@ -1,8 +1,8 @@
 class PostService {
-    async getRandomPosts(page = 1, limit = 10, orderBy = "desc") {
+    async getRandomPosts(page = 1, limit = 10, category = "", orderBy = "desc") {
         try {
             const res = await fetch(
-                `/api/v1/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}`,
+                `/api/v1/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
                 {
                     method: "GET",
                 }

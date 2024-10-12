@@ -23,6 +23,23 @@ const getComments = async (req, res) => {
     }
 };
 
+const getComment = async (req, res) => {
+    try {
+        const { commentId } = req.params;
+        if (!commentId || !validator.isUUID(commentId)) {
+            return res.status(BAD_REQUEST).json({ message: "COMMENTID_MISSING_OR_INVALID" });
+        }
+
+        const comment = await commentObject.getComment(commentId, req.user?.user_id);
+        return res.status(OK).json(comment);
+    } catch (err) {
+        return res.status(SERVER_ERROR).json({
+            message: "something went wrong while getting the comment",
+            error: err.message,
+        });
+    }
+};
+
 const addComment = async (req, res) => {
     try {
         const { user_id } = req.user;
@@ -46,7 +63,12 @@ const addComment = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "CONTENT_MISSING" });
         }
 
-        const comment = await commentObject.createComment(commentId, user_id, postId, commentContent);
+        const comment = await commentObject.createComment(
+            commentId,
+            user_id,
+            postId,
+            commentContent
+        );
         return res.status(OK).json(comment);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -96,4 +118,4 @@ const updateComment = async (req, res) => {
     }
 };
 
-export { getComments, addComment, deleteComment, updateComment };
+export { getComments, getComment, addComment, deleteComment, updateComment };

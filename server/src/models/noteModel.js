@@ -22,7 +22,7 @@ export class SQLnotes extends Inotes {
             }
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -45,7 +45,7 @@ export class SQLnotes extends Inotes {
             }
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -63,7 +63,7 @@ export class SQLnotes extends Inotes {
             }
             return note;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -77,7 +77,7 @@ export class SQLnotes extends Inotes {
             }
             return note;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -91,7 +91,7 @@ export class SQLnotes extends Inotes {
             }
             return { message: "NOTE_DELETED_SUCCESSFULLY" };
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -105,7 +105,7 @@ export class SQLnotes extends Inotes {
             }
             return updatedNote;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -130,7 +130,7 @@ export class SQLnotes extends Inotes {
             }
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -153,7 +153,7 @@ export class SQLnotes extends Inotes {
             }
             return impNotes;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -167,7 +167,7 @@ export class SQLnotes extends Inotes {
             }
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -190,7 +190,7 @@ export class SQLnotes extends Inotes {
             }
             return completedNotes;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 }

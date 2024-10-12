@@ -22,12 +22,15 @@ class LikeService {
         }
     }
 
-    async toggleCommentLike(commentId) {
+    async toggleCommentLike(commentId, likedStatus) {
         try {
-            const res = await fetch(`/api/v1/likes/toggle-comment-like/${commentId}`, {
-                method: "PATCH",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/likes/toggle-comment-like/${commentId}?likedStatus=${likedStatus}`,
+                {
+                    method: "PATCH",
+                    credentials: "include",
+                }
+            );
 
             const data = await res.json();
             console.log(data);

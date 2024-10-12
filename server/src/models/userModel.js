@@ -34,7 +34,7 @@ export class SQLusers extends Iusers {
 
             return user;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -62,7 +62,7 @@ export class SQLusers extends Iusers {
             const { refresh_token, ...createdUser } = user; // to exclude the password from the response
             return createdUser;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -76,7 +76,7 @@ export class SQLusers extends Iusers {
                 throw new Error({ message: "USER_DELETION_DB_ISSUE" });
             }
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -92,7 +92,7 @@ export class SQLusers extends Iusers {
             }
             return user;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -105,7 +105,7 @@ export class SQLusers extends Iusers {
                 throw new Error({ message: "REFRESH_TOKEN_NOT_SAVED_IN_DB" });
             }
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -129,7 +129,7 @@ export class SQLusers extends Iusers {
 
             return { ...response, isFollowed };
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -149,7 +149,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -168,7 +168,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -187,7 +187,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user; // we dont show password anywhere (no need to return though)
             return updatedUser;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -206,7 +206,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -225,7 +225,7 @@ export class SQLusers extends Iusers {
             const { user_password, refresh_token, ...updatedUser } = user;
             return updatedUser;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -251,7 +251,7 @@ export class SQLusers extends Iusers {
 
             return watchHistory;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -264,7 +264,7 @@ export class SQLusers extends Iusers {
             }
             return { message: "WATCH_HISTORY_CLEARED_SUCCESSFULLY" };
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 
@@ -274,7 +274,7 @@ export class SQLusers extends Iusers {
             const [[[response]]] = await connection.query(q, [postId, userId]);
             return response;
         } catch (err) {
-            throw new Error(err);
+            throw err;
         }
     }
 

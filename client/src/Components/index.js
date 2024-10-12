@@ -21,9 +21,13 @@ import UpdateCoverImage from "./User/UpdateCoverImage";
 
 import PostCardView from "./Post/PostCardView";
 import PostListView from "./Post/PostListView";
+import Recemendations from "./Post/Recemendations";
 
 import ChannelAbout from "./Channel/ChannelAbout";
 import ChannelPosts from "./Channel/ChannelPosts";
+
+import Comments from "./Comments/Comments";
+import Comment from "./Comments/Comment";
 
 export {
     Header,
@@ -45,6 +49,9 @@ export {
     UpdateCoverImage,
     PostCardView,
     PostListView,
+    Recemendations,
     ChannelAbout,
     ChannelPosts,
+    Comment,
+    Comments,
 };

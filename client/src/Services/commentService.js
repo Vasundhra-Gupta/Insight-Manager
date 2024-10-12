@@ -1,7 +1,7 @@
 class CommentService {
     async getComments(postId, orderBy = "desc") {
         try {
-            const res = await fetch(`/api/v1/comments/${postId}?orderBy=${orderBy}`, {
+            const res = await fetch(`/api/v1/comments/post/${postId}?orderBy=${orderBy}`, {
                 method: "GET",
             });
 
@@ -18,11 +18,31 @@ class CommentService {
         }
     }
 
+    async getComment(commentId) {
+        try {
+            const res = await fetch(`/api/v1/comments/${commentId}`, {
+                method: "GET",
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            if (res.status === 500) {
+                throw new Error(data.message);
+            }
+            return data;
+        } catch (err) {
+            console.error(`error in getComment service: ${err.message}`);
+            throw err;
+        }
+    }
+
     async addComment(postId, content) {
         try {
             const res = await fetch(`/api/v1/comments/${postId}`, {
                 method: "POST",
                 credentials: "include",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ commentContent: content }),
             });
 
