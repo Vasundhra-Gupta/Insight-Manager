@@ -10,12 +10,12 @@ export const likeObject = getServiceObject("likes");
 const getLikedPosts = async (req, res) => {
     try {
         const { user_id } = req.user;
-        const { orderBy = "desc", limit = 10 } = req.query;
+        const { orderBy = "desc", limit = 10, page = 1 } = req.query;
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
 
-        const likedPosts = await likeObject.getLikedPosts(user_id, orderBy, limit);
+        const likedPosts = await likeObject.getLikedPosts(user_id, orderBy, Number(limit), Number(page));
         return res.status(OK).json(likedPosts);
     } catch (err) {
         return res.status(SERVER_ERROR).json({

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import useChannelContext from "../../Context/ChannelContext";
 import { postService } from "../../Services/postService";
 import { useNavigate } from "react-router-dom";
-import { icons } from "../../assets/icons";
+import { icons } from "../../Assets/icons";
 import PostCardView from "../Post/PostCardView";
 
 export default function ChannelPosts() {

@@ -136,7 +136,7 @@ class UserService {
         }
     }
 
-    async getWatchHistory(orderBy = "desc", limit = 10, page = 1) {
+    async getWatchHistory(limit = 10, page = 1, orderBy = "desc") {
         try {
             const res = await fetch(`/api/v1/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`, {
                 method: "GET",

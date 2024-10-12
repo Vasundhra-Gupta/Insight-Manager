@@ -2,7 +2,7 @@ import useUserContext from "../../Context/UserContext";
 import { useState, useRef } from "react";
 import { Button } from "..";
 import fileRestrictions from "../../Utils/fileRestrictions";
-import { icons } from "../../assets/icons";
+import { icons } from "../../Assets/icons";
 import { userService } from "../../Services/userService";
 import { useNavigate } from "react-router-dom";
 

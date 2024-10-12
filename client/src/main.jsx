@@ -44,7 +44,7 @@ const router = createBrowserRouter(
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
             <Route path="history" element={<WatchHistoryPage />} />
-            <Route path="liked-posts" element={<LikedPostsPage />} />
+            <Route path="liked" element={<LikedPostsPage />} />
             <Route
                 path="channel/:userName"
                 element={

@@ -2,7 +2,7 @@ import { Ilikes } from "../interfaces/likeInterface.js";
 import { connection } from "../server.js";
 
 export class SQLlikes extends Ilikes {
-    async getLikedPosts(userId, orderBy, limit) {
+    async getLikedPosts(userId, orderBy, limit, page) {
         try {
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
@@ -10,28 +10,47 @@ export class SQLlikes extends Ilikes {
             }
             const q = `
                     SELECT
-                    	v.owner_id,
-                        v.owner_avatar, 
-                        v.owner_userName, 
-                        v.owner_firstName, 
-                        v.owner_lastName, 
-                        v.post_id, 
-                        v.post_updatedAt, 
-                        v.post_title, 
-                        v.post_content, 
-                        v.post_views,
-                        v.post_image
-                    FROM post_owner_view v
-                    JOIN post_likes pl
-                    WHERE v.post_id = pl.post_id AND pl.is_liked = 1 AND pl.user_id = ? 
-                    ORDER BY v.post_updatedAt ${orderBy.toUpperCase()} 
-                    LIMIT ?
+                    	c.user_id,
+                        c.user_name AS userName,
+                        c.user_firstName AS firstName,
+                        c.user_lastName lastName,
+                        c.user_avatar AS avatar,
+                        p.post_id, 
+                        p.post_updatedAt, 
+                        p.post_title, 
+                        p.post_content, 
+                        p.totalViews,
+                        p.post_image
+                    FROM post_view p
+                    JOIN channel_view c
+                    ON p.post_ownerId = c.user_id 
+                    JOIN post_likes l
+                    ON p.post_id = l.post_id 
+                    WHERE l.user_id = ? AND l.is_liked = 1 
+                    ORDER BY p.post_updatedAt ${orderBy.toUpperCase()} 
+                    LIMIT ? OFFSET ?
                 `;
-            const [response] = await connection.query(q, [userId, limit]);
-            if (!response?.length) {
+
+            const countQ =
+                "SELECT COUNT(*) AS totalPosts FROM post_likes WHERE user_id = ? AND is_liked = 1";
+
+            const offset = (page - 1) * limit;
+
+            const [[{ totalPosts }]] = await connection.query(countQ, [userId]);
+            const [posts] = await connection.query(q, [userId, limit, offset]);
+
+            if (!posts?.length) {
                 return { message: "NO_LIKED_POSTS" };
             }
-            return response;
+
+            const totalPages = Math.ceil(totalPosts / limit);
+            const hasNextPage = page < totalPages;
+            const hasPrevPage = page > 1;
+
+            return {
+                postsInfo: { totalPosts, totalPages, hasNextPage, hasPrevPage },
+                posts,
+            };
         } catch (err) {
             throw err;
         }

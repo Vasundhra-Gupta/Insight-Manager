@@ -21,6 +21,8 @@ import UpdateCoverImage from "./User/UpdateCoverImage";
 
 import PostCardView from "./Post/PostCardView";
 import PostListView from "./Post/PostListView";
+import WatchHistoryView from "./Post/WatchistoryView";
+import LikedPostView from "./Post/LikedPostView";
 import Recemendations from "./Post/Recemendations";
 
 import ChannelAbout from "./Channel/ChannelAbout";
@@ -54,4 +56,6 @@ export {
     ChannelPosts,
     Comment,
     Comments,
+    WatchHistoryView,
+    LikedPostView,
 };

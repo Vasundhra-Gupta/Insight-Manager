@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PostListView } from "../Components";
 import { postService } from "../Services/postService";
 import { useNavigate } from "react-router-dom";
-import { icons } from "../assets/icons";
+import { icons } from "../Assets/icons";
 
 export default function HomePage() {
     const [posts, setPosts] = useState([]);

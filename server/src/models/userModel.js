@@ -229,7 +229,7 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async getWatchHistory(userId, orderBy, limit) {
+    async getWatchHistory(userId, orderBy, limit, page) {
         try {
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
@@ -237,19 +237,48 @@ export class SQLusers extends Iusers {
             }
 
             const q = `
-                    SELECT * 
-                    FROM watch_history 
-                    WHERE user_id = ?
-                    ORDER BY watchedAt ${orderBy}
-                    LIMIT ?
+                    SELECT 
+                        w.watchedAt,
+                        w.post_id,
+                        p.post_title,
+                        p.post_image,
+                        p.post_createdAt,
+                        p.post_content,
+                        p.totalViews,
+                        p.category_name,
+                        c.user_name AS userName,
+                        c.user_firstName AS firstName,
+                        c.user_lastName lastName,
+                        c.user_avatar AS avatar
+                    FROM watch_history w
+                    JOIN post_view p 
+                    ON w.post_id = p.post_id
+                    JOIN channel_view c 
+                    ON p.post_ownerId = c.user_id 
+                    WHERE w.user_id = ?
+                    ORDER BY w.watchedAt ${orderBy.toUpperCase()}
+                    LIMIT ? OFFSET ? 
                 `;
-            const [watchHistory] = await connection.query(q, [userId, limit]);
 
-            if (!watchHistory.length) {
+            const countQ = "SELECT COUNT(*) AS totalPosts FROM  watch_history WHERE user_id = ?";
+
+            const offset = (page - 1) * limit;
+
+            const [[{ totalPosts }]] = await connection.query(countQ, [userId]);
+            const [posts] = await connection.query(q, [userId, limit, offset]);
+
+            if (!posts?.length) {
                 return { message: "EMPTY_WATCH_HISTORY" };
             }
 
-            return watchHistory;
+            const totalPages = Math.ceil(totalPosts / limit);
+            const hasNextPage = page < totalPages;
+            const hasPrevPage = page > 1;
+
+            return {
+                postsInfo: { totalPosts, totalPages, hasNextPage, hasPrevPage },
+                posts,
+            };
         } catch (err) {
             throw err;
         }

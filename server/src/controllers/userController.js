@@ -426,12 +426,17 @@ const updateCoverImage = async (req, res) => {
 
 const getWatchHistory = async (req, res) => {
     try {
-        const { orderBy = "desc", limit = 10 } = req.query;
+        const { orderBy = "desc", limit = 10, page = 1 } = req.query;
         const { user_id } = req.user;
         if (!user_id) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
-        const response = await userObject.getWatchHistory(user_id, orderBy, Number(limit));
+        const response = await userObject.getWatchHistory(
+            user_id,
+            orderBy,
+            Number(limit),
+            Number(page)
+        );
         return res.status(OK).json(response);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
