@@ -16,7 +16,8 @@ export default function RegisterPage() {
         avatar: null,
         coverImage: null,
     });
-    const nullErrors = {
+
+    const [error, setError] = useState({
         root: "",
         firstName: "",
         lastName: "",
@@ -25,8 +26,7 @@ export default function RegisterPage() {
         password: "",
         avatar: "",
         coverImage: "",
-    };
-    const [error, setError] = useState(nullErrors);
+    });
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
     const { user, setUser } = useUserContext();
@@ -41,7 +41,7 @@ export default function RegisterPage() {
 
     async function handleFileChange(e) {
         const { name, files } = e.target;
-        if (files[0]) {
+        if (files && files[0]) {
             setInputs((prev) => ({ ...prev, [name]: files[0] }));
             fileRestrictions(files[0], name, setError);
         } else {
@@ -75,7 +75,6 @@ export default function RegisterPage() {
         e.preventDefault();
         setLoading(true);
         setDisabled(true);
-        setError(nullErrors);
         try {
             const res = await authService.register(inputs);
             if (res && !res.message) {
@@ -196,7 +195,7 @@ export default function RegisterPage() {
     ));
 
     return (
-        <div className="bg-gray-800 w-full h-full">
+        <div className="bg-gray-800 w-full h-full overflow-scroll">
             {error.root && <div className="text-red-500">{error.root}</div>}
 
             <form onSubmit={handleSubmit} className="w-full h-full">

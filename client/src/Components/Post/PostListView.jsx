@@ -56,10 +56,6 @@ export default function PostListView({ post, reference }) {
                 <div className="text-sm text-[#b0b0b0]">
                     {post_views} views &bull; {formattedCreatedAt}
                 </div>
-
-                <div className="text-ellipsis line-clamp-2 text-sm text-[#e1e1e1]">
-                    {post_content}
-                </div>
             </div>
         </div>
     );

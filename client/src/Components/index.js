@@ -4,6 +4,7 @@ import Sidebar from "./Layout/Sidebar";
 import Layout from "./Layout/Layout";
 
 import Button from "./General/Button";
+import RTE from "./General/RTE";
 
 import LoginPopup from "./Popups/LoginPopup";
 import DeleteAccountPopup from "./Popups/DeleteAccountPopup";
@@ -37,6 +38,7 @@ export {
     Sidebar,
     Layout,
     Button,
+    RTE,
     LoginPopup,
     DeleteAccountPopup,
     UpdateAvatarPopup,

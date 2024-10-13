@@ -43,12 +43,13 @@ export default function verifyExpression(name, value, setError) {
                 break;
             }
 
-            case "bio": {
+            case "bio":
+            case "title": {
                 value.length <= 100
                     ? setError((prevError) => ({ ...prevError, [name]: "" }))
                     : setError((prevError) => ({
                           ...prevError,
-                          [name]: "Bio should not exceed 100 characters.",
+                          [name]: `${name} should not exceed 100 characters.`,
                       }));
                 break;
             }

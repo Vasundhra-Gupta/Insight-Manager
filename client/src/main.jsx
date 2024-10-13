@@ -1,7 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import "./index.css";
+import "./Styles/index.css";
+
 import {
     Route,
     createBrowserRouter,
@@ -22,6 +23,7 @@ import {
     Redirect,
     WatchHistoryPage,
     LikedPostsPage,
+    AddPostPage,
 } from "./Pages";
 
 import { UserContextProvider } from "./Context/UserContext";
@@ -43,6 +45,7 @@ const router = createBrowserRouter(
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
+            <Route path="add-post" element={<AddPostPage />} />
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route

@@ -6,11 +6,14 @@ import { formatDateRelative } from "../Utils/formatDate";
 import { icons } from "../Assets/icons";
 import { likeService } from "../Services/likeService";
 import { followerService } from "../Services/followerService";
+import parse from "html-react-parser";
+import useUserContext from "../Context/UserContext";
 
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
     const [post, setPost] = useState({});
+    const { user } = useUserContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -121,10 +124,10 @@ export default function PostPage() {
     return loading ? (
         <div>loading...</div>
     ) : (
-        <div className="w-full h-full overflow-y-scroll flex items-start justify-start gap-6">
-            <div>
+        <div className="w-full h-full flex items-start justify-start gap-6 overflow-scroll">
+            <div className="w-[70%] h-full">
                 <div>
-                    <div>
+                    <div className="h-[500px]">
                         <img
                             src={post.post_image}
                             alt="post image"
@@ -145,7 +148,7 @@ export default function PostPage() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center justify-start gap-3">
                                 <NavLink
-                                    to={`channel/${post.post_ownerId}`}
+                                    to={`/channel/${post.userName}`}
                                     className="size-[50px] rounded-full overflow-hidden"
                                 >
                                     <img
@@ -164,10 +167,14 @@ export default function PostPage() {
                             </div>
 
                             <div>
-                                <Button
-                                    btnText={post.isFollowed ? "Unfollow" : "Follow"}
-                                    onClick={toggleFollow}
-                                />
+                                {user?.user_name === post.userName ? (
+                                    <Button btnText="Edit" onClick={() => navigate("/settings")} />
+                                ) : (
+                                    <Button
+                                        btnText={post.isFollowed ? "Unfollow" : "Follow"}
+                                        onClick={toggleFollow}
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -230,7 +237,7 @@ export default function PostPage() {
                         </div>
                     </div>
 
-                    <div className="w-full text-md">{post.post_content}</div>
+                    <div className="w-full text-md">{parse(post.post_content)}</div>
                 </div>
 
                 {/* comments */}
@@ -240,7 +247,7 @@ export default function PostPage() {
             </div>
 
             {/* recemendations */}
-            <div>
+            <div className="w-[30%] bg-red-400">
                 <Recemendations category={post.category_name} />
             </div>
         </div>

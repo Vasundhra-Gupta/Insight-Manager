@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+h1 {
+    @apply text-4xl font-bold my-4 leading-tight;
+}
+
+h2 {
+    @apply text-3xl font-semibold my-4 leading-snug;
+}
+
+h3 {
+    @apply text-2xl font-medium my-3 leading-snug;
+}
+
+h4 {
+    @apply text-xl font-medium my-3 leading-snug;
+}
+
+h5 {
+    @apply text-lg font-semibold my-2;
+}
+
+h6 {
+    @apply text-base font-medium my-2;
+}
+
+p {
+    @apply text-base leading-relaxed my-2;
+}
+
+ul {
+    @apply list-disc pl-5 my-3;
+}
+
+ol {
+    @apply list-decimal pl-5 my-3;
+}
+
+li {
+    @apply my-1;
+}
+
+blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic text-gray-600 my-4;
+}
+
+code {
+    @apply block w-[60%] bg-[#161616] p-1 text-[#d6d6d6] font-thin text-[16px];
+}
+
+table {
+    @apply table-auto border-collapse w-full my-4;
+}
+
+th {
+    @apply bg-gray-200 border px-4 py-2 font-bold;
+}
+
+td {
+    @apply border px-4 py-2;
+}
+
+hr {
+    @apply border-t-2 border-gray-300 my-4;
+}
+
+figure {
+    @apply my-4;
+}
+
+figcaption {
+    @apply text-sm text-center text-gray-500;
+}

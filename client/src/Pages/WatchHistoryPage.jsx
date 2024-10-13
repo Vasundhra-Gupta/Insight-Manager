@@ -76,7 +76,7 @@ export default function WatchHistoryPage() {
         return <div>no watched posts!</div>;
     }
     return (
-        <div>
+        <div className="w-full h-full overflow-scroll">
             <div>
                 <Button
                     btnText={

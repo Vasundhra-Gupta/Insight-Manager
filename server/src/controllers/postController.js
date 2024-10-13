@@ -16,7 +16,7 @@ const getRandomPosts = async (req, res) => {
             orderBy,
             Number(page),
             category
-        );        
+        );
         return res.status(OK).json(randomPosts);
     } catch (err) {
         return res.status(SERVER_ERROR).json({

@@ -36,7 +36,8 @@ export default function ChannelPage() {
             const res = await followerService.toggleFollow(channel.user_id);
             if (
                 res &&
-                (res.message === "FOLLOWED_SUCCESSFULLY" || res.message === "UNFOLLOWED_SUCCESSFULLY")
+                (res.message === "FOLLOWED_SUCCESSFULLY" ||
+                    res.message === "UNFOLLOWED_SUCCESSFULLY")
             ) {
                 setChannel((prev) => ({ ...prev, isFollowed: !prev.isFollowed }));
             }
@@ -106,7 +107,7 @@ export default function ChannelPage() {
                 </div>
 
                 {/* follow btn */}
-                {user.user_name === channel.user_name ? (
+                {user?.user_name === channel.user_name ? (
                     <div className="bg-blue-400">
                         <Button
                             btnText="Edit"

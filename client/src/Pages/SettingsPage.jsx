@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Button, UpdateAvatarPopup, UpdateCoverImagePopup } from "../Components";
 import useUserContext from "../Context/UserContext";
-import { icons } from "../assets/icons";
+import { icons } from "../Assets/icons";
 import { useState } from "react";
 
 export default function SettingsPage() {
