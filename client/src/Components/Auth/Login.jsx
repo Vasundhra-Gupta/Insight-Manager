@@ -1,7 +1,7 @@
 import { useState } from "react";
-import useUserContext from "../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../../Services/authService";
+import { useUserContext } from "../../Context";
+import { authService } from "../../Services";
 import { Button } from "..";
 
 export default function Login({ className = "" }) {
@@ -97,7 +97,7 @@ export default function Login({ className = "" }) {
 
             <form onSubmit={handleSubmit} className="">
                 {inputElements}
-                
+
                 <div>
                     <Button
                         onMouseOver={onMouseOver}

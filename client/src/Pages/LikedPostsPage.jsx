@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { LikedPostView } from "../Components";
-import { likeService } from "../Services/likeService";
 import { useNavigate } from "react-router-dom";
+import { LikedPostView } from "../Components";
+import { likeService } from "../Services";
+import { paginate } from "../Utils";
 import { icons } from "../Assets/icons";
-import paginate from "../Utils/pagination";
 import { LIMIT } from "../Constants/constants";
 
 export default function LikedPostsPage() {
@@ -35,13 +35,13 @@ export default function LikedPostsPage() {
     }, [page]);
 
     // displaying posts
-    const postElements = posts?.map((post, index) =>
-        index + 1 === posts.length ? (
-            <LikedPostView key={post.post_id} post={post} reference={paginateRef} />
-        ) : (
-            <LikedPostView key={post.post_id} post={post} reference={null} />
-        )
-    );
+    const postElements = posts?.map((post, index) => (
+        <LikedPostView
+            key={post.post_id}
+            post={post}
+            reference={index + 1 === posts.length ? paginateRef : null}
+        />
+    ));
 
     return (
         <div>
@@ -61,7 +61,7 @@ export default function LikedPostsPage() {
                     {postElements}
                 </div>
             ) : (
-                <div>No posts found !!</div>
+                <div>No liked posts !!</div>
             )}
         </div>
     );

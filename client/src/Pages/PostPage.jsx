@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, NavLink } from "react-router-dom";
-import { postService } from "../Services/postService";
+import { followerService, likeService, postService } from "../Services";
 import { Button, Comments, Recemendations } from "../Components";
-import { formatDateRelative } from "../Utils/formatDate";
+import { formatDateRelative } from "../Utils";
+import { useUserContext } from "../Context";
 import { icons } from "../Assets/icons";
-import { likeService } from "../Services/likeService";
-import { followerService } from "../Services/followerService";
 import parse from "html-react-parser";
-import useUserContext from "../Context/UserContext";
 
 export default function PostPage() {
     const { postId } = useParams();

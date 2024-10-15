@@ -13,6 +13,7 @@ import WatchHistoryPage from "./WatchHistoryPage";
 import LikedPostsPage from "./LikedPostsPage";
 import AdminPage from "./AdminPage";
 import UpdatePostPage from "./UpdatePostPage";
+import SavedPostsPage from "./SavedPostsPage";
 
 export {
     HomePage,
@@ -30,4 +31,5 @@ export {
     LikedPostsPage,
     AdminPage,
     UpdatePostPage,
+    SavedPostsPage,
 };

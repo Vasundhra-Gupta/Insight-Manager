@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { commentService } from "../../Services/commentService";
 import { useNavigate } from "react-router-dom";
+import { commentService } from "../../Services";
 import { Comment, Button } from "..";
 
 export default function Comments({ postId }) {

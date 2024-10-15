@@ -1,9 +1,9 @@
 import { icons } from "../Assets/icons";
-import { Button, WatchHistoryView } from "../Components";
+import { Button, PostListView } from "../Components";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { userService } from "../Services/userService";
-import paginate from "../Utils/pagination";
+import { userService } from "../Services";
+import { paginate, formatDateRelative } from "../Utils";
 import { LIMIT } from "../Constants/constants";
 
 export default function WatchHistoryPage() {
@@ -16,7 +16,6 @@ export default function WatchHistoryPage() {
     // pagination
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
-    // fetching the posts
     useEffect(() => {
         (async function getPosts() {
             try {
@@ -46,14 +45,18 @@ export default function WatchHistoryPage() {
         }
     }
 
-    // displaying posts
-    const postElements = posts?.map((post, index) =>
-        index + 1 === posts.length ? (
-            <WatchHistoryView key={post.post_id} post={post} reference={paginateRef} />
-        ) : (
-            <WatchHistoryView key={post.post_id} post={post} reference={null} />
-        )
-    );
+    const postElements = posts?.map((post, index) => (
+        <PostListView
+            key={post.post_id}
+            post={post}
+            reference={index + 1 === posts.length ? paginateRef : null}
+        >
+            {/* children */}
+            <div className="text-sm absolute bottom-2 right-2">
+                watched {formatDateRelative(post.watchedAt)}
+            </div>
+        </PostListView>
+    ));
 
     return (
         <div className="w-full h-full overflow-scroll">
@@ -86,7 +89,7 @@ export default function WatchHistoryPage() {
                     </div>
                 </div>
             ) : (
-                <div>No posts found !!</div>
+                <div>No read posts !!</div>
             )}
         </div>
     );

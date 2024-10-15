@@ -1,5 +1,5 @@
-import { UpdateCoverImage } from "..";
 import { useRef } from "react";
+import { UpdateCoverImage } from "..";
 
 export default function UpdateCoverImagePopup({ setUpdateCoverImagePopup }) {
     const ref = useRef();

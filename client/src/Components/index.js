@@ -18,8 +18,8 @@ import UpdateAvatar from "./User/UpdateAvatar";
 import UpdateCoverImage from "./User/UpdateCoverImage";
 import PostCardView from "./Post/PostCardView";
 import PostListView from "./Post/PostListView";
-import WatchHistoryView from "./Post/WatchHistoryView";
 import LikedPostView from "./Post/LikedPostView";
+import SavedPostView from "./Post/SavedPostView";
 import Recemendations from "./Post/Recemendations";
 import AdminPostRow from "./Post/AdminPostRow";
 import ChannelAbout from "./Channel/ChannelAbout";
@@ -54,6 +54,6 @@ export {
     ChannelPosts,
     Comment,
     Comments,
-    WatchHistoryView,
     LikedPostView,
+    SavedPostView,
 };

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { Button } from "../Components";
-import { userService } from "../Services/userService";
-import { followerService } from "../Services/followerService";
 import { useParams, useNavigate, NavLink, Outlet } from "react-router-dom";
-import useChannelContext from "../Context/ChannelContext";
-import useUserContext from "../Context/UserContext";
+import { Button } from "../Components";
+import { userService, followerService } from "../Services";
+import { useChannelContext, useUserContext } from "../Context";
 
 export default function ChannelPage() {
     const { userName } = useParams();

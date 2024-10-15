@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { authService } from "../Services/authService";
-import useUserContext from "../Context/UserContext";
+import { authService } from "../Services";
+import { useUserContext } from "../Context";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../Components";
-import verifyExpression from "../Utils/regex";
-import fileRestrictions from "../Utils/fileRestrictions";
+import { verifyExpression, fileRestrictions } from "../Utils";
 
 export default function RegisterPage() {
     const [inputs, setInputs] = useState({

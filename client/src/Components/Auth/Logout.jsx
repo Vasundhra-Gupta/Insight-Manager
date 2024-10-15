@@ -1,7 +1,7 @@
 import { useState } from "react";
-import useUserContext from "../../Context/UserContext";
-import { authService } from "../../Services/authService";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../Context";
+import { authService } from "../../Services";
 import { Button } from "..";
 
 export default function Logout() {

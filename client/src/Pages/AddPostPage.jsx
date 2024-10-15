@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { fileRestrictions, verifyExpression } from "../Utils";
 import { Button, RTE } from "../Components";
-import fileRestrictions from "../Utils/fileRestrictions";
-import verifyExpression from "../Utils/regex";
-import { postService } from "../Services/postService";
-import useUserContext from "../Context/UserContext";
+import { useUserContext } from "../Context";
+import { postService } from "../Services";
 
 export default function AddPostPage() {
     const [inputs, setInputs] = useState({

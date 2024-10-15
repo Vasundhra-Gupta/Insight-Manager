@@ -1,13 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { formatDateRelative } from "../../Utils/formatDate";
+import { formatDateRelative } from "../../Utils";
 
-export default function PostListView({ post, reference }) {
+export default function PostListView({ post, reference, children }) {
     const {
         post_id,
         post_image,
-        post_views,
+        totalViews,
         post_title,
-        post_content,
         post_createdAt,
         firstName,
         lastName,
@@ -16,13 +15,12 @@ export default function PostListView({ post, reference }) {
     } = post;
 
     const navigate = useNavigate();
-    const formattedCreatedAt = formatDateRelative(post_createdAt);
 
     return (
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="cursor-pointer flex flex-col sm:flex-row items-start justify-start h-[300px] w-full gap-x-4 pr-4 border-[0.01rem]"
+            className="relative cursor-pointer flex flex-col sm:flex-row items-start justify-start h-[300px] w-full gap-x-4 pr-4 border-[0.01rem]"
         >
             <div className="h-full w-full">
                 <img alt="post image" src={post_image} className="h-full" />
@@ -54,9 +52,11 @@ export default function PostListView({ post, reference }) {
                 </Link>
 
                 <div className="text-sm text-[#b0b0b0]">
-                    {post_views} views &bull; {formattedCreatedAt}
+                    {totalViews} views &bull; {formatDateRelative(post_createdAt)}
                 </div>
             </div>
+
+            {children}
         </div>
     );
 }

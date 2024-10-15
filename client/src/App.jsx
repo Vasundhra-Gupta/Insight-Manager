@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Layout } from "./Components";
-import useUserContext from "./Context/UserContext";
-import { authService } from "./Services/authService";
 import { useNavigate } from "react-router-dom";
+import { Layout } from "./Components";
+import { useUserContext } from "./Context";
+import { authService } from "./Services";
 
 export default function App() {
     const { setUser } = useUserContext();

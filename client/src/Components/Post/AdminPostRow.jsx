@@ -1,8 +1,8 @@
-import { icons } from "../../Assets/icons";
-import { formatDateExact } from "../../Utils/formatDate";
-import { Button } from "..";
-import { postService } from "../../Services/postService";
 import { useNavigate } from "react-router-dom";
+import { icons } from "../../Assets/icons";
+import { formatDateExact } from "../../Utils";
+import { Button } from "..";
+import { postService } from "../../Services";
 
 export default function AdminPostRow({ post, reference, setPosts }) {
     const {

@@ -1,5 +1,5 @@
-import { UpdateAvatar } from "..";
 import { useRef } from "react";
+import { UpdateAvatar } from "..";
 
 export default function UpdateAvatarPopup({ setUpdateAvatarPopup }) {
     const ref = useRef();

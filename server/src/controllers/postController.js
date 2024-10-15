@@ -318,12 +318,17 @@ const toggleSavePost = async (req, res) => {
 const getSavedPosts = async (req, res) => {
     try {
         const { user_id } = req.user;
-        const { orderBy = "desc" } = req.query;
+        const { orderBy = "desc", limit = 10, page = 1 } = req.query;
         if (!user_id) {
             return res.status(BAD_REQUEST).json("MISSING_USERID");
         }
-        const response = await postObject.getSavedPosts(user_id, orderBy);
-        return res.status(OK).json(response);
+        const savedPosts = await postObject.getSavedPosts(
+            user_id,
+            orderBy,
+            Number(limit),
+            Number(page)
+        );
+        return res.status(OK).json(savedPosts);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: "something happened wrong while getting saved posts",

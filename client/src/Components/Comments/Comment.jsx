@@ -1,10 +1,9 @@
-import { formatDateRelative } from "../../Utils/formatDate";
+import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { commentService, likeService } from "../../Services";
+import { formatDateRelative } from "../../Utils";
 import { icons } from "../../Assets/icons";
 import { Button } from "..";
-import { NavLink, useNavigate } from "react-router-dom";
-import { likeService } from "../../Services/likeService";
-import { useEffect, useState } from "react";
-import { commentService } from "../../Services/commentService";
 
 export default function Comment({ commentId }) {
     const [comment, setComment] = useState(null);

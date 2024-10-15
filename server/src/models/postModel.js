@@ -293,26 +293,54 @@ export class SQLposts extends Iposts {
         }
     }
 
-    async getSavedPosts(userId, orderBy) {
+    async getSavedPosts(userId, orderBy, limit, page) {
         try {
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
             const q = `
-                    SELECT * 
-                    FROM post_owner_view v
-                    INNER JOIN saved_posts s 
-                    ON v.post_id = s.post_id 
+                    SELECT
+                    	c.user_id,
+                        c.user_name AS userName,
+                        c.user_firstName AS firstName,
+                        c.user_lastName lastName,
+                        c.user_avatar AS avatar,
+                        p.post_id, 
+                        p.post_updatedAt,
+                        p.post_createdAt, 
+                        p.post_title, 
+                        p.post_content, 
+                        p.totalViews,
+                        p.post_image
+                    FROM post_view p
+                    JOIN channel_view c
+                    ON p.post_ownerId = c.user_id 
+                    JOIN saved_posts s
+                    ON p.post_id = s.post_id 
                     WHERE s.user_id = ?
-                    ORDER BY v.post_updatedAt ${orderBy}
+                    ORDER BY p.post_updatedAt ${orderBy.toUpperCase()} 
+                    LIMIT ? OFFSET ?
                 `;
-            const [savedPosts] = await connection.query(q, [userId]);
-            if (!savedPosts.length) {
+
+            const offset = (page - 1) * limit;
+
+            const countQ = "SELECT COUNT(*) AS totalPosts FROM saved_posts WHERE user_id = ?";
+
+            const [[{ totalPosts }]] = await connection.query(countQ, [userId]);
+            const [posts] = await connection.query(q, [userId, limit, offset]);
+            if (!posts?.length) {
                 return { message: "NO_SAVED_POSTS" };
             }
 
-            return savedPosts;
+            const totalPages = Math.ceil(totalPosts / limit);
+            const hasNextPage = page < totalPages;
+            const hasPrevPage = page > 1;
+
+            return {
+                postsInfo: { totalPosts, totalPages, hasNextPage, hasPrevPage },
+                posts,
+            };
         } catch (err) {
             throw err;
         }

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Button from "../General/Button";
-import verifyExpression from "../../Utils/regex";
+import { verifyExpression } from "../../Utils";
 import { useNavigate } from "react-router-dom";
-import { userService } from "../../Services/userService";
+import { userService } from "../../Services";
+import { Button } from "..";
 
 export default function UpdatePassword() {
     const initialInputs = {

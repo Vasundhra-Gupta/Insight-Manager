@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../Context";
+import { verifyExpression } from "../../Utils";
+import { userService } from "../../Services";
 import { Button } from "..";
-import useUserContext from "../../Context/UserContext";
-import verifyExpression from "../../Utils/regex";
-import { userService } from "../../Services/userService";
 
 export default function UpdateAccountDetails() {
     const { user, setUser } = useUserContext();

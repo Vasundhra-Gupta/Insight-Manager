@@ -1,7 +1,7 @@
-import useUserContext from "../../Context/UserContext";
+import { useUserContext } from "../../Context";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { authService } from "../../Services/authService";
+import { authService } from "../../Services";
 import { Button } from "..";
 
 export default function DeleteAccount({ className = "" }) {

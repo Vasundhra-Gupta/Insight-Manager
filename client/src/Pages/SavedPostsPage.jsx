@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { PostListView } from "../Components";
+import { Button, SavedPostView } from "../Components";
 import { postService } from "../Services";
-import { paginate } from "../Utils";
+import { useNavigate } from "react-router-dom";
 import { icons } from "../Assets/icons";
+import { paginate } from "../Utils";
 import { LIMIT } from "../Constants/constants";
 
-export default function HomePage() {
+export default function SavedPostsPage() {
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
@@ -16,12 +16,11 @@ export default function HomePage() {
     // pagination
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
-    // fetching the posts
     useEffect(() => {
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getRandomPosts(page, LIMIT);
+                const res = await postService.getSavedPosts(LIMIT, page);
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
@@ -34,13 +33,23 @@ export default function HomePage() {
         })();
     }, [page]);
 
-    // displaying posts
     const postElements = posts?.map((post, index) => (
-        <PostListView
+        <SavedPostView
             key={post.post_id}
             post={post}
             reference={index + 1 === posts.length ? paginateRef : null}
-        />
+        >
+            {/* children */}
+            <div>
+                <Button
+                    btnText={<div className="size-[20px]">{icons.delete}</div>}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        removeFromLiked();
+                    }}
+                />
+            </div>
+        </SavedPostView>
     ));
 
     return (
@@ -53,7 +62,7 @@ export default function HomePage() {
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
                             {icons.loading}
                         </div>
-                        <span className="text-xl ml-3">Please wait . . .</span>
+                        <span className="text-xl ml-3">Please wait...</span>
                     </div>
                 )
             ) : postElements.length > 0 ? (
@@ -61,7 +70,7 @@ export default function HomePage() {
                     {postElements}
                 </div>
             ) : (
-                <div>No posts found !!</div>
+                <div>No saved posts !!</div>
             )}
         </div>
     );

@@ -1,10 +1,10 @@
-import useUserContext from "../../Context/UserContext";
-import { userService } from "../../Services/userService";
 import { useState, useRef } from "react";
-import { Button } from "..";
-import { icons } from "../../Assets/icons";
-import fileRestrictions from "../../Utils/fileRestrictions";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../Context";
+import { fileRestrictions } from "../../Utils";
+import { userService } from "../../Services";
+import { icons } from "../../Assets/icons";
+import { Button } from "..";
 
 export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     const { user, setUser } = useUserContext();

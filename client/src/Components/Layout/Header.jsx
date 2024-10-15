@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button, Logout } from "..";
-import useUserContext from "../../Context/UserContext";
+import { useUserContext } from "../../Context";
 
 export default function Header() {
     const { user, setUser } = useUserContext();

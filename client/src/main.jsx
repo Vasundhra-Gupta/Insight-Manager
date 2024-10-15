@@ -26,6 +26,7 @@ import {
     AddPostPage,
     AdminPage,
     UpdatePostPage,
+    SavedPostsPage,
 } from "./Pages";
 
 import { UserContextProvider } from "./Context/UserContext";
@@ -51,6 +52,8 @@ const router = createBrowserRouter(
             <Route path="update/:postId" element={<UpdatePostPage />} />
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
+            <Route path="saved" element={<SavedPostsPage />} />
+            <Route path="support" element={<SupportPage />} />
             <Route
                 path="channel/:userName"
                 element={
@@ -75,7 +78,6 @@ const router = createBrowserRouter(
                 <Route path="password" element={<UpdatePassword />} />
                 <Route path="delete-account" element={<DeleteAccount />} />
             </Route>
-            <Route path="support" element={<SupportPage />} />
             <Route
                 path="admin"
                 element={

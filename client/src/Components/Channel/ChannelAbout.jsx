@@ -1,6 +1,6 @@
-import useChannelContext from "../../Context/ChannelContext";
 import { NavLink } from "react-router-dom";
-import { formatDateExact } from "../../Utils/formatDate";
+import { useChannelContext } from "../../Context";
+import { formatDateExact } from "../../Utils";
 import { icons } from "../../Assets/icons";
 
 export default function ChannelAbout() {

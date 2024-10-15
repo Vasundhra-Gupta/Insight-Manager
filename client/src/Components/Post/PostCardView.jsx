@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { formatDateRelative } from "../../Utils/formatDate";
+import { formatDateRelative } from "../../Utils";
 
 export default function PostCardView({ post, reference, isHomePage = false }) {
     const {
@@ -15,7 +15,6 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
     } = post;
 
     const navigate = useNavigate();
-    const formattedCreatedAt = formatDateRelative(post_createdAt);
 
     return (
         <div
@@ -30,10 +29,7 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
             {isHomePage ? (
                 <div className="flex items-center justify-start gap-y-4">
                     <div>
-                        <Link
-                            to={`/channel/${userName}`}
-                            onClick={(e) => e.stopPropagation()}
-                        >
+                        <Link to={`/channel/${userName}`} onClick={(e) => e.stopPropagation()}>
                             <img alt="post owner avatar" src={avatar} />
                         </Link>
                     </div>
@@ -46,7 +42,7 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
                         </div>
 
                         <div className="text-sm text-[#888787]">
-                            {post_views} views &bull; {formattedCreatedAt}
+                            {post_views} views &bull; {formatDateRelative(post_createdAt)}
                         </div>
                     </div>
                 </div>
@@ -55,7 +51,7 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
                     <div className="text-xl font-medium text-white">{post_title}</div>
 
                     <div className="text-sm text-[#888787]">
-                        {post_views} views &bull; {formattedCreatedAt}
+                        {post_views} views &bull; {formatDateRelative(post_createdAt)}
                     </div>
                 </div>
             )}

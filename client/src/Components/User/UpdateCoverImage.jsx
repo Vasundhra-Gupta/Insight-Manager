@@ -1,10 +1,10 @@
-import useUserContext from "../../Context/UserContext";
 import { useState, useRef } from "react";
-import { Button } from "..";
-import fileRestrictions from "../../Utils/fileRestrictions";
-import { icons } from "../../Assets/icons";
-import { userService } from "../../Services/userService";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../Context";
+import { fileRestrictions } from "../../Utils";
+import { userService } from "../../Services";
+import { icons } from "../../Assets/icons";
+import { Button } from "..";
 
 export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }) {
     const { user, setUser } = useUserContext();
