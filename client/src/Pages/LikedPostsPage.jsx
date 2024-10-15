@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LikedPostView } from "../Components";
 import { likeService } from "../Services/likeService";
 import { useNavigate } from "react-router-dom";
 import { icons } from "../Assets/icons";
+import paginate from "../Utils/pagination";
+import { LIMIT } from "../Constants/constants";
 
 export default function LikedPostsPage() {
     const [posts, setPosts] = useState([]);
@@ -10,31 +12,16 @@ export default function LikedPostsPage() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const limit = 5;
 
     // pagination
-    let observer;
-    const paginateRef = useCallback(
-        function (lastPostNode) {
-            if (loading) return;
-            if (observer) observer.disconnect();
-            observer = new IntersectionObserver((entries) => {
-                const lastPost = entries[0];
-                if (lastPost.isIntersecting && postsInfo.hasNextPage) {
-                    setPage((prev) => prev + 1);
-                }
-            });
-            if (lastPostNode) observer.observe(lastPostNode);
-        },
-        [postsInfo.hasNextPage]
-    );
+    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     // fetching the posts
     useEffect(() => {
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await likeService.getLikedPosts(limit, page);
+                const res = await likeService.getLikedPosts(LIMIT, page);
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);

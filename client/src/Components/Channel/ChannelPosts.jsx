@@ -16,14 +16,13 @@ export default function ChannelPosts() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const limit = 10;
 
     // fetching posts
     useEffect(() => {
         (async function getChannelPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getPosts(channel.user_id, limit, page);
+                const res = await postService.getPosts(channel.user_id, LIMIT, page);
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);

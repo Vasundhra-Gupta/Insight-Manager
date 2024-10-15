@@ -17,7 +17,6 @@ export default function AdminPage() {
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
-    const limit = 5;
 
     useEffect(() => {
         (async function getChannelProfile() {
@@ -39,7 +38,7 @@ export default function AdminPage() {
         (async function getChannelPosts() {
             try {
                 setPostsLoading(true);
-                const res = await postService.getPosts(user.user_id, limit, page);
+                const res = await postService.getPosts(user.user_id, LIMIT, page);
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);

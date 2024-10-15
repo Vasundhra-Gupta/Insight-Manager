@@ -66,7 +66,7 @@ export default function Comment({ commentId }) {
                             ...prev,
                             isDisliked: true,
                             isLiked: false,
-                            dislikes: prev.dislikes + 1, 
+                            dislikes: prev.dislikes + 1,
                             likes: prev.isLiked ? prev.likes - 1 : prev.likes,
                         };
                     }
@@ -111,6 +111,7 @@ export default function Comment({ commentId }) {
 
                         <div className="flex items-center justify-start gap-2">
                             <Button
+                                onClick={handleLike}
                                 btnText={
                                     <div className="flex items-center justify-center gap-2">
                                         <div
@@ -125,10 +126,10 @@ export default function Comment({ commentId }) {
                                         <div className="">{comment.likes}</div>
                                     </div>
                                 }
-                                onClick={handleLike}
                             />
 
                             <Button
+                                onClick={handleDislike}
                                 btnText={
                                     <div className="flex items-center justify-center gap-2">
                                         <div
@@ -143,7 +144,6 @@ export default function Comment({ commentId }) {
                                         <div className="">{comment.dislikes}</div>
                                     </div>
                                 }
-                                onClick={handleDislike}
                             />
                         </div>
                     </div>

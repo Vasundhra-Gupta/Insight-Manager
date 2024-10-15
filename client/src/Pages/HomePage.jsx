@@ -11,7 +11,6 @@ export default function HomePage() {
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const limit = 5;
 
     // pagination
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
@@ -21,7 +20,7 @@ export default function HomePage() {
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getRandomPosts(page, limit);
+                const res = await postService.getRandomPosts(page, LIMIT);
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);

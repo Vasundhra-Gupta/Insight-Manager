@@ -11,7 +11,6 @@ export default function LikedPostView({ post, reference }) {
         post_image,
         totalViews,
         post_title,
-        post_content,
         post_updatedAt,
         category_name,
         firstName,
@@ -82,10 +81,6 @@ export default function LikedPostView({ post, reference }) {
 
                 <div className="text-sm text-[#b0b0b0]">
                     {totalViews} views &bull; {formatDateRelative(post_updatedAt)}
-                </div>
-
-                <div className="text-ellipsis line-clamp-2 text-sm text-[#e1e1e1]">
-                    {post_content}
                 </div>
             </div>
 

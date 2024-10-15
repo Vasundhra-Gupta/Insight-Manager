@@ -6,6 +6,7 @@ export default function RTE({ defaultValue = "", onChange = null, height = 500, 
             <Editor
                 apiKey="j9kfm3dyfhatgtujh4rx6vidqe9j7otmi2ij6rjr3yqmpwa8"
                 initialValue={defaultValue}
+                onEditorChange={onChange}
                 init={{
                     menubar: true,
                     height: height,
@@ -33,7 +34,6 @@ export default function RTE({ defaultValue = "", onChange = null, height = 500, 
                     content_style:
                         "body { font-family: Helvetica, Arial, sans-serif; font-size:14px; }",
                 }}
-                onEditorChange={onChange}
             />
         </div>
     );

@@ -5,7 +5,7 @@ import { icons } from "../Assets/icons";
 import { useState } from "react";
 
 export default function SettingsPage() {
-    const { user, setUser } = useUserContext();
+    const { user } = useUserContext();
     const [updateAvatarPopup, setUpdateAvatarPopup] = useState(false);
     const [updateCoverImagePopup, setUpdateCoverImagePopup] = useState(false);
 

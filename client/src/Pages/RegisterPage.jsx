@@ -29,10 +29,8 @@ export default function RegisterPage() {
     });
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
-    const { user, setUser } = useUserContext();
+    const { setUser } = useUserContext();
     const navigate = useNavigate();
-
-    /* Methods */
 
     async function handleChange(e) {
         const { value, name } = e.target;

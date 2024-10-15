@@ -12,7 +12,7 @@ export default function Login({ className = "" }) {
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState("");
-    const { user, setUser } = useUserContext();
+    const { setUser } = useUserContext();
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -97,7 +97,7 @@ export default function Login({ className = "" }) {
 
             <form onSubmit={handleSubmit} className="">
                 {inputElements}
-
+                
                 <div>
                     <Button
                         onMouseOver={onMouseOver}

@@ -6,7 +6,7 @@ import { Button } from "..";
 
 export default function Logout() {
     const [loading, setLoading] = useState(false);
-    const { user, setUser } = useUserContext();
+    const { setUser } = useUserContext();
     const navigate = useNavigate();
 
     async function handleClick() {

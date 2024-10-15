@@ -7,7 +7,6 @@ export default function WatchHistoryView({ post, reference }) {
         post_image,
         totalViews,
         post_title,
-        post_content,
         post_createdAt,
         watchedAt,
         firstName,
@@ -58,11 +57,9 @@ export default function WatchHistoryView({ post, reference }) {
                     {totalViews} views &bull; {formattedCreatedAt}
                 </div>
 
-                <div className="text-ellipsis line-clamp-2 text-sm text-[#e1e1e1]">
-                    {post_content}
+                <div className="text-sm absolute bottom-2 right-2">
+                    Watched {formatDateRelative(watchedAt)}
                 </div>
-
-                <div className="text-sm absolute bottom-2 right-2">Watched {formatDateRelative(watchedAt)}</div>
             </div>
         </div>
     );

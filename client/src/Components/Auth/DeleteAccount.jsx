@@ -7,7 +7,7 @@ import { Button } from "..";
 export default function DeleteAccount({ className = "" }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const { user, setUser } = useUserContext();
+    const { setUser } = useUserContext();
     const navigate = useNavigate();
     const [check, setCheck] = useState(false);
     const [disabled, setDisabled] = useState(false);

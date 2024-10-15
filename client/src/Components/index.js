@@ -2,15 +2,12 @@ import Header from "./Layout/Header";
 import Footer from "./Layout/Footer";
 import Sidebar from "./Layout/Sidebar";
 import Layout from "./Layout/Layout";
-
 import Button from "./General/Button";
 import RTE from "./General/RTE";
-
 import LoginPopup from "./Popups/LoginPopup";
 import DeleteAccountPopup from "./Popups/DeleteAccountPopup";
 import UpdateAvatarPopup from "./Popups/UpdateAvatarPopup";
 import UpdateCoverImagePopup from "./Popups/UpdateCoverImagePopup";
-
 import DeleteAccount from "./Auth/DeleteAccount";
 import Logout from "./Auth/Logout";
 import Login from "./Auth/Login";
@@ -19,17 +16,14 @@ import UpdateChannelDetails from "./User/UpdateChannelDetails";
 import UpdatePassword from "./User/UpdatePassword";
 import UpdateAvatar from "./User/UpdateAvatar";
 import UpdateCoverImage from "./User/UpdateCoverImage";
-
 import PostCardView from "./Post/PostCardView";
 import PostListView from "./Post/PostListView";
-import WatchHistoryView from "./Post/WatchistoryView";
+import WatchHistoryView from "./Post/WatchHistoryView";
 import LikedPostView from "./Post/LikedPostView";
 import Recemendations from "./Post/Recemendations";
 import AdminPostRow from "./Post/AdminPostRow";
-
 import ChannelAbout from "./Channel/ChannelAbout";
 import ChannelPosts from "./Channel/ChannelPosts";
-
 import Comments from "./Comments/Comments";
 import Comment from "./Comments/Comment";
 
