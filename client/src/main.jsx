@@ -24,6 +24,8 @@ import {
     WatchHistoryPage,
     LikedPostsPage,
     AddPostPage,
+    AdminPage,
+    UpdatePostPage,
 } from "./Pages";
 
 import { UserContextProvider } from "./Context/UserContext";
@@ -45,7 +47,8 @@ const router = createBrowserRouter(
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
-            <Route path="add-post" element={<AddPostPage />} />
+            <Route path="add" element={<AddPostPage />} />
+            <Route path="update/:postId" element={<UpdatePostPage />} />
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route
@@ -73,6 +76,14 @@ const router = createBrowserRouter(
                 <Route path="delete-account" element={<DeleteAccount />} />
             </Route>
             <Route path="support" element={<SupportPage />} />
+            <Route
+                path="admin"
+                element={
+                    <Redirect path="/login">
+                        <AdminPage />
+                    </Redirect>
+                }
+            />
             <Route path="server-error" element={<ServerErrorPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Route>

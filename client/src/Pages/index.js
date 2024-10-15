@@ -11,6 +11,8 @@ import ServerErrorPage from "./ServerErrorPage";
 import Redirect from "./Redirect";
 import WatchHistoryPage from "./WatchHistoryPage";
 import LikedPostsPage from "./LikedPostsPage";
+import AdminPage from "./AdminPage";
+import UpdatePostPage from "./UpdatePostPage";
 
 export {
     HomePage,
@@ -26,4 +28,6 @@ export {
     Redirect,
     WatchHistoryPage,
     LikedPostsPage,
+    AdminPage,
+    UpdatePostPage,
 };

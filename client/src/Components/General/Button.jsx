@@ -1,11 +1,18 @@
-export default function Button({ disabled = false, className = "", btnText, ...props }) {
+export default function Button({
+    disabled = false,
+    className = "px-[8px] py-[5px] text-2xl rounded-lg overflow-hidden hover:border-[#b5b4b4] hover:bg-slate-800",
+    btnText,
+    ...props
+}) {
     return (
-        <button
-            disabled={disabled}
-            {...props}
-            className={`disabled:cursor-not-allowed bg-slate-500 ${className}`}
-        >
-            {btnText}
-        </button>
+        <div className={`w-fit h-fit bg-slate-600 ${className}`}>
+            <button
+                disabled={disabled}
+                {...props}
+                className="disabled:cursor-not-allowed h-full w-full"
+            >
+                {btnText}
+            </button>
+        </div>
     );
 }

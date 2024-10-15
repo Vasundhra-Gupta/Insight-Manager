@@ -25,6 +25,7 @@ import PostListView from "./Post/PostListView";
 import WatchHistoryView from "./Post/WatchistoryView";
 import LikedPostView from "./Post/LikedPostView";
 import Recemendations from "./Post/Recemendations";
+import AdminPostRow from "./Post/AdminPostRow";
 
 import ChannelAbout from "./Channel/ChannelAbout";
 import ChannelPosts from "./Channel/ChannelPosts";
@@ -54,6 +55,7 @@ export {
     PostCardView,
     PostListView,
     Recemendations,
+    AdminPostRow,
     ChannelAbout,
     ChannelPosts,
     Comment,

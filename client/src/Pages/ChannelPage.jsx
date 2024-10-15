@@ -108,7 +108,7 @@ export default function ChannelPage() {
 
                 {/* follow btn */}
                 {user?.user_name === channel.user_name ? (
-                    <div className="bg-blue-400">
+                    <div className="">
                         <Button
                             btnText="Edit"
                             onClick={() => {
@@ -117,7 +117,7 @@ export default function ChannelPage() {
                         />
                     </div>
                 ) : (
-                    <div className="bg-blue-400">
+                    <div className="">
                         <Button
                             btnText={channel.isFollowed ? "UnFollow" : "Follow"}
                             onClick={toggleFollow}

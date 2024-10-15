@@ -40,16 +40,16 @@ export default function PostPage() {
                     if (prev.isLiked) {
                         return {
                             ...prev,
-                            total_likes: prev.total_likes - 1,
+                            totalLikes: prev.totalLikes - 1,
                             isLiked: false,
                         };
                     } else {
                         return {
                             ...prev,
-                            total_likes: prev.total_likes + 1,
-                            total_dislikes: prev.isDisliked
-                                ? prev.total_dislikes - 1
-                                : prev.total_dislikes,
+                            totalLikes: prev.totalLikes + 1,
+                            totalDislikes: prev.isDisliked
+                                ? prev.totalDislikes - 1
+                                : prev.totalDislikes,
                             isLiked: true,
                             isDisliked: false,
                         };
@@ -69,14 +69,14 @@ export default function PostPage() {
                     if (prev.isDisliked) {
                         return {
                             ...prev,
-                            total_dislikes: prev.total_dislikes - 1,
+                            totalDislikes: prev.totalDislikes - 1,
                             isDisliked: false,
                         };
                     } else {
                         return {
                             ...prev,
-                            total_dislikes: prev.total_dislikes + 1,
-                            total_likes: prev.isLiked ? prev.total_likes - 1 : prev.total_likes,
+                            totalDislikes: prev.totalDislikes + 1,
+                            totalLikes: prev.isLiked ? prev.totalLikes - 1 : prev.totalLikes,
                             isDisliked: true,
                             isLiked: false,
                         };
@@ -193,7 +193,7 @@ export default function PostPage() {
                                             >
                                                 {icons.like}
                                             </div>
-                                            <div>{post.total_likes}</div>
+                                            <div>{post.totalLikes}</div>
                                         </div>
                                     }
                                     onClick={toggleLike}
@@ -210,7 +210,7 @@ export default function PostPage() {
                                             >
                                                 {icons.dislike}
                                             </div>
-                                            <div>{post.total_dislikes}</div>
+                                            <div>{post.totalDislikes}</div>
                                         </div>
                                     }
                                     onClick={toggleDislike}

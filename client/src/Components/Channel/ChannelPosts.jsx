@@ -1,19 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useChannelContext from "../../Context/ChannelContext";
 import { postService } from "../../Services/postService";
 import { useNavigate } from "react-router-dom";
 import { icons } from "../../Assets/icons";
 import PostCardView from "../Post/PostCardView";
+import { Button } from "..";
+import useUserContext from "../../Context/UserContext";
+import paginate from "../../Utils/pagination";
 
 export default function ChannelPosts() {
     const { channel } = useChannelContext();
+    const { user } = useUserContext();
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
-    const [postsFound, setPostsFound] = useState(true);
     const navigate = useNavigate();
-    const limit = 5;
+    const limit = 10;
 
     // fetching posts
     useEffect(() => {
@@ -24,8 +27,6 @@ export default function ChannelPosts() {
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
-                } else {
-                    setPostsFound(false);
                 }
             } catch (err) {
                 navigate("/server-error");
@@ -36,42 +37,37 @@ export default function ChannelPosts() {
     }, [channel.userName, page]);
 
     // pagination
-    let observer;
-    const paginationRef = useCallback(
-        (node) => {
-            if (loading) return;
-            if (observer) observer.disconnect();
-            observer = new IntersectionObserver((entries) => {
-                const lastPost = entries[0];
-                if (lastPost.isIntersecting && postsInfo.hasNextPage) {
-                    setPage((prev) => prev + 1);
-                }
-            });
-            if (node) observer.observe(node);
-        },
-        [postsInfo.hasNextPage]
-    );
+    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     // displaying posts
-    const postElements = posts?.map((post, index) =>
-        index + 1 === posts.length ? (
-            <PostCardView key={post.post_id} post={post} reference={paginationRef} />
-        ) : (
-            <PostCardView key={post.post_id} post={post} reference={null} />
-        )
-    );
+    const postElements = posts?.map((post, index) => (
+        <PostCardView
+            key={post.post_id}
+            post={post}
+            reference={index + 1 === posts.length ? paginateRef : null}
+        />
+    ));
 
-    if (!postsFound) return <div>No posts Found.</div>;
     return (
         <div>
-            {postElements.length > 0 && (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7">
-                    {postElements}
-                </div>
-            )}
+            <div className="w-full">
+                {user.user_name === channel.user_name && (
+                    <div className="w-full flex items-center justify-center mb-4">
+                        <Button
+                            btnText={
+                                <div className="flex items-center justify-center gap-2">
+                                    <div className="size-[20px] fill-white">{icons.plus}</div>
+                                    <div>New Post</div>
+                                </div>
+                            }
+                            onClick={() => navigate("/add")}
+                        />
+                    </div>
+                )}
+            </div>
 
-            {loading &&
-                (page === 1 ? (
+            {loading ? (
+                page === 1 ? (
                     <div className="w-full text-center">loading first batch...</div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
@@ -80,7 +76,14 @@ export default function ChannelPosts() {
                         </div>
                         <span className="text-xl ml-3">Please wait . . .</span>
                     </div>
-                ))}
+                )
+            ) : postElements.length > 0 ? (
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7">
+                    {postElements}
+                </div>
+            ) : (
+                <div>No posts found !!</div>
+            )}
         </div>
     );
 }

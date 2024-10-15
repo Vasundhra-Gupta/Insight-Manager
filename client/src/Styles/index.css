@@ -54,7 +54,7 @@ code {
     @apply block w-[60%] bg-[#161616] p-1 text-[#d6d6d6] font-thin text-[16px];
 }
 
-table {
+/* table {
     @apply table-auto border-collapse w-full my-4;
 }
 
@@ -64,11 +64,11 @@ th {
 
 td {
     @apply border px-4 py-2;
-}
+} */
 
-hr {
+/* hr {
     @apply border-t-2 border-gray-300 my-4;
-}
+} */
 
 figure {
     @apply my-4;

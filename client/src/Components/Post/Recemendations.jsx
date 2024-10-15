@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { PostListView } from "..";
 import { icons } from "../../Assets/icons";
 import { postService } from "../../Services/postService";
+import paginate from "../../Utils/pagination";
 
 export default function Recemendations({ category }) {
     const [posts, setPosts] = useState([]);
@@ -30,30 +31,16 @@ export default function Recemendations({ category }) {
     }, [category, page]);
 
     // pagination
-    let observer;
-    const paginateRef = useCallback(
-        function (lastPostNode) {
-            if (loading) return;
-            if (observer) observer.disconnect();
-            observer = new IntersectionObserver((entries) => {
-                const lastPost = entries[0];
-                if (lastPost.isIntersecting && postsInfo.hasNextPage) {
-                    setPage((prev) => prev + 1);
-                }
-            });
-            if (lastPostNode) observer.observe(lastPostNode);
-        },
-        [postsInfo.hasNextPage]
-    );
+    const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     // displaying posts
-    const postElements = posts?.map((post, index) =>
-        index + 1 === posts.length ? (
-            <PostListView key={post.post_id} post={post} reference={paginateRef} />
-        ) : (
-            <PostListView key={post.post_id} post={post} reference={null} />
-        )
-    );
+    const postElements = posts?.map((post, index) => (
+        <PostListView
+            key={post.post_id}
+            post={post}
+            reference={index + 1 === posts.length ? paginateRef : null}
+        />
+    ));
 
     return (
         <div className="w-full h-full">

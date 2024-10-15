@@ -20,7 +20,7 @@ const getRandomPosts = async (req, res) => {
         return res.status(OK).json(randomPosts);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wromg while getting random posts",
+            message: "something went wrong while getting random posts",
             error: err.message,
         });
     }

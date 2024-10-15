@@ -9,7 +9,6 @@ export default function LikedPostsPage() {
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
-    const [postsFound, setPostsFound] = useState(true);
     const navigate = useNavigate();
     const limit = 5;
 
@@ -39,8 +38,6 @@ export default function LikedPostsPage() {
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
-                } else if (res?.message && page === 1) {
-                    setPostsFound(false);
                 }
             } catch (err) {
                 navigate("/server-error");
@@ -59,28 +56,26 @@ export default function LikedPostsPage() {
         )
     );
 
-    if (!postsFound) {
-        return <div>no posts found!</div>;
-    }
     return (
         <div>
-            {postElements.length > 0 && (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
-                    {postElements}
-                </div>
-            )}
-
-            {loading &&
-                (page === 1 ? (
+            {loading ? (
+                page === 1 ? (
                     <div className="w-full text-center">loading first batch...</div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
                             {icons.loading}
                         </div>
-                        <span className="text-xl ml-3">Please wait . . .</span>
+                        <span className="text-xl ml-3">Please wait...</span>
                     </div>
-                ))}
+                )
+            ) : postElements.length > 0 ? (
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
+                    {postElements}
+                </div>
+            ) : (
+                <div>No posts found !!</div>
+            )}
         </div>
     );
 }
