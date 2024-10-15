@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Header, Footer, Sidebar } from "..";
+import { Header, Footer, Sidebar, Popup } from "..";
 
 export default function Layout() {
     return (
@@ -8,6 +8,7 @@ export default function Layout() {
             <Sidebar />
             <Outlet />
             <Footer />
+            <Popup />
         </div>
     );
 }

@@ -32,7 +32,7 @@ export default function ChannelPosts() {
                 setLoading(false);
             }
         })();
-    }, [channel.userName, page]);
+    }, [channel.user_name, page]);
 
     // pagination
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
@@ -49,7 +49,7 @@ export default function ChannelPosts() {
     return (
         <div>
             <div className="w-full">
-                {user.user_name === channel.user_name && (
+                {user?.user_name === channel.user_name && (
                     <div className="w-full flex items-center justify-center mb-4">
                         <Button
                             btnText={

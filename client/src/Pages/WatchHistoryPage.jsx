@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { userService } from "../Services";
 import { paginate, formatDateRelative } from "../Utils";
 import { LIMIT } from "../Constants/constants";
+import { useUserContext } from "../Context";
 
 export default function WatchHistoryPage() {
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const { user } = useUserContext();
     const navigate = useNavigate();
 
     // pagination
@@ -58,7 +60,9 @@ export default function WatchHistoryPage() {
         </PostListView>
     ));
 
-    return (
+    return !user ? (
+        <div>Login to see history</div>
+    ) : (
         <div className="w-full h-full overflow-scroll">
             {loading ? (
                 page === 1 ? (

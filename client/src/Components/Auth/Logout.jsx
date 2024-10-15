@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../Context";
+import { useUserContext, usePopupContext } from "../../Context";
 import { authService } from "../../Services";
 import { Button } from "..";
 
 export default function Logout() {
     const [loading, setLoading] = useState(false);
     const { setUser } = useUserContext();
+    const { setShowPopup, setPopupText } = usePopupContext();
     const navigate = useNavigate();
 
     async function handleClick() {
@@ -15,6 +16,8 @@ export default function Logout() {
             const res = await authService.logout();
             if (res && !res.message) {
                 setUser(null);
+                setShowPopup(true);
+                setPopupText("Logout Successfully");
             }
         } catch (err) {
             navigate("/servor-error");

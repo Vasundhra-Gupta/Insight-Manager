@@ -33,7 +33,6 @@ export default function Recemendations({ category }) {
     // pagination
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
-    // displaying posts
     const postElements = posts?.map((post, index) => (
         <PostListView
             key={post.post_id}

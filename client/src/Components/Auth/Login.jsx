@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../Context";
+import { useUserContext, usePopupContext } from "../../Context";
 import { authService } from "../../Services";
 import { Button } from "..";
 
@@ -13,6 +13,7 @@ export default function Login({ className = "" }) {
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState("");
     const { setUser } = useUserContext();
+    const { setShowPopup, setPopupText } = usePopupContext();
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -37,6 +38,8 @@ export default function Login({ className = "" }) {
             const res = await authService.login(inputs, setLoading);
             if (res && !res.message) {
                 setUser(res);
+                setPopupText("Login Successfully 😉");
+                setShowPopup(true);
                 navigate("/");
             } else {
                 setUser(null);

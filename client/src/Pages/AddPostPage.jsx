@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fileRestrictions, verifyExpression } from "../Utils";
 import { Button, RTE } from "../Components";
-import { useUserContext } from "../Context";
+import { usePopupContext } from "../Context";
 import { postService } from "../Services";
 
 export default function AddPostPage() {
@@ -16,7 +16,7 @@ export default function AddPostPage() {
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const navigate = useNavigate();
-    const { user } = useUserContext();
+    const { setShowPopup, setPopupText } = usePopupContext();
     const [error, setError] = useState({
         title: "",
         postImage: "",
@@ -58,7 +58,9 @@ export default function AddPostPage() {
             setLoading(true);
             const res = await postService.addPost(inputs);
             if (res && !res.message) {
-                navigate(`/post/${postId}}`);
+                setPopupText("Post Created Successfully");
+                setShowPopup(true);
+                navigate(`/post/${postId}`);
             }
         } catch (err) {
             navigate("/server-error");

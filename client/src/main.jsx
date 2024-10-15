@@ -31,6 +31,7 @@ import {
 
 import { UserContextProvider } from "./Context/UserContext";
 import { ChannelContextProvider } from "./Context/ChannelContext";
+import { PopupContextProvider } from "./Context/PopupContext";
 
 import {
     DeleteAccount,
@@ -94,8 +95,10 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
     // <StrictMode>
-    <UserContextProvider>
-        <RouterProvider router={router} />
-    </UserContextProvider>
+    <PopupContextProvider>
+        <UserContextProvider>
+            <RouterProvider router={router} />
+        </UserContextProvider>
+    </PopupContextProvider>
     // </StrictMode>,
 );

@@ -26,6 +26,7 @@ import ChannelAbout from "./Channel/ChannelAbout";
 import ChannelPosts from "./Channel/ChannelPosts";
 import Comments from "./Comments/Comments";
 import Comment from "./Comments/Comment";
+import Popup from "./Popups/Popup";
 
 export {
     Header,
@@ -56,4 +57,5 @@ export {
     Comments,
     LikedPostView,
     SavedPostView,
+    Popup,
 };

@@ -5,12 +5,14 @@ import { likeService } from "../Services";
 import { paginate } from "../Utils";
 import { icons } from "../Assets/icons";
 import { LIMIT } from "../Constants/constants";
+import { useUserContext } from "../Context";
 
 export default function LikedPostsPage() {
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const { user } = useUserContext();
     const navigate = useNavigate();
 
     // pagination
@@ -43,7 +45,9 @@ export default function LikedPostsPage() {
         />
     ));
 
-    return (
+    return !user ? (
+        <div>Login to see liked posts</div>
+    ) : (
         <div>
             {loading ? (
                 page === 1 ? (

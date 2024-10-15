@@ -121,6 +121,8 @@ export default function PostPage() {
 
     return loading ? (
         <div>loading...</div>
+    ) : Object.keys(post).length === 0 ? (
+        <div>Post Not Found !!</div>
     ) : (
         <div className="w-full h-full flex items-start justify-start gap-6 overflow-scroll">
             <div className="w-[70%] h-full">
