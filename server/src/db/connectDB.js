@@ -25,7 +25,9 @@ class DBConnection {
                         })
                         .promise();
                     const conn = await this.connection.getConnection();
-                    console.log(`Connected to SQL database successfully , port: ${conn.config.host}`);
+                    console.log(
+                        `Connected to SQL database successfully , port: ${conn.config.host}`
+                    );
                     conn.release();
                 } else {
                     throw new Error("Unsupported Database Type");
