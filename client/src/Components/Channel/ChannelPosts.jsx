@@ -7,6 +7,7 @@ import PostCardView from "../Post/PostCardView";
 import { Button } from "..";
 import useUserContext from "../../Context/UserContext";
 import paginate from "../../Utils/pagination";
+import { LIMIT } from "../../Constants/constants";
 
 export default function ChannelPosts() {
     const { channel } = useChannelContext();

@@ -23,9 +23,6 @@ export default function AddPostPage() {
         postImage: "",
     });
 
-    const defaultValue = "hello";
-    console.log(inputs);
-
     function handleChange(e) {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
@@ -62,7 +59,7 @@ export default function AddPostPage() {
             setLoading(true);
             const res = await postService.addPost(inputs);
             if (res && !res.message) {
-                navigate(`/channel/${user.user_name}`);
+                navigate(`/post/${postId}}`);
             }
         } catch (err) {
             navigate("/server-error");
@@ -73,8 +70,8 @@ export default function AddPostPage() {
 
     function onMouseOver() {
         if (
-            Object.values(inputs).some((value) => value === "") ||
-            Object.values(error).some((error) => error !== "")
+            Object.values(inputs).some((value) => !value) ||
+            Object.values(error).some((error) => error)
         ) {
             setDisabled(true);
         } else {
@@ -91,6 +88,7 @@ export default function AddPostPage() {
                 name="category"
                 id={category}
                 value={category}
+                checked={inputs.category === category} // just good for verification
                 onChange={handleChange}
             />
             <label htmlFor={category}>{category}</label>
@@ -158,9 +156,6 @@ export default function AddPostPage() {
                             <span className="text-red-500">* </span>Content :
                         </div>
                         <RTE
-                            defaultValue={defaultValue}
-                            height={450}
-                            width={"full"}
                             onChange={() =>
                                 setInputs((prev) => ({
                                     ...prev,

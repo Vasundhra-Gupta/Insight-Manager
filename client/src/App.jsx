@@ -5,7 +5,7 @@ import { authService } from "./Services/authService";
 import { useNavigate } from "react-router-dom";
 
 export default function App() {
-    const { user, setUser } = useUserContext();
+    const { setUser } = useUserContext();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 

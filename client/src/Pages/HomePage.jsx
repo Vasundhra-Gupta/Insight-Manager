@@ -4,6 +4,7 @@ import { postService } from "../Services/postService";
 import { useNavigate } from "react-router-dom";
 import { icons } from "../Assets/icons";
 import paginate from "../Utils/pagination";
+import { LIMIT } from "../Constants/constants";
 
 export default function HomePage() {
     const [posts, setPosts] = useState([]);

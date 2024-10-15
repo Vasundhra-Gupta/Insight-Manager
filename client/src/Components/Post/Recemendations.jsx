@@ -4,6 +4,7 @@ import { PostListView } from "..";
 import { icons } from "../../Assets/icons";
 import { postService } from "../../Services/postService";
 import paginate from "../../Utils/pagination";
+import { LIMIT } from "../../Constants/constants";
 
 export default function Recemendations({ category }) {
     const [posts, setPosts] = useState([]);

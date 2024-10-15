@@ -176,7 +176,7 @@ export class SQLposts extends Iposts {
                     "SELECT category_id AS categoryId FROM categories WHERE category_name = ?";
                 [[{ categoryId }]] = await connection.query(q, [category]);
                 if (!categoryId) {
-                    throw new Error({ message: "FINDING_CATEGORY_ID_DB_ISSUE" });
+                    return { message: "CATEGORY_NOT_FOUND" };
                 }
             }
             const q =
@@ -237,9 +237,14 @@ export class SQLposts extends Iposts {
 
     async updatePostDetails(postId, title, content, category, updatedAt) {
         try {
+            const q1 = "SELECT category_id AS categoryId FROM categories WHERE category_name = ?";
+            const [[{ categoryId }]] = await connection.query(q1, [category]);
+            if (!categoryId) {
+                throw new Error("CATEGORY_NOT_FOUND");
+            }
             const q =
                 "UPDATE posts SET post_title = ?, post_content = ?,post_category = ?, post_updatedAt = ? WHERE post_id = ?";
-            await connection.query(q, [title, content, category, updatedAt, postId]);
+            await connection.query(q, [title, content, categoryId, updatedAt, postId]);
             const post = await this.getPost(postId);
             if (post?.message) {
                 throw new Error("POSTDETAILS_UPDATION_DB_ISSUE");

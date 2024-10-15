@@ -64,9 +64,9 @@ th {
 
 td {
     @apply border px-4 py-2;
-} */
+} 
 
-/* hr {
+hr {
     @apply border-t-2 border-gray-300 my-4;
 } */
 

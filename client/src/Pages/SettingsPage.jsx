@@ -24,9 +24,9 @@ export default function SettingsPage() {
 
                     <div>
                         <Button
-                            btnText={icons.upload}
+                            btnText={<div className="size-[35px]">{icons.upload}</div>}
                             onClick={() => setUpdateCoverImagePopup(true)}
-                            className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] size-[35px] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
+                            className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
                         />
                     </div>
                 </div>
@@ -43,9 +43,9 @@ export default function SettingsPage() {
 
                     <div>
                         <Button
-                            btnText={icons.upload}
+                            btnText={<div className="size-[35px]">{icons.upload}</div>}
                             onClick={() => setUpdateAvatarPopup(true)}
-                            className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] size-[35px] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
+                            className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
                         />
                     </div>
                 </div>

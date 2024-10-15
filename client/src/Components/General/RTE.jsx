@@ -1,6 +1,12 @@
 import { Editor } from "@tinymce/tinymce-react";
+import { DEFAULT_RTE_TEXT } from "../../Constants/constants";
 
-export default function RTE({ defaultValue = "", onChange = null, height = 500, width = 300 }) {
+export default function RTE({
+    defaultValue = DEFAULT_RTE_TEXT,
+    onChange = null,
+    height = 450,
+    width = "full",
+}) {
     return (
         <div className="w-full h-full">
             <Editor

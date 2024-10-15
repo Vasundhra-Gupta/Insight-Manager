@@ -168,7 +168,10 @@ export default function PostPage() {
 
                             <div>
                                 {user?.user_name === post.userName ? (
-                                    <Button btnText="Edit" onClick={() => navigate("/settings")} />
+                                    <Button
+                                        btnText="Edit"
+                                        onClick={() => navigate(`/update/${post.post_id}`)}
+                                    />
                                 ) : (
                                     <Button
                                         btnText={post.isFollowed ? "Unfollow" : "Follow"}

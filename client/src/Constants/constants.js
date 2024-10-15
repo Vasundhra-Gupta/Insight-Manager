@@ -1,3 +1,3 @@
 const LIMIT = 10;
-
-export { LIMIT };
+const DEFAULT_RTE_TEXT = "Welcome to Post Manager ⭐";
+export { LIMIT, DEFAULT_RTE_TEXT };

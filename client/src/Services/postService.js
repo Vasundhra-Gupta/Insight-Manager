@@ -63,12 +63,13 @@ class PostService {
         }
     }
 
-    async updatePostDetails(title, content) {
+    async updatePostDetails(inputs, postId) {
         try {
             const res = await fetch(`/api/v1/posts/update-details/${postId}`, {
                 method: "PATCH",
                 credentials: "include",
-                body: JSON.stringify({ title, content }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(inputs), // title, content & category
             });
 
             const data = await res.json();
@@ -84,12 +85,12 @@ class PostService {
         }
     }
 
-    async updatePostImage(postImage) {
+    async updatePostImage(postImage, postId) {
         try {
             const formData = new FormData();
             formData.append("postImage", postImage);
 
-            const res = await fetch("/api/v1/posts/update-image", {
+            const res = await fetch(`/api/v1/posts/update-image/${postId}`, {
                 method: "PATCH",
                 credentials: "include",
                 body: formData,
@@ -174,12 +175,15 @@ class PostService {
         }
     }
 
-    async getSavedPosts(orderBy = "desc") {
+    async getSavedPosts(limit = 10, page = 1, orderBy = "desc") {
         try {
-            const res = await fetch(`/api/v1/posts/saved?orderBy=${orderBy}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/posts/saved?orderBy=${orderBy}&limit=${limit}&page=${page}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
 
             const data = await res.json();
             console.log(data);

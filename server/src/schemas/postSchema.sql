@@ -12,7 +12,7 @@ ADD COLUMN post_isVisible boolean DEFAULT true NOT NULL;
 ALTER TABLE posts
 ADD COLUMN post_category varchar(40);
 alter table posts
-add constraint post_category_fk FOREIGN KEY(post_category) REFERENCES categories(category_id);
+add constraint post_category_fk FOREIGN KEY(post_category) REFERENCES categories(category_id) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE TABLE saved_posts(
     post_id varchar(40),
     user_id varchar(40),
