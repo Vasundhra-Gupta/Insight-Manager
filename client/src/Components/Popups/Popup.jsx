@@ -46,7 +46,7 @@ export default function Popup() {
             }, 4000);
             return () => clearTimeout(timer); // doubt❓
         }
-    }, [showPopup]);
+    }, [popupText, showPopup]);
 
     return (
         // since we want to use exit property
@@ -71,6 +71,7 @@ export default function Popup() {
 
                     {/* Progress Bar */}
                     <motion.div
+                        key={popupText}
                         className="relative h-1 mt-3 bg-[#8871ee] rounded"
                         variants={progressVariants}
                     />

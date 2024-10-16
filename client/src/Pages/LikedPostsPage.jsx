@@ -34,7 +34,7 @@ export default function LikedPostsPage() {
                 setLoading(false);
             }
         })();
-    }, [page]);
+    }, [page,user]);
 
     // displaying posts
     const postElements = posts?.map((post, index) => (

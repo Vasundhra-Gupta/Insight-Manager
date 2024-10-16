@@ -49,7 +49,7 @@ export default function AdminPage() {
                 setPostsLoading(false);
             }
         })();
-    }, [page]);
+    }, [page, user]);
 
     const stats = [
         {

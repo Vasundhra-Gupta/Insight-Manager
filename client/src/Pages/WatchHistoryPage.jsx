@@ -33,7 +33,7 @@ export default function WatchHistoryPage() {
                 setLoading(false);
             }
         })();
-    }, [page]);
+    }, [page, user]);
 
     async function clearHistory() {
         try {

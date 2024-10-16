@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { icons } from "../Assets/icons";
 import { paginate } from "../Utils";
 import { LIMIT } from "../Constants/constants";
+import { useUserContext } from "../Context";
 
 export default function SavedPostsPage() {
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
+    const { user } = useUserContext();
     const navigate = useNavigate();
 
     // pagination
@@ -31,7 +33,7 @@ export default function SavedPostsPage() {
                 setLoading(false);
             }
         })();
-    }, [page]);
+    }, [page, user]);
 
     const postElements = posts?.map((post, index) => (
         <SavedPostView
@@ -52,7 +54,9 @@ export default function SavedPostsPage() {
         </SavedPostView>
     ));
 
-    return (
+    return !user ? (
+        <div>Login to see Saved posts</div>
+    ) : (
         <div>
             {loading ? (
                 page === 1 ? (

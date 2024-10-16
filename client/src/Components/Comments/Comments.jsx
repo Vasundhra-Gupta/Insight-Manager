@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { commentService } from "../../Services";
 import { Comment, Button } from "..";
-import { usePopupContext } from "../../Context";
+import { usePopupContext, useUserContext } from "../../Context";
 
 export default function Comments({ postId }) {
     const navigate = useNavigate();
@@ -10,7 +10,8 @@ export default function Comments({ postId }) {
     const [loading, setLoading] = useState(true);
     const [addingComment, setAddingComment] = useState(false);
     const [input, setInput] = useState("");
-    const { setShowPopup, setPopupText } = usePopupContext();
+    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { user } = useUserContext();
 
     useEffect(() => {
         (async function getComments() {
@@ -26,11 +27,16 @@ export default function Comments({ postId }) {
                 setLoading(false);
             }
         })();
-    }, [postId]);
+    }, [postId, user]);
 
     async function addComment(e) {
         e.preventDefault();
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Comment");
+                return;
+            }
             if (!input) return;
             setAddingComment(true);
             const res = await commentService.addComment(postId, input);

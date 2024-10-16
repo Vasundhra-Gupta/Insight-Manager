@@ -12,7 +12,7 @@ export class SQLcomments extends Icomments {
             const q = `  
                     SELECT 
                         v.*,
-                        IFNULL(l.is_liked, -1) AS isLiked
+                        IFNULL(l.is_liked, -1) AS isLiked    -- -1 for no interaction
                     FROM comment_view v
                     LEFT JOIN comment_likes l 
                     ON v.comment_id = l.comment_id AND l.user_id = ?

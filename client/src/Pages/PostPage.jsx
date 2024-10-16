@@ -10,7 +10,7 @@ import parse from "html-react-parser";
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
-    const { setShowPopup, setPopupText } = usePopupContext();
+    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } = usePopupContext();
     const [post, setPost] = useState({});
     const { user } = useUserContext();
     const navigate = useNavigate();
@@ -29,10 +29,15 @@ export default function PostPage() {
                 setLoading(false);
             }
         })();
-    }, [postId]);
+    }, [postId, user]);
 
     async function toggleLike() {
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Like");
+                return;
+            }
             const res = await likeService.togglePostLike(postId, true);
             if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
                 setPost((prev) => {
@@ -62,6 +67,11 @@ export default function PostPage() {
 
     async function toggleDislike() {
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Dislike");
+                return;
+            }
             const res = await likeService.togglePostLike(postId, false);
             if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
                 setPost((prev) => {
@@ -90,6 +100,11 @@ export default function PostPage() {
 
     async function toggleFollow() {
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Follow");
+                return;
+            }
             const res = await followerService.toggleFollow(post.post_ownerId);
             if (
                 res &&
@@ -108,6 +123,11 @@ export default function PostPage() {
 
     async function toggleSave() {
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Save");
+                return;
+            }
             const res = await postService.toggleSavePost(postId);
             if (
                 res &&

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Header, Footer, Sidebar, Popup } from "..";
+import { Header, Footer, Sidebar, Popup, LoginPopup } from "..";
 
 export default function Layout() {
     return (
@@ -9,6 +9,7 @@ export default function Layout() {
             <Outlet />
             <Footer />
             <Popup />
+            <LoginPopup />
         </div>
     );
 }

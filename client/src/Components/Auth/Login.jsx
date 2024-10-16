@@ -13,7 +13,8 @@ export default function Login({ className = "" }) {
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState("");
     const { setUser } = useUserContext();
-    const { setShowPopup, setPopupText } = usePopupContext();
+    const { setShowPopup, setPopupText, loginPopupText, showLoginPopup, setShowLoginPopup } =
+        usePopupContext();
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -40,7 +41,9 @@ export default function Login({ className = "" }) {
                 setUser(res);
                 setPopupText("Login Successfully 😉");
                 setShowPopup(true);
-                navigate("/");
+                if (!showLoginPopup) {
+                    navigate("/");
+                }
             } else {
                 setUser(null);
                 setError(res.message);
@@ -50,6 +53,9 @@ export default function Login({ className = "" }) {
         } finally {
             setDisabled(false);
             setLoading(false);
+            if (showLoginPopup) {
+                setShowLoginPopup(false);
+            }
         }
     }
 
@@ -96,19 +102,27 @@ export default function Login({ className = "" }) {
 
     return (
         <div className={className}>
-            {error && <div className="text-red-500">{error}</div>}
+            <div className="w-full">
+                {loginPopupText && (
+                    <div className="text-center w-full text-xl text-white">
+                        Login to {loginPopupText}
+                    </div>
+                )}
 
-            <form onSubmit={handleSubmit} className="">
-                {inputElements}
+                {error && <div className="text-red-500">{error}</div>}
 
-                <div>
-                    <Button
-                        onMouseOver={onMouseOver}
-                        btnText={loading ? "logging in ..." : "Login"}
-                        disabled={disabled}
-                    />
-                </div>
-            </form>
+                <form onSubmit={handleSubmit} className="">
+                    {inputElements}
+
+                    <div>
+                        <Button
+                            onMouseOver={onMouseOver}
+                            btnText={loading ? "logging in ..." : "Login"}
+                            disabled={disabled}
+                        />
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

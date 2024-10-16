@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate, NavLink, Outlet } from "react-router-dom";
 import { Button } from "../Components";
 import { userService, followerService } from "../Services";
-import { useChannelContext, useUserContext } from "../Context";
+import { useChannelContext, useUserContext, usePopupContext } from "../Context";
 
 export default function ChannelPage() {
     const { userName } = useParams();
@@ -10,6 +10,7 @@ export default function ChannelPage() {
     const { channel, setChannel } = useChannelContext();
     const { user } = useUserContext();
     const [loading, setLoading] = useState(true);
+    const { setShowLoginPopup, setLoginPopupText } = usePopupContext();
 
     useEffect(() => {
         (async function getChannelProfile() {
@@ -27,10 +28,15 @@ export default function ChannelPage() {
                 setLoading(false);
             }
         })();
-    }, [userName]);
+    }, [userName, user]);
 
     async function toggleFollow() {
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Follow");
+                return;
+            }
             const res = await followerService.toggleFollow(channel.user_id);
             if (
                 res &&
@@ -48,7 +54,6 @@ export default function ChannelPage() {
         { name: "posts", path: "" },
         { name: "About", path: "about" },
     ];
-
     const tabElements = tabs?.map((tab) => (
         <NavLink
             key={tab.name}

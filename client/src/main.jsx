@@ -49,23 +49,34 @@ const router = createBrowserRouter(
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="post/:postId" element={<PostPage />} />
-            <Route path="add" element={<AddPostPage />} />
-            <Route path="update/:postId" element={<UpdatePostPage />} />
             <Route path="history" element={<WatchHistoryPage />} />
             <Route path="liked" element={<LikedPostsPage />} />
             <Route path="saved" element={<SavedPostsPage />} />
             <Route path="support" element={<SupportPage />} />
             <Route
-                path="channel/:userName"
+                path="add"
                 element={
-                    <ChannelContextProvider>
-                        <ChannelPage />
-                    </ChannelContextProvider>
+                    <Redirect path="/login">
+                        <AddPostPage />
+                    </Redirect>
                 }
-            >
-                <Route path="" element={<ChannelPosts />} />
-                <Route path="about" element={<ChannelAbout />} />
-            </Route>
+            />
+            <Route
+                path="update/:postId"
+                element={
+                    <Redirect path="/login">
+                        <UpdatePostPage />
+                    </Redirect>
+                }
+            />
+            <Route
+                path="admin"
+                element={
+                    <Redirect path="/login">
+                        <AdminPage />
+                    </Redirect>
+                }
+            />
             <Route
                 path="settings/"
                 element={
@@ -80,13 +91,16 @@ const router = createBrowserRouter(
                 <Route path="delete-account" element={<DeleteAccount />} />
             </Route>
             <Route
-                path="admin"
+                path="channel/:userName"
                 element={
-                    <Redirect path="/login">
-                        <AdminPage />
-                    </Redirect>
+                    <ChannelContextProvider>
+                        <ChannelPage />
+                    </ChannelContextProvider>
                 }
-            />
+            >
+                <Route path="" element={<ChannelPosts />} />
+                <Route path="about" element={<ChannelAbout />} />
+            </Route>
             <Route path="server-error" element={<ServerErrorPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Route>

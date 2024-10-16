@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { usePopupContext, useUserContext } from "../../Context";
 import { commentService, likeService } from "../../Services";
 import { formatDateRelative } from "../../Utils";
 import { icons } from "../../Assets/icons";
 import { Button } from "..";
-import { usePopupContext, useUserContext } from "../../Context";
 
 export default function Comment({ comment, setComments }) {
     const {
@@ -21,12 +21,18 @@ export default function Comment({ comment, setComments }) {
     } = comment;
     const navigate = useNavigate();
     const { user } = useUserContext();
-    const { setShowPopup, setPopupText } = usePopupContext();
+    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } = usePopupContext();
     const [newContent, setNewContent] = useState(comment_content);
     const [isEditing, setIsEditing] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     async function handleLike() {
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Follow");
+                return;
+            }
             const res = await likeService.toggleCommentLike(comment_id, true);
             if (res && res.message === "COMMENT_LIKE_TOGGLED_SUCCESSFULLY") {
                 setComments((prev) =>
@@ -58,6 +64,11 @@ export default function Comment({ comment, setComments }) {
 
     async function handleDislike() {
         try {
+            if (!user) {
+                setShowLoginPopup(true);
+                setLoginPopupText("Follow");
+                return;
+            }
             const res = await likeService.toggleCommentLike(comment_id, false);
             if (res && res.message === "COMMENT_LIKE_TOGGLED_SUCCESSFULLY") {
                 setComments((prev) =>
@@ -89,6 +100,7 @@ export default function Comment({ comment, setComments }) {
     async function editComment(e) {
         try {
             e.preventDefault();
+            setIsUpdating(true);
             const res = await commentService.updateComment(comment_id, newContent);
             if (res && !res.message) {
                 setComments((prev) =>
@@ -107,6 +119,8 @@ export default function Comment({ comment, setComments }) {
             }
         } catch (err) {
             navigate("/server-error");
+        } finally {
+            setIsUpdating(false);
         }
     }
 
@@ -176,7 +190,7 @@ export default function Comment({ comment, setComments }) {
                             />
 
                             {/* submit btn */}
-                            <Button type="submit" btnText="Update" />
+                            <Button type="submit" btnText={isUpdating ? "Updating..." : "Update"} />
                         </form>
                     ) : (
                         <div className="text-ellipsis line-clamp-2">{comment_content}</div>
@@ -221,7 +235,7 @@ export default function Comment({ comment, setComments }) {
                     </div>
                 </div>
 
-                {user_name === user.user_name && (
+                {user_name === user?.user_name && (
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-2 absolute top-2 right-2">
                         <Button
                             onClick={() => setIsEditing(true)}

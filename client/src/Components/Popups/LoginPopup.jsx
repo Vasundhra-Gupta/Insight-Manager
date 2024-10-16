@@ -1,5 +1,7 @@
 import { Login } from "..";
+import { usePopupContext } from "../../Context";
 
 export default function LoginPopup() {
-    return <Login className="fixed inset-0 backdrop-blur-sm" />;
+    const { showLoginPopup } = usePopupContext();
+    return showLoginPopup && <Login className="fixed inset-0 backdrop-blur-sm" />;
 }
