@@ -44,7 +44,15 @@ import {
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path="/" element={<App />}>
+        <Route
+            path="/"
+            element={
+                <PopupContextProvider>
+                    {/* because we are using useLocation() in this context which requires the component or the context provider to be inside a Router */}
+                    <App />
+                </PopupContextProvider>
+            }
+        >
             <Route path="" element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
@@ -109,10 +117,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById("root")).render(
     // <StrictMode>
-    <PopupContextProvider>
-        <UserContextProvider>
-            <RouterProvider router={router} />
-        </UserContextProvider>
-    </PopupContextProvider>
+    <UserContextProvider>
+        <RouterProvider router={router} />
+    </UserContextProvider>
     // </StrictMode>,
 );

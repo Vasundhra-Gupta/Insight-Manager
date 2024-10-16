@@ -9,7 +9,7 @@ import { Button } from "..";
 export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
     const { user, setUser } = useUserContext();
     const [error, setError] = useState({
-        avatar: "", // have to take object due to regex
+        avatar: "", // have to take object due to regex util format
     });
     const [loading, setLoading] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(user.user_avatar);
@@ -51,9 +51,6 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
             const res = await userService.updateAvatar(avatar);
             if (res && !res.message) {
                 setUser(res);
-            } else {
-                // popup something went wrong !!
-                return;
             }
         } catch (err) {
             navigate("/server-error");

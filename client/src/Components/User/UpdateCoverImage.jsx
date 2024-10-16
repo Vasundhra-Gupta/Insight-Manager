@@ -50,9 +50,6 @@ export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }
             const res = await userService.updateCoverImage(coverImage);
             if (res && !res.message) {
                 setUser(res);
-            } else {
-                // popup something went wrong !!
-                return;
             }
         } catch (err) {
             navigate("/server-error");
