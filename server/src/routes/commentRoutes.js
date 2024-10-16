@@ -1,9 +1,15 @@
 import express from "express";
 export const commentRouter = express.Router();
-import { verifyJwt } from "../middlewares/index.js";
-import { addComment, updateComment, deleteComment, getComments, getComment} from "../controllers/commentController.js";
+import { verifyJwt, optionalVerifyJwt } from "../middlewares/index.js";
+import {
+    addComment,
+    updateComment,
+    deleteComment,
+    getComments,
+    getComment,
+} from "../controllers/commentController.js";
 
-commentRouter.route("/post/:postId").get(getComments);
+commentRouter.route("/post/:postId").get(optionalVerifyJwt, getComments);
 
 commentRouter.use(verifyJwt);
 

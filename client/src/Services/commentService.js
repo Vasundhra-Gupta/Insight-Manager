@@ -64,6 +64,7 @@ class CommentService {
             const res = await fetch(`/api/v1/comments/${commentId}`, {
                 method: "PATCH",
                 credentials: "include",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ commentContent: content }),
             });
 

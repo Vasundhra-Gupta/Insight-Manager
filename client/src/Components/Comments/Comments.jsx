@@ -35,16 +35,7 @@ export default function Comments({ postId }) {
             setAddingComment(true);
             const res = await commentService.addComment(postId, input);
             if (res && !res.message) {
-                setComments((prev) => [
-                    ...prev,
-                    {
-                        user_id: res.user_id,
-                        post_id: res.post_id,
-                        comment_id: res.comment_id,
-                        comment_content: res.comment_content,
-                        comment_createdAt: res.comment_createdAt,
-                    },
-                ]);
+                setComments((prev) => [...prev, res]);
                 setPopupText("Comment Added Successfully 🤗");
                 setShowPopup(true);
             }
@@ -57,7 +48,7 @@ export default function Comments({ postId }) {
     }
 
     const commentElements = comments?.map((comment) => (
-        <Comment key={comment.comment_id} commentId={comment.comment_id} />
+        <Comment key={comment.comment_id} comment={comment} setComments={setComments} />
     ));
 
     return loading ? (

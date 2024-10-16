@@ -49,10 +49,11 @@ export default function Popup() {
     }, [showPopup]);
 
     return (
-        // since we want to use exit
+        // since we want to use exit property
         <AnimatePresence>
             {showPopup && (
                 <motion.div
+                    key={popupText} // whenever this key changes the component animation will restart (re-render)
                     variants={popupVariants}
                     initial="initial"
                     animate="final"

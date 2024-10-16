@@ -2,41 +2,30 @@ import { Icomments } from "../interfaces/commentInterface.js";
 import { connection } from "../server.js";
 
 export class SQLcomments extends Icomments {
-    async getComments(postId, orderBy) {
+    async getComments(postId, currentUserId, orderBy) {
         try {
             const validOrderBy = ["ASC", "DESC"];
             if (!validOrderBy.includes(orderBy.toUpperCase())) {
                 throw new Error("INVALID_ORDERBY_VALUE");
             }
 
-            // const q1 =
-            //     "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 1) AS likes";
-            // const q2 =
-            //     "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 0) AS dislikes";
-            // const q = `
-            //         SELECT
-            //             u.user_name,
-            //             u.user_firstName,
-            //             u.user_lastName,
-            //             u.user_id,
-            //             u.user_avatar,
-            //             c.comment_id,
-            //             c.comment_content,
-            //             c.comment_createdAt,
-            //             ${q1},
-            //             ${q2}
-            //         FROM comments c
-            //         NATURAL JOIN users u
-            //         WHERE post_id = ?
-            //         ORDER BY c.comment_createdAt ${orderBy.toUpperCase()}
-            //     `;
-
-            const q = "SELECT * FROM comments WHERE post_id = ?;";
-            const [result] = await connection.query(q, [postId]);
-            if (!result?.length) {
+            const q = `  
+                    SELECT 
+                        v.*,
+                        IFNULL(l.is_liked, -1) AS isLiked
+                    FROM comment_view v
+                    LEFT JOIN comment_likes l 
+                    ON v.comment_id = l.comment_id AND l.user_id = ?
+                    WHERE v.post_id = ? 
+                    ORDER BY v.comment_createdAt ${orderBy.toUpperCase()};
+                `;
+                
+            const [comments] = await connection.query(q, [currentUserId, postId]);
+            if (!comments?.length) {
                 return { message: "NO_COMMENTS_FOUND" };
             }
-            return result;
+
+            return comments;
         } catch (err) {
             throw err;
         }
@@ -45,42 +34,21 @@ export class SQLcomments extends Icomments {
     // only for checking if that comment exists or not
     async getComment(commentId, currentUserId) {
         try {
-            const q1 =
-                "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 1) AS likes";
-            const q2 =
-                "(SELECT COUNT(*) FROM comment_likes WHERE comment_id = c.comment_id AND is_liked = 0) AS dislikes";
-
-            let isLiked = 0;
-            let isDisliked = 0;
-            if (currentUserId) {
-                const q3 = `SELECT is_liked FROM comment_likes WHERE comment_id = ? AND user_id = ?`;
-                const [[response]] = await connection.query(q3, [commentId, currentUserId]);
-                if (response) {
-                    if (response.is_liked) isLiked = true;
-                    else isDisliked = true;
-                }
-            }
-
-            const q = `
-                SELECT 
-                    user_name,
-                    user_firstName, 
-                    user_lastName,
-                    user_avatar,
-                    c.*,
-                    ${q1},
-                    ${q2}
-                FROM comments c 
-                NATURAL JOIN users u 
-                WHERE comment_id = ?
-            `;
-            const [[comment]] = await connection.query(q, [commentId]);
-
+            const q = `  
+                    SELECT 
+                        v.*,
+                        IFNULL(l.is_liked, -1) AS isLiked
+                    FROM comment_view v
+                    LEFT JOIN comment_likes l 
+                    ON v.comment_id = l.comment_id AND l.user_id = ? 
+                    WHERE v.comment_id = ?  
+                `;
+            const [[comment]] = await connection.query(q, [currentUserId, commentId]);
             if (!comment) {
                 return { message: "COMMENT_NOT_FOUND" };
             }
 
-            return { ...comment, isLiked, isDisliked };
+            return comment;
         } catch (err) {
             throw err;
         }
