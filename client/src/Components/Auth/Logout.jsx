@@ -16,8 +16,8 @@ export default function Logout() {
             const res = await authService.logout();
             if (res && !res.message) {
                 setUser(null);
+                setPopupText("LogOut Successfull 🙂");
                 setShowPopup(true);
-                setPopupText("Logout Successfully");
             }
         } catch (err) {
             navigate("/servor-error");

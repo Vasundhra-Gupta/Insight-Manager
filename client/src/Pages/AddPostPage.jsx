@@ -58,7 +58,7 @@ export default function AddPostPage() {
             setLoading(true);
             const res = await postService.addPost(inputs);
             if (res && !res.message) {
-                setPopupText("Post Created Successfully");
+                setPopupText("Post Created Successfully 🤗");
                 setShowPopup(true);
                 navigate(`/post/${postId}`);
             }

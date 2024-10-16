@@ -3,13 +3,14 @@ import { useNavigate, useParams, NavLink } from "react-router-dom";
 import { followerService, likeService, postService } from "../Services";
 import { Button, Comments, Recemendations } from "../Components";
 import { formatDateRelative } from "../Utils";
-import { useUserContext } from "../Context";
+import { useUserContext, usePopupContext } from "../Context";
 import { icons } from "../Assets/icons";
 import parse from "html-react-parser";
 
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
+    const { setShowPopup, setPopupText } = usePopupContext();
     const [post, setPost] = useState({});
     const { user } = useUserContext();
     const navigate = useNavigate();
@@ -80,6 +81,7 @@ export default function PostPage() {
                         };
                     }
                 });
+                setShowPopup(true);
             }
         } catch (err) {
             navigate("/server-error");
@@ -112,6 +114,14 @@ export default function PostPage() {
                 (res.message === "POST_UNSAVED_SUCCESSFULLY" ||
                     res.message === "POST_SAVED_SUCCESSFULLY")
             ) {
+                setPopupText(
+                    `${
+                        res.message === "POST_SAVED_SUCCESSFULLY"
+                            ? "Post Saved Successfully 🤗"
+                            : "Post Unsaved Successfully 🙂"
+                    }`
+                );
+                setShowPopup(true);
                 setPost((prev) => ({ ...prev, isSaved: !prev.isSaved }));
             }
         } catch (err) {

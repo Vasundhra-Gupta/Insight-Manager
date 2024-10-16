@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, RTE } from "../Components";
 import { verifyExpression, fileRestrictions } from "../Utils";
 import { postService } from "../Services";
-import { useUserContext } from "../Context";
+import { useUserContext,usePopupContext } from "../Context";
 
 export default function UpdatePostPage() {
     const [inputs, setInputs] = useState({
@@ -22,6 +22,7 @@ export default function UpdatePostPage() {
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
     const [disabled, setDisabled] = useState(false);
+    const { setShowPopup, setPopupText } = usePopupContext();
     const [defaultRTEValue, setDefaultRTEValue] = useState("");
     const navigate = useNavigate();
     const { user } = useUserContext();
@@ -95,6 +96,8 @@ export default function UpdatePostPage() {
             );
             const res1 = await postService.updatePostImage(inputs.postImage, postId);
             if (res && res1 && !res.message && !res1.message) {
+                setPopupText("Post Updated Successfully 🤗");
+                setShowPopup(true);
                 navigate(`/post/${postId}`);
             }
         } catch (err) {

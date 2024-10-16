@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { commentService } from "../../Services";
 import { Comment, Button } from "..";
+import { usePopupContext } from "../../Context";
 
 export default function Comments({ postId }) {
     const navigate = useNavigate();
@@ -9,6 +10,7 @@ export default function Comments({ postId }) {
     const [loading, setLoading] = useState(true);
     const [addingComment, setAddingComment] = useState(false);
     const [input, setInput] = useState("");
+    const { setShowPopup, setPopupText } = usePopupContext();
 
     useEffect(() => {
         (async function getComments() {
@@ -43,6 +45,8 @@ export default function Comments({ postId }) {
                         comment_createdAt: res.comment_createdAt,
                     },
                 ]);
+                setPopupText("Comment Added Successfully 🤗");
+                setShowPopup(true);
             }
         } catch (err) {
             navigate("/server-error");
@@ -58,33 +62,34 @@ export default function Comments({ postId }) {
 
     return loading ? (
         <div>loading...</div>
-    ) : comments.length > 0 ? (
-        <div>
-            <div>{comments.length} Comments</div>
-
-            <div>
-                <form onSubmit={addComment} className="flex  items-center justify-start gap-2">
-                    <input
-                        type="text"
-                        placeholder="Add a new Comment"
-                        name="comment"
-                        id="comment"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="bg-transparent border-[0.01rem] rounded-lg indent-2 p-1"
-                    />
-                    <Button type="reset" btnText="Cancel" onClick={(e) => setInput("")} />
-                    <Button
-                        type="submit"
-                        btnText={addingComment ? "adding..." : "Comment"}
-                        disabled={addingComment}
-                    />
-                </form>
-            </div>
-
-            <div>{commentElements}</div>
-        </div>
     ) : (
-        <div>No Comments Found !!</div>
+        <div>
+            <form onSubmit={addComment} className="flex  items-center justify-start gap-2">
+                <input
+                    type="text"
+                    placeholder="Add a new Comment"
+                    name="comment"
+                    id="comment"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    className="bg-transparent border-[0.01rem] rounded-lg indent-2 p-1"
+                />
+                <Button type="reset" btnText="Cancel" onClick={(e) => setInput("")} />
+                <Button
+                    type="submit"
+                    btnText={addingComment ? "adding..." : "Comment"}
+                    disabled={addingComment}
+                />
+            </form>
+
+            {comments.length > 0 ? (
+                <div>
+                    <div>{comments.length} Comments</div>
+                    <div>{commentElements}</div>
+                </div>
+            ) : (
+                <div>No Comments Found !!</div>
+            )}
+        </div>
     );
 }

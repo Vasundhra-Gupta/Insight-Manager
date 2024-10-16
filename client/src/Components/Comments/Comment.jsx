@@ -76,6 +76,10 @@ export default function Comment({ commentId }) {
         }
     }
 
+    async function editComment() {}
+
+    async function deleteComment() {}
+
     if (comment) {
         return (
             <div className="w-full h-full">
