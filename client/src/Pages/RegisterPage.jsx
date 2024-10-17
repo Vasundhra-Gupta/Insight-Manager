@@ -165,7 +165,7 @@ export default function RegisterPage() {
                 />
             </div>
             {field.name === "password" && (
-                <div className="text-sm">password must be 8-12 characters.</div>
+                <div className="text-xs">tpassword must be 8-12 characters.</div>
             )}
         </div>
     ));
@@ -192,23 +192,29 @@ export default function RegisterPage() {
     ));
 
     return (
-        <div className="bg-gray-800 w-full h-full overflow-scroll">
-            {error.root && <div className="text-red-500">{error.root}</div>}
+        <div className="bg-gray-900 w-full h-full overflow-scroll flex items-center justify-center">
+            <div>
+                {!error.root && (
+                    <div className="text-red-500 w-full text-center mb-4">{error.root}vmerbb</div>
+                )}
 
-            <form onSubmit={handleSubmit} className="w-full h-full">
-                <div className="flex flex-col items-start justify-center gap-4">
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col items-start justify-center gap-4"
+                >
                     {inputElements}
-                    {fileElements}
-                </div>
 
-                <div>
-                    <Button
-                        disabled={disabled}
-                        onMouseOver={onMouseOver}
-                        btnText={loading ? "Signing Up..." : "Sign Up"}
-                    />
-                </div>
-            </form>
+                    {fileElements}
+
+                    <div>
+                        <Button
+                            disabled={disabled}
+                            onMouseOver={onMouseOver}
+                            btnText={loading ? "Signing Up..." : "Sign Up"}
+                        />
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

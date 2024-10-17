@@ -4,7 +4,7 @@ import { useUserContext, usePopupContext } from "../../Context";
 import { authService } from "../../Services";
 import { Button } from "..";
 
-export default function Login({ className = "" }) {
+export default function Login() {
     const [inputs, setInputs] = useState({
         loginInput: "",
         password: "",
@@ -13,8 +13,7 @@ export default function Login({ className = "" }) {
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState("");
     const { setUser } = useUserContext();
-    const { setShowPopup, setPopupText, loginPopupText, showLoginPopup, setShowLoginPopup } =
-        usePopupContext();
+    const { setShowPopup, setPopupText, showLoginPopup, setShowLoginPopup } = usePopupContext();
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -101,28 +100,23 @@ export default function Login({ className = "" }) {
     ));
 
     return (
-        <div className={className}>
-            <div className="w-full">
-                {loginPopupText && (
-                    <div className="text-center w-full text-xl text-white">
-                        Login to {loginPopupText}
-                    </div>
-                )}
+        <div>
+            {error && <div className="text-red-500 w-full text-center mb-3">{error}</div>}
 
-                {error && <div className="text-red-500">{error}</div>}
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col items-center justify-center gap-4"
+            >
+                {inputElements}
 
-                <form onSubmit={handleSubmit} className="">
-                    {inputElements}
-
-                    <div>
-                        <Button
-                            onMouseOver={onMouseOver}
-                            btnText={loading ? "logging in ..." : "Login"}
-                            disabled={disabled}
-                        />
-                    </div>
-                </form>
-            </div>
+                <div>
+                    <Button
+                        onMouseOver={onMouseOver}
+                        btnText={loading ? "logging in ..." : "Login"}
+                        disabled={disabled}
+                    />
+                </div>
+            </form>
         </div>
     );
 }

@@ -1,5 +1,5 @@
-import { Ilikes } from "../interfaces/likeInterface.js";
-import { connection } from "../server.js";
+import { Ilikes } from "../../interfaces/likeInterface.js";
+import { connection } from "../../server.js";
 
 export class SQLlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {

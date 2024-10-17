@@ -1,5 +1,5 @@
-import { Icomments } from "../interfaces/commentInterface.js";
-import { connection } from "../server.js";
+import { Icomments } from "../../interfaces/commentInterface.js";
+import { connection } from "../../server.js";
 
 export class SQLcomments extends Icomments {
     async getComments(postId, currentUserId, orderBy) {

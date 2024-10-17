@@ -1,5 +1,9 @@
 import { Login } from "../Components";
 
 export default function LoginPage() {
-    return <Login className="bg-slate-600" />;
+    return (
+        <div className="bg-slate-900">
+            <Login />
+        </div>
+    );
 }

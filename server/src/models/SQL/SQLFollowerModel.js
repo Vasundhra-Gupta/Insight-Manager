@@ -1,5 +1,5 @@
-import { Ifollowers } from "../interfaces/followerInterface.js";
-import { connection } from "../server.js";
+import { Ifollowers } from "../../interfaces/followerInterface.js";
+import { connection } from "../../server.js";
 
 export class SQLfollowers extends Ifollowers {
     async getFollowers(channelId) {

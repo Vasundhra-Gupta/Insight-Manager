@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { useChannelContext } from "../../Context";
+import { useChannelContext, usePopupContext } from "../../Context";
 import { formatDateExact } from "../../Utils";
 import { icons } from "../../Assets/icons";
 
 export default function ChannelAbout() {
     const { channel } = useChannelContext();
+    const { setPopupText, setShowPopup } = usePopupContext();
     const {
         user_name,
         user_firstName,
@@ -17,7 +18,11 @@ export default function ChannelAbout() {
         totalPosts,
     } = channel;
 
-    function copyEmail() {}
+    function copyEmail() {
+        window.navigator.clipboard.writeText(user_email);
+        setShowPopup(true);
+        setPopupText("Email Copied to Clipboard 🤗");
+    }
 
     return (
         <div>
@@ -34,14 +39,27 @@ export default function ChannelAbout() {
             <div className="flex flex-col gap-2 items-start justify-start mt-2 text-lg">
                 <div className="flex items-center justify-start gap-3">
                     <div className="size-[20px] fill-[#b5b4b4]">{icons.email}</div>
-                    <div className="cursor-pointer text-blue-600" onClick={copyEmail}>
-                        {user_email}
+
+                    <div className="flex  items-center justify-center gap-1">
+                        <div className="cursor-pointer text-blue-600 hover:text-blue-700 ">
+                            {user_email}
+                        </div>
+
+                        <div
+                            className="size-[15px] hover:fill-[#ffffff] cursor-pointer fill-[#b5b4b4]"
+                            onClick={copyEmail}
+                        >
+                            {icons.clipboard}
+                        </div>
                     </div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
                     <div className="size-[23px] fill-[#b5b4b4]">{icons.globe}</div>
-                    <NavLink to={`/channel/${user_name}`} className="text-blue-500 pb-1">
+                    <NavLink
+                        to={`/channel/${user_name}`}
+                        className="text-blue-600 hover:text-blue-700 pb-1"
+                    >
                         {`https://note-manager/channel/${user_name}`}
                     </NavLink>
                 </div>

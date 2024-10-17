@@ -1,5 +1,5 @@
-import { Iusers } from "../interfaces/userInterface.js";
-import { connection } from "../server.js";
+import { Iusers } from "../../interfaces/userInterface.js";
+import { connection } from "../../server.js";
 import validator from "validator";
 
 export class SQLusers extends Iusers {

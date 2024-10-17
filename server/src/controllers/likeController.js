@@ -3,7 +3,6 @@ import { OK, BAD_REQUEST, SERVER_ERROR } from "../constants/errorCodes.js";
 import getServiceObject from "../db/serviceObjects.js";
 import { postObject } from "./postController.js";
 import { commentObject } from "./commentController.js";
-import { noteObject } from "./noteController.js";
 
 export const likeObject = getServiceObject("likes");
 
@@ -82,34 +81,4 @@ const toggleCommentLike = async (req, res) => {
         });
     }
 };
-
-const toggleNoteVote = async (req, res) => {
-    try {
-        const { user_id } = req.user;
-        const { noteId } = req.params;
-        let { voteStatus } = req.query;
-        voteStatus = voteStatus === "true" ? 1 : 0;
-
-        if (!noteId || !validator.isUUID(noteId)) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_OR_INVALID_NOTEID" });
-        }
-        if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
-        }
-
-        const note = await noteObject.getNote(noteId);
-        if (note?.message) {
-            return res.status(BAD_REQUEST).json(note);
-        }
-
-        const response = await likeObject.toggleNoteVote(noteId, user_id, voteStatus);
-        return res.status(OK).json(response);
-    } catch (err) {
-        return res.status(SERVER_ERROR).json({
-            message: "something went wrong while toggling note vote.",
-            error: err.message,
-        });
-    }
-};
-
-export { getLikedPosts, togglePostLike, toggleCommentLike, toggleNoteVote };
+export { getLikedPosts, togglePostLike, toggleCommentLike };

@@ -1,5 +1,5 @@
-import { Iposts } from "../interfaces/postInterface.js";
-import { connection } from "../server.js";
+import { Iposts } from "../../interfaces/postInterface.js";
+import { connection } from "../../server.js";
 
 export class SQLposts extends Iposts {
     // pending search query
