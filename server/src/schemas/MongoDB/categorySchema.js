@@ -4,7 +4,6 @@ const categorySchema = new Schema({
     category_id: {
         type: String,
         required: true,
-        index: true,
         unique: true,
     },
     category_name: {

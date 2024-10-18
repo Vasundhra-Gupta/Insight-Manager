@@ -4,24 +4,59 @@ import {
     migrateCategories,
     migratePosts,
     migrateUsers,
-    migrateLikes,
+    migratePostLikes,
+    migrateCommentLikes,
     migrateComments,
     migrateFollowers,
 } from "../MigrationScripts/index.js";
-import { connectMongoDB, disconnectMongoDB } from "../db/MongoDBMigrationConnection.js";
+import { dbInstance } from "../db/connectDB.js";
+import { OK, SERVER_ERROR } from "../constants/errorCodes.js";
 
-migrationRouter.route("/connect-MongoDB").get(connectMongoDB);
+migrationRouter.route("/all").post(
+    // migrateCategories,
+    migrateUsers,
+    // migrateCommentLikes,
+    // migratePostLikes,
+    // migrateComments,
+    // migrateFollowers,
+    // migratePosts,
+    async (req, res) => {
+        try {
+            await dbInstance.mongodbMigrationDisconnect();
+            return res.status(OK).json({
+                message: "SUCCESSFULLY_MIGRATED_FROM_SQL-->MONGODB✨✨✨&CONNECTION_CLOSED",
+            });
+        } catch (err) {
+            return res
+                .status(SERVER_ERROR)
+                .json({ message: "MONGODB_MIGRATION_CONNECTION_CLOSING_ISSUE" });
+        }
+    }
+);
 
-migrationRouter.route("/disconnect-MongoDB").get(disconnectMongoDB);
+// migrationRouter.route("/disconnect").get(async (req, res) => {
+//     try {
+//         await dbInstance.mongodbMigrationDisconnect();
+//         return res.status(OK).json({ message: "MONGODB_CONNECTION_CLOSED" });
+//     } catch (err) {
+//         return res
+//             .status(SERVER_ERROR)
+//             .json({ message: "MONGODB_MIGRATION_CONNECTION_CLOSING_ISSUE" });
+//     }
+// });
 
-migrationRouter.route("/posts").post(migratePosts);
+// ⭐⭐⭐ next() could cause issue
 
-migrationRouter.route("/users").post(migrateUsers);
+// migrationRouter.route("/posts").post(migratePosts);
 
-migrationRouter.route("/likes").post(migrateLikes);
+// migrationRouter.route("/users").post(migrateUsers);
 
-migrationRouter.route("/comments").post(migrateComments);
+// migrationRouter.route("/post-likes").post(migratePostLikes);
 
-migrationRouter.route("/followers").post(migrateFollowers);
+// migrationRouter.route("/comment-likes").post(migrateCommentLikes);
 
-migrationRouter.route("/categories").post(migrateCategories);
+// migrationRouter.route("/comments").post(migrateComments);
+
+// migrationRouter.route("/followers").post(migrateFollowers);
+
+// migrationRouter.route("/categories").post(migrateCategories);

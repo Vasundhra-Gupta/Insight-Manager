@@ -161,11 +161,11 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder={field.placeholder}
-                    className="bg-transparent border-[0.01rem]"
+                    className="bg-transparent border-[0.01rem] w-[300px]"
                 />
             </div>
             {field.name === "password" && (
-                <div className="text-xs">tpassword must be 8-12 characters.</div>
+                <div className="text-xs">password must be 8-12 characters.</div>
             )}
         </div>
     ));
@@ -185,7 +185,7 @@ export default function RegisterPage() {
                     name={field.name}
                     id={field.name}
                     onChange={handleFileChange}
-                    className="bg-transparent border-[0.01rem]"
+                    className="bg-transparent border-[0.01rem] w-[300px]"
                 />
             </div>
         </div>
@@ -193,9 +193,11 @@ export default function RegisterPage() {
 
     return (
         <div className="bg-gray-900 w-full h-full overflow-scroll flex items-center justify-center">
-            <div>
-                {!error.root && (
-                    <div className="text-red-500 w-full text-center mb-4">{error.root}vmerbb</div>
+            <div className="w-full flex flex-col items-center justify-center gap-4">
+                <div>Create new account</div>
+
+                {error.root && (
+                    <div className="text-red-500 w-full text-center mb-4">{error.root}</div>
                 )}
 
                 <form
@@ -206,8 +208,9 @@ export default function RegisterPage() {
 
                     {fileElements}
 
-                    <div>
+                    <div className="w-full">
                         <Button
+                            className="w-full"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
                             btnText={loading ? "Signing Up..." : "Sign Up"}
