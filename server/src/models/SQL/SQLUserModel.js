@@ -1,26 +1,11 @@
 import { Iusers } from "../../interfaces/userInterface.js";
 import { connection } from "../../server.js";
 import validator from "validator";
+import { verifyOrderBy } from "../../utils/verifyOrderBy.js";
 
 export class SQLusers extends Iusers {
     async getUser(searchInput) {
         try {
-            // let q;
-            // if (validator.isEmail(searchInput)) {
-            //     q = "SELECT * FROM users WHERE user_email = ?";
-            // } else if (validator.isUUID(searchInput)) {
-            //     q = "SELECT * FROM users WHERE user_id = ?";
-            // } else {
-            //     q = "SELECT * FROM users WHERE user_name = ?";
-            // }
-
-            // const [[user]] = await connection.query(q, [searchInput]);
-
-            // if (!user) {
-            //     return { message: "USER_NOT_FOUND" };
-            // }
-
-            // using PL/SQL Procedures
             let q;
             if (validator.isEmail(searchInput)) {
                 q = "CALL getUser('email',?)";
@@ -231,10 +216,7 @@ export class SQLusers extends Iusers {
 
     async getWatchHistory(userId, orderBy, limit, page) {
         try {
-            const validOrderBy = ["ASC", "DESC"];
-            if (!validOrderBy.includes(orderBy.toUpperCase())) {
-                throw new Error("INVALID_ORDERBY_VALUE");
-            }
+            verifyOrderBy(orderBy);
 
             const q = `
                     SELECT 
@@ -256,7 +238,7 @@ export class SQLusers extends Iusers {
                     JOIN channel_view c 
                     ON p.post_ownerId = c.user_id 
                     WHERE w.user_id = ?
-                    ORDER BY w.watchedAt ${orderBy.toUpperCase()}
+                    ORDER BY w.watchedAt ${orderBy}
                     LIMIT ? OFFSET ? 
                 `;
 
@@ -306,15 +288,4 @@ export class SQLusers extends Iusers {
             throw err;
         }
     }
-
-    // async deleteUsers() {
-    //     try {
-    //         // const q = "TRUNCATE TABLE users";   // good error
-    //         const q = "DELETE FROM users"
-
-    //         return await connection.query(q)
-    //     } catch (err) {
-    //         throw new Error(err.message)
-    //     }
-    // }
 }

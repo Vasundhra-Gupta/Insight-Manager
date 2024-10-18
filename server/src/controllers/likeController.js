@@ -14,7 +14,12 @@ const getLikedPosts = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "MISSING_USERID" });
         }
 
-        const likedPosts = await likeObject.getLikedPosts(user_id, orderBy, Number(limit), Number(page));
+        const likedPosts = await likeObject.getLikedPosts(
+            user_id,
+            orderBy.toUpperCase(),
+            Number(limit),
+            Number(page)
+        );
         return res.status(OK).json(likedPosts);
     } catch (err) {
         return res.status(SERVER_ERROR).json({

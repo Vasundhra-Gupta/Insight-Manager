@@ -18,11 +18,9 @@ const registerUser = async (req, res) => {
     try {
         const { userName, firstName, lastName, email, password } = req.body;
         const userId = uuid();
-
         if (!userId) {
             throw new Error({ message: "USERID_CREATION_UUID_ISSUE" });
         }
-
         if (!userName || !firstName || !email || !password) {
             return res.status(BAD_REQUEST).json({ message: "MISSING_FIELDS" });
         }
@@ -107,6 +105,7 @@ const loginUser = async (req, res) => {
         }
 
         const user = await userObject.getUser(loginInput);
+        console.log("2");
         if (user?.message) {
             return res.status(BAD_REQUEST).json(user); // user = {message:"USER_NOT_FOUND"}
         }
@@ -433,7 +432,7 @@ const getWatchHistory = async (req, res) => {
         }
         const response = await userObject.getWatchHistory(
             user_id,
-            orderBy,
+            orderBy.toUpperCase(),
             Number(limit),
             Number(page)
         );

@@ -1,13 +1,11 @@
 import { Icomments } from "../../interfaces/commentInterface.js";
 import { connection } from "../../server.js";
+import { verifyOrderBy } from "../../utils/verifyOrderBy.js";
 
 export class SQLcomments extends Icomments {
     async getComments(postId, currentUserId, orderBy) {
         try {
-            const validOrderBy = ["ASC", "DESC"];
-            if (!validOrderBy.includes(orderBy.toUpperCase())) {
-                throw new Error("INVALID_ORDERBY_VALUE");
-            }
+            verifyOrderBy(orderBy);
 
             const q = `  
                     SELECT 

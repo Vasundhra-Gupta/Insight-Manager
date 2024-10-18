@@ -1,14 +1,12 @@
 import { Iposts } from "../../interfaces/postInterface.js";
 import { connection } from "../../server.js";
+import { verifyOrderBy } from "../../utils/verifyOrderBy.js";
 
 export class SQLposts extends Iposts {
     // pending search query
     async getRandomPosts(limit, orderBy, page, category) {
         try {
-            const validOrderBy = ["ASC", "DESC"];
-            if (!validOrderBy.includes(orderBy.toUpperCase())) {
-                throw new Error("INVALID_ORDERBY_VALUE");
-            }
+            verifyOrderBy(orderBy);
 
             let q = `
                     SELECT 
@@ -30,7 +28,7 @@ export class SQLposts extends Iposts {
                 countQ += ` WHERE p.category_name = ? `;
             }
 
-            q += ` ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
+            q += ` ORDER BY post_updatedAt ${orderBy} LIMIT ? OFFSET ? `;
 
             const offset = (page - 1) * limit;
 
@@ -58,10 +56,7 @@ export class SQLposts extends Iposts {
 
     async getPosts(channelId, limit, orderBy, page, category) {
         try {
-            const validOrderBy = ["ASC", "DESC"];
-            if (!validOrderBy.includes(orderBy.toUpperCase())) {
-                throw new Error("INVALID_ORDERBY_VALUE");
-            }
+            verifyOrderBy(orderBy);
 
             let q = `
                     SELECT 
@@ -86,7 +81,7 @@ export class SQLposts extends Iposts {
                 countQ += " WHERE p.post_ownerId = ? ";
             }
 
-            q += `ORDER BY post_updatedAt ${orderBy.toUpperCase()} LIMIT ? OFFSET ? `;
+            q += `ORDER BY post_updatedAt ${orderBy} LIMIT ? OFFSET ? `;
 
             const offset = (page - 1) * limit;
             const queryParams = category
@@ -295,10 +290,7 @@ export class SQLposts extends Iposts {
 
     async getSavedPosts(userId, orderBy, limit, page) {
         try {
-            const validOrderBy = ["ASC", "DESC"];
-            if (!validOrderBy.includes(orderBy.toUpperCase())) {
-                throw new Error("INVALID_ORDERBY_VALUE");
-            }
+            verifyOrderBy(orderBy);
             const q = `
                     SELECT
                     	c.user_id,
@@ -319,7 +311,7 @@ export class SQLposts extends Iposts {
                     JOIN saved_posts s
                     ON p.post_id = s.post_id 
                     WHERE s.user_id = ?
-                    ORDER BY p.post_updatedAt ${orderBy.toUpperCase()} 
+                    ORDER BY p.post_updatedAt ${orderBy} 
                     LIMIT ? OFFSET ?
                 `;
 

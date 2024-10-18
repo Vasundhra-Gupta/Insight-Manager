@@ -13,7 +13,11 @@ const getComments = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
         }
 
-        const comments = await commentObject.getComments(postId, req.user?.user_id, orderBy);
+        const comments = await commentObject.getComments(
+            postId,
+            req.user?.user_id,
+            orderBy.toUpperCase()
+        );
         return res.status(OK).json(comments);
     } catch (err) {
         return res.status(SERVER_ERROR).json({

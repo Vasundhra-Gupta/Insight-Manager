@@ -13,7 +13,7 @@ const getRandomPosts = async (req, res) => {
         const { limit = 10, orderBy = "desc", page = 1, category = "", query = "" } = req.query;
         const randomPosts = await postObject.getRandomPosts(
             Number(limit),
-            orderBy,
+            orderBy.toUpperCase(),
             Number(page),
             category
         );
@@ -36,7 +36,7 @@ const getPosts = async (req, res) => {
         const posts = await postObject.getPosts(
             channelId,
             Number(limit),
-            orderBy,
+            orderBy.toUpperCase(),
             Number(page),
             category
         );
@@ -324,7 +324,7 @@ const getSavedPosts = async (req, res) => {
         }
         const savedPosts = await postObject.getSavedPosts(
             user_id,
-            orderBy,
+            orderBy.toUpperCase(),
             Number(limit),
             Number(page)
         );

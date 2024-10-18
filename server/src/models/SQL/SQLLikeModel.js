@@ -1,13 +1,11 @@
 import { Ilikes } from "../../interfaces/likeInterface.js";
 import { connection } from "../../server.js";
+import { verifyOrderBy } from "../../utils/verifyOrderBy.js";
 
 export class SQLlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
         try {
-            const validOrderBy = ["ASC", "DESC"];
-            if (!validOrderBy.includes(orderBy.toUpperCase())) {
-                throw new Error("INVALID_ORDERBY_VALUE");
-            }
+            verifyOrderBy(orderBy);
             const q = `
                     SELECT
                     	c.user_id,
@@ -71,16 +69,6 @@ export class SQLlikes extends Ilikes {
         try {
             const q = "CALL toggleCommentLike(?, ?, ?)";
             const [[[response]]] = await connection.query(q, [userId, commentId, likedStatus]);
-            return response;
-        } catch (err) {
-            throw err;
-        }
-    }
-
-    async toggleNoteVote(noteId, userId, voteStatus) {
-        try {
-            const q = "CALL toggleNoteVote(?, ?, ?)";
-            const [[[response]]] = await connection.query(q, [userId, noteId, voteStatus]);
             return response;
         } catch (err) {
             throw err;

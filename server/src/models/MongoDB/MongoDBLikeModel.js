@@ -21,11 +21,4 @@ export class MongoDBlikes extends Ilikes {
             throw err;
         }
     }
-
-    async toggleNoteVote(noteId, userId, voteStatus) {
-        try {
-        } catch (err) {
-            throw err;
-        }
-    }
 }
