@@ -6,56 +6,60 @@ export async function migrateSavedPosts(req, res, next) {
     try {
         // SQL saved posts
         const [SQLsavedPosts] = await connection.query("SELECT * FROM saved_posts");
-
+        console.log(SQLsavedPosts);
         if (SQLsavedPosts.length) {
             // SQL saved posts keys
-            const SQLsavedPostKeys = SQLsavedPosts.map((s) => `${s.post_id} ${s.user_id}`);
+            const SQLsavedPostKeys = SQLsavedPosts.map((p) => `${p.post_id} ${p.user_id}`);
 
             // MongoDB saved posts
-            const [MongoDBsavedPosts] = await SavedPost.find();
+            const MongoDBsavedPosts = await SavedPost.find();
+            console.log(MongoDBsavedPosts);
             // MongoDB saved posts keys
-            const MongoDBsavedPostsKeys = MongoDBsavedPosts.map((s) => `${s.post_id} ${s.user_id}`);
+            const MongoDBsavedPostKeys = MongoDBsavedPosts.map((p) => `${p.post_id} ${p.user_id}`);
 
-            const newSavedPost = [];
+            const newSavedPosts = [];
 
             //find records to Insert
             for (let savedPost of SQLsavedPosts) {
                 const key = `${savedPost.post_id} ${savedPost.user_id}`;
-                if (!MongoDBsavedPostsKeys.includes(key)) {
-                    newSavedPost.push(savedPost);
+                if (!MongoDBsavedPostKeys.includes(key)) {
+                    newSavedPosts.push(savedPost);
                 }
             }
 
             //find records to Delete
-            const deletedSavedPost = MongoDBsavedPosts.filter((s) => {
-                const key = `${s.post_id} ${s.user_id}`;
+            const deletedSavedPosts = MongoDBsavedPosts.filter((p) => {
+                const key = `${p.post_id} ${p.user_id}`;
                 return !SQLsavedPostKeys.includes(key);
             });
 
             //Insert
-            if (newSavedPost.length) {
-                await SavedPost.insertMany(newSavedPost);
+            if (newSavedPosts.length) {
+                await SavedPost.insertMany(newSavedPosts);
             }
 
             //Delete
-            if (deletedSavedPost.length) {
-                const deleteFilters = deletedSavedPost.map((s) => ({
-                    post_id: s.post_id,
-                    user_id: s.user_id,
+            if (deletedSavedPosts.length) {
+                const deleteFilters = deletedSavedPosts.map((p) => ({
+                    post_id: p.post_id,
+                    user_id: p.user_id,
                 }));
                 await SavedPost.deleteMany({ $or: deleteFilters });
             }
 
-            console.log(`${newSavedPost.length} new SAVEDPOSTS INSERTED \n ${deletedSavedPost} SAVEDPOSTS DELETED`);
+            console.log(
+                `${newSavedPosts.length} new SAVEDPOSTS INSERTED.\n${deletedSavedPosts.length} SAVEDPOSTS DELETED.`
+            );
         } else {
             const count = SavedPost.countDocuments();
             if (count) {
                 await SavedPost.deleteMany();
-                console.log("CLEARED MONGODB SAVEDPOSTS\n");
+                console.log("CLEARED MONGODB SAVEDPOSTS");
             } else {
                 console.log("NO_SAVEDPOSTS_TO_MIGRATE");
             }
         }
+
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({

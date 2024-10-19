@@ -190,6 +190,8 @@ export async function migrateCommentLikes(req, res, next) {
 //     }
 // }
 
+
+
 // export async function migrateCommentLikes(req, res, next) {
 //     try {
 //         const [commentLikes] = await connection.query("SELECT * FROM comment_likes");
