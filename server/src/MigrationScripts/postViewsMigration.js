@@ -4,27 +4,27 @@ import { SavedPost } from "../schemas/MongoDB/userSchema.js";
 
 export async function migratePostViews(req, res, next) {
     try {
-        const [SQLpostViews] = await connection.query("SELECT * FROM post_views");
+        const [SQLviewedPost] = await connection.query("SELECT * FROM post_views");
 
-        if (SQLpostViews.length) {
-            const SQLpostViewsKeys = SQLpostViews.map((v) => `${v.post_id} ${v.user_identifier}`);
+        if (SQLviewedPost.length) {
+            const SQLviewedPostKeys = SQLviewedPost.map((v) => `${v.post_id} ${v.user_identifier}`);
 
-            const [MongoDBpostViews] = await SavedPost.find();
+            const [MongoDBviewedPost] = await SavedPost.find();
     
-            const MongoDBpostViewsKeys = MongoDBpostViews.map((v) => `${v.post_id} ${v.user_identifier}`);
+            const MongoDBviewedPostKeys = MongoDBviewedPost.map((v) => `${v.post_id} ${v.user_identifier}`);
 
             const newViewedPost = [];
 
-            for (let post of SQLpostViews) {
+            for (let post of SQLviewedPost) {
                 const key = `${post.post_id} ${post.user_identifier}`;
-                if (!MongoDBpostViewsKeys.includes(key)) {
+                if (!MongoDBviewedPostKeys.includes(key)) {
                     newViewedPost.push(post);
                 }
             }
 
-            const deletedViewedPost = MongoDBpostViews.filter((s) => {
-                const key = `${s.post_id} ${s.user_identifier}`;
-                return !SQLpostViewsKeys.includes(key);
+            const deletedViewedPost = MongoDBpostViews.filter((v) => {
+                const key = `${v.post_id} ${v.user_identifier}`;
+                return !SQLviewedPostKeys.includes(key);
             });
 
             if (newViewedPost.length) {
@@ -32,27 +32,27 @@ export async function migratePostViews(req, res, next) {
             }
 
             if (deletedViewedPost.length) {
-                const deleteFilters = deletedViewedPost.map((s) => ({
-                    post_id: s.post_id,
-                    user_identifier: s.user_identifier,
+                const deleteFilters = deletedViewedPost.map((v) => ({
+                    post_id: v.post_id,
+                    user_identifier: v.user_identifier,
                 }));
                 await SavedPost.deleteMany({ $or: deleteFilters });
             }
 
-            console.log(`${deletedViewedPost.length} new SAVEDPOSTS INSERTED \n ${deletedViewedPost} SAVEDPOSTS DELETED`);
+            console.log(`${deletedViewedPost.length} new VIEWEDPOSTS INSERTED \n ${deletedViewedPost} VIEWEDPOSTS DELETED`);
         } else {
             const count = SavedPost.countDocuments();
             if (count) {
                 await SavedPost.deleteMany();
-                console.log("CLEARED MONGODB SAVEDPOSTS\n");
+                console.log("CLEARED MONGODB VIEWEDPOSTS\n");
             } else {
-                console.log("NO_SAVEDPOSTS_TO_MIGRATE");
+                console.log("NO_VIEWEDPOSTS_TO_MIGRATE");
             }
         }
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while migrating saved posts",
+            message: "something went wrong while migrating viewed posts",
             error: err.message,
         });
     }
