@@ -6,7 +6,6 @@ export const verifyPassword = async (password, hashedPassword) => {
         if (!isPasswordValid) {
             return { message: "WRONG_CREDENTIALS" };
         }
-        return { message: "VALID" };
     } catch (err) {
         throw new Error({
             message: `something went wrong while validating the password, err: ${err.message}`,

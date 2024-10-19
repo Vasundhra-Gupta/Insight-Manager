@@ -13,26 +13,29 @@ export async function migratePosts(req, res, next) {
 
             // Fetch all existing posts from MongoDB
             const MongoDBposts = await Post.find();
-            const MongoDBpostIds = new Set(MongoDBposts.map((c) => c.post_id));
+            const MongoDBpostIds = MongoDBposts.map((c) => c.post_id);
 
             const newPosts = [];
             const updatedPosts = [];
 
             // 1. Find new & updated records
             for (let post of SQLposts) {
-                if (!MongoDBpostIds.has(post.post_id)) {
+                if (!MongoDBpostIds.includes(post.post_id)) {
                     // new post
                     newPosts.push(post);
                 } else {
                     // If exists, compare
                     const existingMongoPost = MongoDBposts.find((c) => c.post_id === post.post_id);
                     if (
-                        existingMongoPost &&
-                        (existingMongoPost.post_title !== post.post_title ||
-                            existingMongoPost.post_content !== post.post_content ||
-                            existingMongoPost.post_image !== post.post_image ||
-                            existingMongoPost.post_visibility !== Boolean(post.post_visibility) ||
-                            existingMongoPost.post_category !== post.post_category)
+                        Object.entries(existingMongoPost).some(
+                            ([key, value]) => Object.keys(post).includes(key) && value !== post[key]
+                        )
+                        // existingMongoPost.post_title !== post.post_title ||
+                        // existingMongoPost.post_content !== post.post_content ||
+                        // existingMongoPost.post_image !== post.post_image ||
+                        // existingMongoPost.post_visibility !== Boolean(post.post_visibility) ||
+                        // existingMongoPost.post_category !== post.post_category ||
+                        // existingMongoPost.post_updatedAt !== post.post_updatedAt
                     ) {
                         // If different, push to updatedPosts array
                         updatedPosts.push(post);
@@ -41,7 +44,7 @@ export async function migratePosts(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedPostsIds = await Post.find({
+            const deletedPosts = await Post.find({
                 post_id: { $nin: SQLpostIds },
             });
 
@@ -62,6 +65,7 @@ export async function migratePosts(req, res, next) {
                                 post_category: p.post_category,
                                 post_image: p.post_image,
                                 post_visibility: p.post_visibility,
+                                post_updatedAt: p.post_updatedAt,
                             },
                         },
                     },
@@ -70,15 +74,22 @@ export async function migratePosts(req, res, next) {
             }
 
             // 5. Delete
-            if (deletedPostsIds.length > 0) {
+            if (deletedPosts.length > 0) {
+                const deletedPostsIds = deletedPosts.map((p) => p.post_id);
                 await Post.deleteMany({ post_id: { $in: deletedPostsIds } });
             }
 
             console.log(
-                `${newPosts.length} new POSTS INSERTED.\n${updatedPosts.length} POSTS UPDATED.\n${deletedPostsIds.length} POSTS DELETED.`
+                `${newPosts.length} new POSTS INSERTED.\n${updatedPosts.length} POSTS UPDATED.\n${deletedPosts.length} POSTS DELETED.`
             );
         } else {
-            console.log("NO_POSTS_TO_MIGRATE");
+            const count = await Post.countDocuments();
+            if (count) {
+                await Post.deleteMany();
+                console.log("CLEARED MONGODB POSTS\n");
+            } else {
+                console.log("NO_POSTS_TO_MIGRATE");
+            }
         }
 
         next();

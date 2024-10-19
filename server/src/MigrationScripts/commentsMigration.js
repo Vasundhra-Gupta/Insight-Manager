@@ -13,14 +13,14 @@ export async function migrateComments(req, res, next) {
 
             // Fetch all existing comments from MongoDB
             const MongoDBcomments = await Comment.find();
-            const MongoDBcommentIds = new Set(MongoDBcomments.map((c) => c.comment_id));
+            const MongoDBcommentIds = MongoDBcomments.map((c) => c.comment_id);
 
             const newComments = [];
             const updatedComments = [];
 
             // 1. Find new & updated records
             for (let comment of SQLcomments) {
-                if (!MongoDBcommentIds.has(comment.comment_id)) {
+                if (!MongoDBcommentIds.includes(comment.comment_id)) {
                     // new comment
                     newComments.push(comment);
                 } else {
@@ -36,16 +36,16 @@ export async function migrateComments(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedCommentsIds = await Comment.find({
+            const deletedComments = await Comment.find({
                 comment_id: { $nin: SQLcommentIds },
-            }).select("comment_id");
+            });
 
-            // 3. Insert new comments
+            // 3. Insert
             if (newComments.length > 0) {
                 await Comment.insertMany(newComments);
             }
 
-            // 4. Update existing comments (bulk update)
+            // 4. Update (bulk update)
             if (updatedComments.length > 0) {
                 const bulkOptions = updatedComments.map((c) => ({
                     updateOne: {
@@ -56,15 +56,22 @@ export async function migrateComments(req, res, next) {
                 await Comment.bulkWrite(bulkOptions);
             }
 
-            // 5. Delete comments that are deleted from SQL
-            if (deletedCommentsIds.length > 0) {
+            // 5. Delete
+            if (deletedComments.length > 0) {
+                const deletedCommentsIds = deletedComments.map((c) => c.comment_id);
                 await Comment.deleteMany({ comment_id: { $in: deletedCommentsIds } });
             }
             console.log(
-                `${newComments.length} new COMMENTS INSERTED.\n${updatedComments.length} COMMENTS UPDATED.\n${deletedCommentsIds.length} COMMENTS DELETED.`
+                `${newComments.length} new COMMENTS INSERTED.\n${updatedComments.length} COMMENTS UPDATED.\n${deletedComments.length} COMMENTS DELETED.`
             );
         } else {
-            console.log("NO_COMMENTS_TO_MIGRATE");
+            const count = await Comment.countDocuments();
+            if (count) {
+                await Comment.deleteMany();
+                console.log("CLEARED MONGODB COMMENTS\n");
+            } else {
+                console.log("NO_COMMENTS_TO_MIGRATE");
+            }
         }
 
         next();

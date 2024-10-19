@@ -13,14 +13,14 @@ export async function migrateCategories(req, res, next) {
 
             // Fetch all existing categories from MongoDB
             const MongoDBcategories = await Category.find();
-            const MongoDBcategoryIds = new Set(MongoDBcategories.map((c) => c.category_id));
+            const MongoDBcategoryIds = MongoDBcategories.map((c) => c.category_id);
 
             const newCategories = [];
             const updatedCategories = [];
 
             // 1. Find new & updated records
             for (let category of SQLcategories) {
-                if (!MongoDBcategoryIds.has(category.category_id)) {
+                if (!MongoDBcategoryIds.includes(category.category_id)) {
                     // new category
                     newCategories.push(category);
                 } else {
@@ -28,7 +28,10 @@ export async function migrateCategories(req, res, next) {
                     const existingMongoCategory = MongoDBcategories.find(
                         (c) => c.category_id === category.category_id
                     );
-                    if (existingMongoCategory?.category_name !== category.category_name) {
+                    if (
+                        existingMongoCategory &&
+                        existingMongoCategory.category_name !== category.category_name
+                    ) {
                         // If different, push to updatedCategories array
                         updatedCategories.push(category);
                     }
@@ -36,9 +39,9 @@ export async function migrateCategories(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedCategoriesIds = await Category.find({
-                category_id: { $nin: SQLcategoryIds },
-            });
+            const deletedCategories = MongoDBcategories.filter(
+                (c) => !SQLcategoryIds.includes(c.category_id)
+            );
 
             // 3. Insert
             if (newCategories.length > 0) {
@@ -57,15 +60,22 @@ export async function migrateCategories(req, res, next) {
             }
 
             // 5. Delete
-            if (deletedCategoriesIds.length > 0) {
+            if (deletedCategories.length > 0) {
+                const deletedCategoriesIds = deletedCategories.map((c) => c.category_id);
                 await Category.deleteMany({ category_id: { $in: deletedCategoriesIds } });
             }
 
             console.log(
-                `${newCategories.length} new CATEGORIES INSERTED.\n${updatedCategories.length} CATEGORIES UPDATED.\n${deletedCategoriesIds.length} CATEGORIES DELETED.`
+                `${newCategories.length} new CATEGORIES INSERTED.\n${updatedCategories.length} CATEGORIES UPDATED.\n${deletedCategories.length} CATEGORIES DELETED.\n`
             );
         } else {
-            console.log("NO_CATEGORIES_TO_MIGRATE");
+            const count = await Category.countDocuments();
+            if (count) {
+                await Category.deleteMany();
+                console.log("CLEARED MONGODB CATEGORIES\n");
+            } else {
+                console.log("NO_CATEGORIES_TO_MIGRATE");
+            }
         }
 
         next();

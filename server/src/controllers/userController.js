@@ -105,7 +105,6 @@ const loginUser = async (req, res) => {
         }
 
         const user = await userObject.getUser(loginInput);
-        console.log("2");
         if (user?.message) {
             return res.status(BAD_REQUEST).json(user); // user = {message:"USER_NOT_FOUND"}
         }

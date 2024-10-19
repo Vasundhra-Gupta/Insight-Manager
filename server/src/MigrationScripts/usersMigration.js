@@ -9,34 +9,37 @@ export async function migrateUsers(req, res, next) {
         console.log(SQLusers);
 
         if (SQLusers.length) {
-            const SQLuserIds = SQLusers.map((user) => user.user_id);
+            const SQLuserIds = SQLusers.map((u) => u.user_id);
 
             // Fetch all existing users from MongoDB
             const MongoDBusers = await User.find();
-            const MongoDBuserIds = new Set(MongoDBusers.map((c) => c.user_id));
+            const MongoDBuserIds = MongoDBusers.map((u) => u.user_id);
 
             const newUsers = [];
             const updatedUsers = [];
 
             // 1. Find new & updated records
             for (let user of SQLusers) {
-                if (!MongoDBuserIds.has(user.user_id)) {
+                if (!MongoDBuserIds.includes(user.user_id)) {
                     // new user
                     newUsers.push(user);
                 } else {
                     // If exists, compare
-                    const existingMongoUser = MongoDBusers.find((c) => c.user_id === user.user_id);
+                    const existingMongoUser = MongoDBusers.find((u) => u.user_id === user.user_id);
 
                     if (
-                        existingMongoUser &&
-                        (existingMongoUser.user_name !== user.user_name ||
-                            existingMongoUser.user_firstName !== user.user_firstName ||
-                            existingMongoUser.user_lastName !== user.user_lastName ||
-                            existingMongoUser.user_email !== user.user_email ||
-                            existingMongoUser.user_avatar !== user.user_avatar ||
-                            existingMongoUser.user_coverImage !== user.user_coverImage ||
-                            existingMongoUser.refresh_token !== user.refresh_token ||
-                            existingMongoUser.user_password !== user.user_password)
+                        Object.entries(existingMongoUser).some(
+                            ([key, value]) => Object.keys(user).includes(key) && value !== user[key]
+                        )
+                        // existingMongoUser.user_name !== user.user_name ||
+                        // existingMongoUser.user_firstName !== user.user_firstName ||
+                        // existingMongoUser.user_lastName !== user.user_lastName ||
+                        // existingMongoUser.user_email !== user.user_email ||
+                        // existingMongoUser.user_avatar !== user.user_avatar ||
+                        // existingMongoUser.user_coverImage !== user.user_coverImage ||
+                        // existingMongoUser.refresh_token !== user.refresh_token ||
+                        // existingMongoUser.user_bio !== user.user_bio ||
+                        // existingMongoUser.user_password !== user.user_password
                     ) {
                         // If different, push to updatedUsers array
                         updatedUsers.push(user);
@@ -45,7 +48,7 @@ export async function migrateUsers(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedUsersIds = await User.find({
+            const deletedUsers = await User.find({
                 user_id: { $nin: SQLuserIds },
             });
 
@@ -61,6 +64,7 @@ export async function migrateUsers(req, res, next) {
                         filter: { user_id: u.user_id },
                         update: {
                             $set: {
+                                user_name: u.user_name,
                                 user_firstName: u.user_firstName,
                                 user_lastName: u.user_lastName,
                                 user_email: u.user_email,
@@ -68,6 +72,7 @@ export async function migrateUsers(req, res, next) {
                                 user_coverImage: u.user_coverImage,
                                 user_password: u.user_password,
                                 refresh_token: u.refresh_token,
+                                user_bio: u.user_bio,
                             },
                         },
                     },
@@ -76,15 +81,22 @@ export async function migrateUsers(req, res, next) {
             }
 
             // 5. Delete
-            if (deletedUsersIds.length > 0) {
+            if (deletedUsers.length > 0) {
+                const deletedUsersIds = deletedUsers.map((u) => u.user_id);
                 await User.deleteMany({ user_id: { $in: deletedUsersIds } });
             }
 
             console.log(
-                `${newUsers.length} new USERS INSERTED.\n${updatedUsers.length} USERS UPDATED.\n${deletedUsersIds.length} USERS DELETED.`
+                `${newUsers.length} new USERS INSERTED.\n${updatedUsers.length} USERS UPDATED.\n${deletedUsers.length} USERS DELETED.`
             );
         } else {
-            console.log("NO_USERS_TO_MIGRATE");
+            const count = await User.countDocuments();
+            if (count) {
+                await User.deleteMany();
+                console.log("CLEARED MONGODB USERS\n");
+            } else {
+                console.log("NO_USERS_TO_MIGRATE");
+            }
         }
 
         next();
