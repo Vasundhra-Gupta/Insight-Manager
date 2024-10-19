@@ -44,18 +44,21 @@ const postSchema = new Schema({
     },
 });
 
-// const postViewSchema = new Schema({
-//     post_id: {
-//         type: String,
-//         ref: "posts",
-//         required: true,
-//         index: true,
-//     },
-//     user_identifier: {
-//         type: String,
-//         ref: "users",
-//         required: true,
-//     }
-// });
+const postViewSchema = new Schema({
+    post_id: {
+        type: String,
+        ref: "posts",
+        required: true,
+        index: true,
+    },
+    user_identifier: {
+        type: String,
+        ref: "users",
+        required: true,
+    }
+});
 
-export const Post = model("Post", postSchema);
+const Post = model("Post", postSchema);
+const PostView = model("PostView", postViewSchema)
+
+export {Post, PostView}
