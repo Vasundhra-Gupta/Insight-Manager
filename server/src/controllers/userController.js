@@ -15,6 +15,7 @@ export const userObject = getServiceObject("users");
 
 // pending form validity
 const registerUser = async (req, res) => {
+    let coverImage, avatar;
     try {
         const { userName, firstName, lastName, email, password } = req.body;
         const userId = uuid();
@@ -54,26 +55,23 @@ const registerUser = async (req, res) => {
         if (!avatarLocalPath) {
             throw new Error({ message: "AVATAR_LOCALPATH_MULTER_ISSUE" });
         }
-        const avatar = await uploadOnCloudinary(avatarLocalPath);
+        avatar = await uploadOnCloudinary(avatarLocalPath);
         if (!avatar) {
-            return res.status(SERVER_ERROR).json({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
+            throw new Error({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
         }
         const avatarURL = avatar.url;
 
-        let coverImageURL = "";
         if (req.files?.coverImage) {
             const coverImageLocalPath = req.files.coverImage[0].path;
             if (!coverImageLocalPath) {
                 throw new Error({ message: "COVERIMAGE_LOCALPATH_MULTER_ISSUE" });
             }
-            const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+            coverImage = await uploadOnCloudinary(coverImageLocalPath);
             if (!coverImage) {
-                return res
-                    .status(SERVER_ERROR)
-                    .json({ message: "COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
+                throw new Error({ message: "COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
             }
-            coverImageURL = coverImage.url;
         }
+        const coverImageURL = coverImage.url;
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userObject.createUser(
@@ -89,6 +87,12 @@ const registerUser = async (req, res) => {
 
         return res.status(OK).json(user);
     } catch (err) {
+        if (avatar) {
+            await deleteFromCloudinary(avatar.url);
+        }
+        if (coverImage) {
+            await deleteFromCloudinary(coverImage.url);
+        }
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while registering the user.",
             error: err.message,
@@ -340,6 +344,7 @@ const updatePassword = async (req, res) => {
 };
 
 const updateAvatar = async (req, res) => {
+    let avatar;
     try {
         const { user_id, user_avatar } = req.user;
 
@@ -356,9 +361,9 @@ const updateAvatar = async (req, res) => {
             throw new Error({ message: "AVATAR_LOCALPATH_MULTER_ISSUE" });
         }
 
-        const avatar = await uploadOnCloudinary(avatarLocalPath);
+        avatar = await uploadOnCloudinary(avatarLocalPath);
         if (!avatar) {
-            return res.status(500).json({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
+            throw new Error({ message: "AVATAR_UPLOAD_CLOUDINARY_ISSUE" });
         }
         const avatarURL = avatar.url;
         const updatedUser = await userObject.updateAvatar(user_id, avatarURL);
@@ -366,12 +371,15 @@ const updateAvatar = async (req, res) => {
         if (updatedUser) {
             const response = await deleteFromCloudinary(user_avatar);
             if (response.result !== "ok") {
-                return res.status(500).json({ message: "OLD_AVATAR_DELETION_CLOUDINARY_ISSUE" });
+                throw new Error({ message: "OLD_AVATAR_DELETION_CLOUDINARY_ISSUE" });
             }
         }
 
         return res.status(OK).json(updatedUser);
     } catch (err) {
+        if (avatar) {
+            await deleteFromCloudinary(avatar.url);
+        }
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while updating avatar.",
             error: err.message,
@@ -380,6 +388,7 @@ const updateAvatar = async (req, res) => {
 };
 
 const updateCoverImage = async (req, res) => {
+    let coverImage;
     try {
         const { user_id, user_coverImage } = req.user;
 
@@ -396,9 +405,9 @@ const updateCoverImage = async (req, res) => {
             throw new Error({ message: "COVERIMAGE_LOCALPATH_MULTER_ISSUE" });
         }
 
-        const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+        coverImage = await uploadOnCloudinary(coverImageLocalPath);
         if (!coverImage) {
-            return res.status(500).json({ message: "COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
+            throw new Error({ message: "COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
         }
 
         const coverImageURL = coverImage.url;
@@ -407,14 +416,15 @@ const updateCoverImage = async (req, res) => {
         if (updatedUser) {
             const response = await deleteFromCloudinary(user_coverImage);
             if (response.result !== "ok") {
-                return res
-                    .status(500)
-                    .json({ message: "OLD_COVERIMAGE_DELETION_CLOUDINARY_ISSUE" });
+                throw new Error({ message: "OLD_COVERIMAGE_DELETION_CLOUDINARY_ISSUE" });
             }
         }
 
         return res.status(OK).json(updatedUser);
     } catch (err) {
+        if (coverImage) {
+            await deleteFromCloudinary(coverImage.url);
+        }
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while updating coverImage.",
             error: err.message,

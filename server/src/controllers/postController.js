@@ -79,6 +79,7 @@ const getPost = async (req, res) => {
 };
 
 const addPost = async (req, res) => {
+    let postImage;
     try {
         const { user_id } = req.user;
         const { title, content, category } = req.body;
@@ -102,10 +103,10 @@ const addPost = async (req, res) => {
 
         const postImageLocalPath = req.file.path;
         if (!postImageLocalPath) {
-            throw new Error("POSTIMAGE_LOCALPATH_MULTER_ISSUE");
+            throw new Error({ message: "POSTIMAGE_LOCALPATH_MULTER_ISSUE" });
         }
 
-        const postImage = await uploadOnCloudinary(postImageLocalPath);
+        postImage = await uploadOnCloudinary(postImageLocalPath);
         if (!postImage) {
             throw new Error({ message: "POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
         }
@@ -123,6 +124,9 @@ const addPost = async (req, res) => {
 
         return res.status(OK).json(post);
     } catch (err) {
+        if (postImage) {
+            await deleteFromCloudinary(postImage.url);
+        }
         return res.status(SERVER_ERROR).json({
             message: "something went wrong while adding a post",
             error: err.message,
@@ -206,6 +210,7 @@ const updatePostDetails = async (req, res) => {
 };
 
 const updatePostImage = async (req, res) => {
+    let postImage;
     try {
         const { postId } = req.params;
         const { user_id } = req.user;
@@ -232,7 +237,7 @@ const updatePostImage = async (req, res) => {
             throw new Error({ message: "POSTIMAGE_LOCALPATH_MULTER_ISSUE" });
         }
 
-        const postImage = await uploadOnCloudinary(postImageLocalPath);
+        postImage = await uploadOnCloudinary(postImageLocalPath);
         if (!postImage) {
             throw new Error({ message: "POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE" });
         }
@@ -250,6 +255,9 @@ const updatePostImage = async (req, res) => {
 
         return res.status(OK).json(updatedPost);
     } catch (err) {
+        if (postImage) {
+            await deleteFromCloudinary(postImage.url);
+        }
         return res.status(SERVER_ERROR).json({
             message: "something wrong happened while updating post image",
             error: err.message,
