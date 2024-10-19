@@ -48,9 +48,7 @@ export async function migrateUsers(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedUsers = await User.find({
-                user_id: { $nin: SQLuserIds },
-            });
+            const deletedUsers = MongoDBusers.filter((u) => !SQLuserIds.includes(u.user_id));
 
             // 3. Insert
             if (newUsers.length > 0) {
@@ -107,29 +105,3 @@ export async function migrateUsers(req, res, next) {
         });
     }
 }
-
-// export async function migrateUsers(req, res, next) {
-//     try {
-//         const [users] = await connection.query("SELECT * FROM users");
-//         console.log(users);
-
-//         if (users.length) {
-//             const result = await User.insertMany(users);
-//             console.log(result);
-
-//             if (result.length) {
-//                 console.log("USERS_MIGRATED_SUCCESSFULLY");
-//             } else {
-//                 throw new Error({ message: "MONGODB_USER_MIGRATION_ISSUE" });
-//             }
-//         } else {
-//             console.log("NO_USERS_TO_MIGRATE");
-//         }
-//         next();
-//     } catch (err) {
-//         return res.status(SERVER_ERROR).json({
-//             message: "something went wrong while migrating users",
-//             error: err.message,
-//         });
-//     }
-// }

@@ -5,7 +5,7 @@ import { SERVER_ERROR } from "../constants/errorCodes.js";
 export async function migrateCategories(req, res, next) {
     try {
         // Fetch all categories from SQL
-        const [SQLcategories] = await connection.query("SELECT * FROM categories");
+        const [SQLcategories] = await connection.query("SELECT * FROM categories"); // ⭐ could think of limit (pagination concept as app scales)
         console.log(SQLcategories);
 
         if (SQLcategories.length) {
@@ -86,33 +86,3 @@ export async function migrateCategories(req, res, next) {
         });
     }
 }
-
-// export async function migrateCategories(req, res, next) {
-//     try {
-//         const [categories] = await connection.query("SELECT * FROM categories"); // ⭐ could think of limit (pagination concept as app scales)
-//         if (!categories) {
-//             throw new Error({ message: "CATEGORIES_FETCHING_SQL_ISSUE" });
-//         }
-
-//         console.log(categories);
-
-//         if (categories.length) {
-//             const result = await Category.insertMany(categories);
-//             console.log(result);
-
-//             if (result.length) {
-//                 console.log("CATEGORIES_MIGRATED_SUCCESSFULLY");
-//             } else {
-//                 throw new Error({ message: "MONGODB_CATEGORY_MIGRATION_ISSUE" });
-//             }
-//         } else {
-//             console.log("NO_CATEGORIES_TO_MIGRATE");
-//         }
-//         next();
-//     } catch (err) {
-//         return res.status(SERVER_ERROR).json({
-//             message: "something went wrong while migrating categories",
-//             error: err.message,
-//         });
-//     }
-// }

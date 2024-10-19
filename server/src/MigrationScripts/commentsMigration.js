@@ -36,9 +36,9 @@ export async function migrateComments(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedComments = await Comment.find({
-                comment_id: { $nin: SQLcommentIds },
-            });
+            const deletedComments = MongoDBcomments.filter(
+                (c) => !SQLcommentIds.includes(c.comment_id)
+            );
 
             // 3. Insert
             if (newComments.length > 0) {
@@ -83,28 +83,4 @@ export async function migrateComments(req, res, next) {
     }
 }
 
-// export async function migrateComments(req, res, next) {
-//     try {
-//         const [comments] = await connection.query("SELECT * FROM comments");
-//         console.log(comments);
 
-//         if (comments.length) {
-//             const result = await Comment.insertMany(comments);
-//             console.log(result);
-
-//             if (result.length) {
-//                 console.log("COMMENTS_MIGRATED_SUCCESSFULLY");
-//             } else {
-//                 throw new Error({ message: "MONGODB_COMMENT_MIGRATION_ISSUE" });
-//             }
-//         } else {
-//             console.log("NO_COMMENTS_TO_MIGRATE");
-//         }
-//         next();
-//     } catch (err) {
-//         return res.status(SERVER_ERROR).json({
-//             message: "something went wrong while migrating comments",
-//             error: err.message,
-//         });
-//     }
-// }

@@ -6,6 +6,7 @@ export async function migratePostLikes(req, res, next) {
     try {
         const [SQLlikedPosts] = await connection.query("SELECT * FROM post_likes");
         console.log(SQLlikedPosts);
+
         if (SQLlikedPosts.length) {
             // SQL saved posts keys
             const SQLlikedPostKeys = SQLlikedPosts.map((p) => `${p.post_id} ${p.user_id}`);
@@ -17,7 +18,7 @@ export async function migratePostLikes(req, res, next) {
             const MongoDBlikedPostsKeys = MongoDBlikedPosts.map((p) => `${p.post_id} ${p.user_id}`);
 
             const newLikedPosts = [];
-            const updatedLikedPost = [];
+            const updatedLikedPosts = [];
 
             //find records to Insert o update
             for (let post of SQLlikedPosts) {
@@ -25,12 +26,12 @@ export async function migratePostLikes(req, res, next) {
                 if (!MongoDBlikedPostsKeys.includes(key)) {
                     newLikedPosts.push(post);
                 } else {
-                    const existingMongoPost = MongoDBlikedPosts.filter((p) => p.post_id === post.post_id && p.user_id === post.user_id);
-                    existingMongoPost.map((p) => {
-                        if (p.is_liked != post.is_liked) {
-                            updatedLikedPost.push(post);
-                        }
-                    });
+                    const existingMongoPost = MongoDBlikedPosts.find(
+                        (p) => p.post_id === post.post_id && p.user_id === post.user_id
+                    );
+                    if (existingMongoPost.is_liked !== Boolean(post.is_liked)) {
+                        updatedLikedPosts.push(post);
+                    }
                 }
             }
 
@@ -46,8 +47,8 @@ export async function migratePostLikes(req, res, next) {
             }
 
             //Update
-            if (updatedLikedPost.length) {
-                const bulkOptions = updatedLikedPost.map((p) => ({
+            if (updatedLikedPosts.length) {
+                const bulkOptions = updatedLikedPosts.map((p) => ({
                     updateOne: {
                         filter: { post_id: p.post_id, user_id: p.user_id },
                         update: {
@@ -62,23 +63,26 @@ export async function migratePostLikes(req, res, next) {
 
             //Delete
             if (deletedlikedPosts.length) {
-                const deleteFilters = deletedlikedPosts.map((s) => ({
-                    post_id: s.post_id,
-                    user_id: s.user_id,
+                const deleteFilters = deletedlikedPosts.map((p) => ({
+                    post_id: p.post_id,
+                    user_id: p.user_id,
                 }));
                 await PostLike.deleteMany({ $or: deleteFilters });
             }
 
-            console.log(`${newLikedPosts.length} new LIKEDPOSTS INSERTED \n ${deletedlikedPosts.length} LIKEDPOSTS DELETED`);
+            console.log(
+                `${newLikedPosts.length} new LIKEDPOSTS INSERTED.\n${updatedLikedPosts.length} LIKEDPOSTS UPDATED.\n${deletedlikedPosts.length} LIKEDPOSTS DELETED.`
+            );
         } else {
             const count = PostLike.countDocuments();
             if (count) {
                 await PostLike.deleteMany();
-                console.log("CLEARED MONGODB LIKEDPOSTS\n");
+                console.log("CLEARED MONGODB LIKEDPOSTS");
             } else {
                 console.log("NO_LIKEDPOSTS_TO_MIGRATE");
             }
         }
+
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -92,37 +96,40 @@ export async function migrateCommentLikes(req, res, next) {
     try {
         const [SQLlikedComments] = await connection.query("SELECT * FROM comment_likes");
         console.log(SQLlikedComments);
-        if (SQLlikedComments.length) {
-            // SQL saved posts keys
-            const SQLlikedCommentKeys = SQLlikedComments.map((p) => `${p.post_id} ${p.user_id}`);
 
-            // MongoDB saved posts
+        if (SQLlikedComments.length) {
+            // SQL saved comments keys
+            const SQLlikedCommentKeys = SQLlikedComments.map((c) => `${c.comment_id} ${c.user_id}`);
+
+            // MongoDB saved comments
             const MongoDBlikedComments = await CommentLike.find();
             console.log(MongoDBlikedComments);
-            // MongoDB saved posts keys
-            const MongoDBlikedCommentKeys = MongoDBlikedComments.map((p) => `${p.post_id} ${p.user_id}`);
+            // MongoDB saved comments keys
+            const MongoDBlikedCommentKeys = MongoDBlikedComments.map(
+                (c) => `${c.comment_id} ${c.user_id}`
+            );
 
             const newLikedComments = [];
             const updatedLikedComments = [];
 
             //find records to Insert o update
-            for (let post of SQLlikedComments) {
-                const key = `${post.post_id} ${post.user_id}`;
+            for (let comment of SQLlikedComments) {
+                const key = `${comment.comment_id} ${comment.user_id}`;
                 if (!MongoDBlikedCommentKeys.includes(key)) {
-                    newLikedComments.push(post);
+                    newLikedComments.push(comment);
                 } else {
-                    const existingMongoPost = MongoDBlikedComments.filter((p) => p.post_id === post.post_id && p.user_id === post.user_id);
-                    existingMongoPost.map((p) => {
-                        if (p.is_liked != post.is_liked) {
-                            updatedLikedComments.push(post);
-                        }
-                    });
+                    const existingMongoComment = MongoDBlikedComments.find(
+                        (c) => c.comment_id === comment.comment_id && c.user_id === comment.user_id
+                    );
+                    if (existingMongoComment.is_liked !== Boolean(comment.is_liked)) {
+                        updatedLikedComments.push(comment);
+                    }
                 }
             }
 
             //find records to Delete
-            const deletedlikedComments = MongoDBlikedComments.filter((p) => {
-                const key = `${p.post_id} ${p.user_id}`;
+            const deletedlikedComments = MongoDBlikedComments.filter((c) => {
+                const key = `${c.comment_id} ${c.user_id}`;
                 return !SQLlikedCommentKeys.includes(key);
             });
 
@@ -133,12 +140,12 @@ export async function migrateCommentLikes(req, res, next) {
 
             //Update
             if (updatedLikedComments.length) {
-                const bulkOptions = updatedLikedComments.map((p) => ({
+                const bulkOptions = updatedLikedComments.map((c) => ({
                     updateOne: {
-                        filter: { post_id: p.post_id, user_id: p.user_id },
+                        filter: { comment_id: c.comment_id, user_id: c.user_id },
                         update: {
                             $set: {
-                                is_liked: p.is_liked,
+                                is_liked: c.is_liked,
                             },
                         },
                     },
@@ -148,23 +155,26 @@ export async function migrateCommentLikes(req, res, next) {
 
             //Delete
             if (deletedlikedComments.length) {
-                const deleteFilters = deletedlikedComments.map((s) => ({
-                    post_id: s.post_id,
-                    user_id: s.user_id,
+                const deleteFilters = deletedlikedComments.map((c) => ({
+                    comment_id: c.comment_id,
+                    user_id: c.user_id,
                 }));
                 await CommentLike.deleteMany({ $or: deleteFilters });
             }
 
-            console.log(`${newLikedComments.length} new LIKEDCOMMENTS INSERTED \n ${deletedlikedComments.length} LIKEDCOMMENTS DELETED`);
+            console.log(
+                `${newLikedComments.length} new LIKEDCOMMENTS INSERTED.\n${updatedLikedComments.length} LIKEDCOMMENTS UPDATED.\n${deletedlikedComments.length} LIKEDCOMMENTS DELETED.`
+            );
         } else {
             const count = CommentLike.countDocuments();
             if (count) {
                 await CommentLike.deleteMany();
-                console.log("CLEARED MONGODB LIKEDCOMMENTS\n");
+                console.log("CLEARED MONGODB LIKEDCOMMENTS");
             } else {
                 console.log("NO_LIKEDCOMMENTS_TO_MIGRATE");
             }
         }
+
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -173,3 +183,4 @@ export async function migrateCommentLikes(req, res, next) {
         });
     }
 }
+

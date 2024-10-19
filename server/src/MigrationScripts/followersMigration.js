@@ -69,28 +69,4 @@ export async function migrateFollowers(req, res, next) {
     }
 }
 
-// export async function migrateFollowers(req, res, next) {
-//     try {
-//         const [followers] = await connection.query("SELECT * FROM followers");
-//         console.log(followers);
 
-//         if (followers.length) {
-//             const result = await Follower.insertMany(followers);
-//             console.log(result);
-
-//             if (result.length) {
-//                 console.log("FOLLOWERS_MIGRATED_SUCCESSFULLY");
-//             } else {
-//                 throw new Error({ message: "MONGODB_FOLLOWER_MIGRATION_ISSUE" });
-//             }
-//         } else {
-//             return res.status(OK).json({ message: "NO_FOLLOWERS_TO_MIGRATE" });
-//         }
-//         next();
-//     } catch (err) {
-//         return res.status(BAD_REQUEST).json({
-//             message: "something went wrong while migrating followers",
-//             error: err.message,
-//         });
-//     }
-// }
