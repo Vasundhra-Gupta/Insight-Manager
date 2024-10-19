@@ -2,7 +2,7 @@ import { connection } from "../server.js";
 import { SERVER_ERROR } from "../constants/errorCodes.js";
 import { PostLike, CommentLike } from "../schemas/MongoDB/likeSchema.js";
 
-export async function migrateLikedPosts(req, res, next) {
+export async function migratePostLikes(req, res, next) {
     try {
         const [SQLlikedPosts] = await connection.query("SELECT * FROM post_likes");
         console.log(SQLlikedPosts);
@@ -88,7 +88,7 @@ export async function migrateLikedPosts(req, res, next) {
     }
 }
 
-export async function migrateCommentPosts(req, res, next) {
+export async function migrateCommentLikes(req, res, next) {
     try {
         const [SQLlikedComments] = await connection.query("SELECT * FROM comment_likes");
         console.log(SQLlikedComments);
