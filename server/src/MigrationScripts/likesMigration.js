@@ -47,18 +47,16 @@ export async function migrateLikedPosts(req, res, next) {
 
             //Update
             if (updatedLikedPost.length) {
-                const bulkOptions = updatedLikedPost.map(
-                    ((p) => ({
-                        updateOne: {
-                            filter: { post_id: p.post_id, user_id: p.user_id },
-                            update: {
-                                $set: {
-                                    is_liked: p.is_liked,
-                                },
+                const bulkOptions = updatedLikedPost.map((p) => ({
+                    updateOne: {
+                        filter: { post_id: p.post_id, user_id: p.user_id },
+                        update: {
+                            $set: {
+                                is_liked: p.is_liked,
                             },
                         },
-                    }))
-                );
+                    },
+                }));
                 await PostLike.bulkWrite(bulkOptions);
             }
 
@@ -118,7 +116,7 @@ export async function migrateCommentPosts(req, res, next) {
                         if (p.is_liked != post.is_liked) {
                             updatedLikedComments.push(post);
                         }
-                    })
+                    });
                 }
             }
 
@@ -135,18 +133,16 @@ export async function migrateCommentPosts(req, res, next) {
 
             //Update
             if (updatedLikedComments.length) {
-                const bulkOptions = updatedLikedComments.map(
-                    ((p) => ({
-                        updateOne: {
-                            filter: { post_id: p.post_id, user_id: p.user_id },
-                            update: {
-                                $set: {
-                                    is_liked: p.is_liked,
-                                },
+                const bulkOptions = updatedLikedComments.map((p) => ({
+                    updateOne: {
+                        filter: { post_id: p.post_id, user_id: p.user_id },
+                        update: {
+                            $set: {
+                                is_liked: p.is_liked,
                             },
                         },
-                    }))
-                );
+                    },
+                }));
                 await CommentLike.bulkWrite(bulkOptions);
             }
 
