@@ -16,16 +16,16 @@ import {
 migrationRouter
     .route("/db")
     .post(
-        migrateUsers,
-        migratePosts,
-        migrateComments,
-        migrateFollowers,
-        migrateCategories,
+        // migrateUsers,
+        // migratePosts,
+        // migrateComments,
+        // migrateFollowers,
+        // migrateCategories,
         migratePostLikes,
         migrateCommentLikes,
-        migratePostViews,
-        migrateSavedPosts,
-        migrateWatchHistory
+        // migratePostViews,
+        // migrateSavedPosts,
+        // migrateWatchHistory
     );
 
 migrationRouter.route("/users").post(migrateUsers);
