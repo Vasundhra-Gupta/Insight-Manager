@@ -1,11 +1,11 @@
-import { connection } from "../server.js"; // still has SQL connection in this connection variable.
-import { User } from "../schemas/MongoDB/userSchema.js";
-import { SERVER_ERROR } from "../constants/errorCodes.js";
+import { connection } from '../server.js'; // still has SQL connection in this connection variable.
+import { User } from '../schemas/MongoDB/userSchema.js';
+import { SERVER_ERROR } from '../constants/errorCodes.js';
 
 export async function migrateUsers(req, res, next) {
     try {
         // Fetch all users from SQL
-        const [SQLusers] = await connection.query("SELECT * FROM users");
+        const [SQLusers] = await connection.query('SELECT * FROM users');
         console.log(SQLusers);
 
         if (SQLusers.length) {
@@ -25,11 +25,15 @@ export async function migrateUsers(req, res, next) {
                     newUsers.push(user);
                 } else {
                     // If exists, compare
-                    const existingMongoUser = MongoDBusers.find((u) => u.user_id === user.user_id);
+                    const existingMongoUser = MongoDBusers.find(
+                        (u) => u.user_id === user.user_id
+                    );
 
                     if (
                         Object.entries(existingMongoUser).some(
-                            ([key, value]) => Object.keys(user).includes(key) && value !== user[key]
+                            ([key, value]) =>
+                                Object.keys(user).includes(key) &&
+                                value !== user[key]
                         )
                         // existingMongoUser.user_name !== user.user_name ||
                         // existingMongoUser.user_firstName !== user.user_firstName ||
@@ -48,7 +52,9 @@ export async function migrateUsers(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedUsers = MongoDBusers.filter((u) => !SQLuserIds.includes(u.user_id));
+            const deletedUsers = MongoDBusers.filter(
+                (u) => !SQLuserIds.includes(u.user_id)
+            );
 
             // 3. Insert
             if (newUsers.length > 0) {
@@ -81,7 +87,9 @@ export async function migrateUsers(req, res, next) {
             // 5. Delete
             if (deletedUsers.length > 0) {
                 const deletedUsersIds = deletedUsers.map((u) => u.user_id);
-                await User.deleteMany({ user_id: { $in: deletedUsersIds } });
+                await User.deleteMany({
+                    user_id: { $in: deletedUsersIds },
+                });
             }
 
             console.log(
@@ -91,16 +99,16 @@ export async function migrateUsers(req, res, next) {
             const count = await User.countDocuments();
             if (count) {
                 await User.deleteMany();
-                console.log("CLEARED MONGODB USERS\n");
+                console.log('CLEARED MONGODB USERS\n');
             } else {
-                console.log("NO_USERS_TO_MIGRATE");
+                console.log('NO_USERS_TO_MIGRATE');
             }
         }
 
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while migrating users",
+            message: 'something went wrong while migrating users',
             error: err.message,
         });
     }

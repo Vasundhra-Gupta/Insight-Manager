@@ -5,7 +5,7 @@ import {
     SQLfollowers,
     SQLcomments,
     // SQLcategories,
-} from "../models/SQL/index.js";
+} from '../models/SQL/index.js';
 
 import {
     MongoDBusers,
@@ -14,56 +14,56 @@ import {
     MongoDBfollowers,
     MongoDBcomments,
     // MongoDBcategories,
-} from "../models/MongoDB/index.js";
+} from '../models/MongoDB/index.js';
 
 export default function getServiceObject(serviceType) {
     try {
         switch (process.env.DATABASE_TYPE) {
-            case "SQL": {
+            case 'SQL': {
                 switch (serviceType) {
-                    case "users":
+                    case 'users':
                         return new SQLusers();
-                    case "posts":
+                    case 'posts':
                         return new SQLposts();
-                    case "likes":
+                    case 'likes':
                         return new SQLlikes();
-                    case "comments":
+                    case 'comments':
                         return new SQLcomments();
-                    case "followers":
+                    case 'followers':
                         return new SQLfollowers();
-                    case "categories":
+                    case 'categories':
                         return new SQLcategories();
                     default: {
-                        throw new Error("Unsupported service type");
+                        throw new Error('Unsupported service type');
                     }
                 }
             }
-            case "MongoDB": {
+            case 'MongoDB': {
                 switch (serviceType) {
-                    case "users":
+                    case 'users':
                         return new MongoDBusers();
-                    case "posts":
+                    case 'posts':
                         return new MongoDBposts();
-                    case "likes":
+                    case 'likes':
                         return new MongoDBlikes();
-                    case "comments":
+                    case 'comments':
                         return new MongoDBcomments();
-                    case "followers":
+                    case 'followers':
                         return new MongoDBfollowers();
-                    case "categories":
+                    case 'categories':
                         return new MongoDBcategories();
                     default: {
-                        throw new Error("Unsupported service type");
+                        throw new Error('Unsupported service type');
                     }
                 }
             }
             default: {
-                throw new Error("Unsupported Database Type");
+                throw new Error('Unsupported Database Type');
             }
         }
     } catch (err) {
         return console.log({
-            message: "something went wrong while generating service object",
+            message: 'something went wrong while generating service object',
             error: err.message,
         });
     }

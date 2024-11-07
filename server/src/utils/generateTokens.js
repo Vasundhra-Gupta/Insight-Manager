@@ -1,5 +1,5 @@
-import { userObject } from "../controllers/userController.js";
-import jwt from "jsonwebtoken";
+import { userObject } from '../controllers/userController.js';
+import jwt from 'jsonwebtoken';
 
 const generateAccessToken = async (userId) => {
     try {
@@ -20,7 +20,9 @@ const generateAccessToken = async (userId) => {
 
         return accessToken;
     } catch (err) {
-        throw new Error({ message: `something went wrong while generating the access token, err: ${err.message}` });
+        throw new Error({
+            message: `something went wrong while generating the access token, err: ${err.message}`,
+        });
     }
 };
 
@@ -44,7 +46,9 @@ const generateRefreshToken = async (userId) => {
 
         return refreshToken;
     } catch (err) {
-        throw new Error({ message: `something went wrong while generating the refresh token, err: ${err.message}` });
+        throw new Error({
+            message: `something went wrong while generating the refresh token, err: ${err.message}`,
+        });
     }
 };
 

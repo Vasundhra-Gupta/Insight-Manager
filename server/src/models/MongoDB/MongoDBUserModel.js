@@ -1,5 +1,5 @@
-import { Iusers } from "../../interfaces/userInterface.js";
-import validator from "validator";
+import { Iusers } from '../../interfaces/userInterface.js';
+import validator from 'validator';
 
 export class MongoDBusers extends Iusers {
     async getUser(searchInput) {
@@ -9,7 +9,16 @@ export class MongoDBusers extends Iusers {
         }
     }
 
-    async createUser(userId, userName, firstName, lastName, avatar, coverImage, email, password) {
+    async createUser(
+        userId,
+        userName,
+        firstName,
+        lastName,
+        avatar,
+        coverImage,
+        email,
+        password
+    ) {
         try {
         } catch (err) {
             throw err;

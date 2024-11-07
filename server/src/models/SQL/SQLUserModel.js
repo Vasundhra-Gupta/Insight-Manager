@@ -1,7 +1,7 @@
-import { Iusers } from "../../interfaces/userInterface.js";
-import { connection } from "../../server.js";
-import validator from "validator";
-import { verifyOrderBy } from "../../utils/verifyOrderBy.js";
+import { Iusers } from '../../interfaces/userInterface.js';
+import { connection } from '../../server.js';
+import validator from 'validator';
+import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
 
 export class SQLusers extends Iusers {
     async getUser(searchInput) {
@@ -23,10 +23,19 @@ export class SQLusers extends Iusers {
         }
     }
 
-    async createUser(userId, userName, firstName, lastName, avatar, coverImage, email, password) {
+    async createUser(
+        userId,
+        userName,
+        firstName,
+        lastName,
+        avatar,
+        coverImage,
+        email,
+        password
+    ) {
         try {
             const q =
-                "INSERT INTO users (user_id, user_name, user_firstName, user_lastName, user_avatar, user_coverImage, user_email, user_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                'INSERT INTO users (user_id, user_name, user_firstName, user_lastName, user_avatar, user_coverImage, user_email, user_password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
             await connection.query(q, [
                 userId,
@@ -42,7 +51,9 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "USER_CREATION_DB_ISSUE" });
+                throw new Error({
+                    message: 'USER_CREATION_DB_ISSUE',
+                });
             }
             const { refresh_token, ...createdUser } = user; // to exclude the password from the response
             return createdUser;
@@ -53,12 +64,14 @@ export class SQLusers extends Iusers {
 
     async deleteUser(userId) {
         try {
-            const q = "DELETE FROM users WHERE user_id = ?";
+            const q = 'DELETE FROM users WHERE user_id = ?';
 
             const [result] = await connection.query(q, [userId]);
 
             if (result.affectedRows === 0) {
-                throw new Error({ message: "USER_DELETION_DB_ISSUE" });
+                throw new Error({
+                    message: 'USER_DELETION_DB_ISSUE',
+                });
             }
         } catch (err) {
             throw err;
@@ -67,13 +80,15 @@ export class SQLusers extends Iusers {
 
     async logoutUser(userId) {
         try {
-            const q = "UPDATE users SET refresh_token = ? WHERE user_id = ?";
-            await connection.query(q, ["", userId]);
+            const q = 'UPDATE users SET refresh_token = ? WHERE user_id = ?';
+            await connection.query(q, ['', userId]);
 
             const user = await this.getUser(userId);
 
-            if (user?.refresh_token !== "") {
-                throw new Error({ message: "REFRESH_TOKEN_NOT_DELETED_IN_DB" });
+            if (user?.refresh_token !== '') {
+                throw new Error({
+                    message: 'REFRESH_TOKEN_NOT_DELETED_IN_DB',
+                });
             }
             return user;
         } catch (err) {
@@ -83,11 +98,13 @@ export class SQLusers extends Iusers {
 
     async updateRefreshToken(userId, refreshToken) {
         try {
-            const q = "UPDATE users SET refresh_token = ? WHERE user_id = ?";
+            const q = 'UPDATE users SET refresh_token = ? WHERE user_id = ?';
             await connection.query(q, [refreshToken, userId]);
             const user = await this.getUser(userId);
-            if (user?.refresh_token === "") {
-                throw new Error({ message: "REFRESH_TOKEN_NOT_SAVED_IN_DB" });
+            if (user?.refresh_token === '') {
+                throw new Error({
+                    message: 'REFRESH_TOKEN_NOT_SAVED_IN_DB',
+                });
             }
         } catch (err) {
             throw err;
@@ -98,18 +115,23 @@ export class SQLusers extends Iusers {
         try {
             let isFollowed = false;
             const q1 =
-                "SELECT COUNT(*) AS isFollowed FROM followers where following_id = ? AND follower_id = ? "; // either 0 or 1
+                'SELECT COUNT(*) AS isFollowed FROM followers where following_id = ? AND follower_id = ? '; // either 0 or 1
             if (currentUserId) {
-                const [[response1]] = await connection.query(q1, [channelId, currentUserId]);
+                const [[response1]] = await connection.query(q1, [
+                    channelId,
+                    currentUserId,
+                ]);
                 if (response1.isFollowed) {
                     isFollowed = true;
                 }
             }
 
-            const q = "SELECT * FROM channel_view WHERE user_id = ?";
+            const q = 'SELECT * FROM channel_view WHERE user_id = ?';
             const [[response]] = await connection.query(q, [channelId]);
             if (!response) {
-                throw new Error({ message: "CHANNEL_FETCHING_DB_ISSUE" });
+                throw new Error({
+                    message: 'CHANNEL_FETCHING_DB_ISSUE',
+                });
             }
 
             return { ...response, isFollowed };
@@ -121,14 +143,16 @@ export class SQLusers extends Iusers {
     async updateAccountDetails(userId, firstName, lastName, email) {
         try {
             const q =
-                "UPDATE users SET user_firstName=?, user_lastName = ?, user_email=? WHERE user_id= ?";
+                'UPDATE users SET user_firstName = ?, user_lastName = ?, user_email = ? WHERE user_id = ?';
 
             await connection.query(q, [firstName, lastName, email, userId]);
 
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "ACCOUNT_DETAILS_UPDATION_DB_ISSUE" });
+                throw new Error({
+                    message: 'ACCOUNT_DETAILS_UPDATION_DB_ISSUE',
+                });
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -140,14 +164,17 @@ export class SQLusers extends Iusers {
 
     async updateChannelDetails(userId, userName, bio) {
         try {
-            const q = "UPDATE users SET user_name=?, user_bio=? WHERE user_id= ?";
+            const q =
+                'UPDATE users SET user_name = ?, user_bio = ? WHERE user_id = ?';
 
             await connection.query(q, [userName, bio, userId]);
 
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "PROFILE_DETAILS_UPDATION_DB_ISSUE" });
+                throw new Error({
+                    message: 'PROFILE_DETAILS_UPDATION_DB_ISSUE',
+                });
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -159,14 +186,16 @@ export class SQLusers extends Iusers {
 
     async updatePassword(userId, newPassword) {
         try {
-            const q = "UPDATE users SET user_password = ? WHERE user_id = ?";
+            const q = 'UPDATE users SET user_password = ? WHERE user_id = ?';
 
             await connection.query(q, [newPassword, userId]);
 
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "PASSWORD_UPDATION_DB_ISSUE" });
+                throw new Error({
+                    message: 'PASSWORD_UPDATION_DB_ISSUE',
+                });
             }
 
             const { user_password, refresh_token, ...updatedUser } = user; // we dont show password anywhere (no need to return though)
@@ -178,14 +207,16 @@ export class SQLusers extends Iusers {
 
     async updateAvatar(userId, avatar) {
         try {
-            const q = "UPDATE users SET user_avatar = ? WHERE user_id = ?";
+            const q = 'UPDATE users SET user_avatar = ? WHERE user_id = ?';
 
             await connection.query(q, [avatar, userId]);
 
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "AVATAR_UPDATION_DB_ISSUE" });
+                throw new Error({
+                    message: 'AVATAR_UPDATION_DB_ISSUE',
+                });
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -197,14 +228,16 @@ export class SQLusers extends Iusers {
 
     async updateCoverImage(userId, coverImage) {
         try {
-            const q = "UPDATE users SET user_coverImage=? WHERE user_id= ?";
+            const q = 'UPDATE users SET user_coverImage=? WHERE user_id= ?';
 
             await connection.query(q, [coverImage, userId]);
 
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({ message: "COVERIMAGE_UPDATION_DB_ISSUE" });
+                throw new Error({
+                    message: 'COVERIMAGE_UPDATION_DB_ISSUE',
+                });
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -242,7 +275,8 @@ export class SQLusers extends Iusers {
                     LIMIT ? OFFSET ? 
                 `;
 
-            const countQ = "SELECT COUNT(*) AS totalPosts FROM  watch_history WHERE user_id = ?";
+            const countQ =
+                'SELECT COUNT(*) AS totalPosts FROM  watch_history WHERE user_id = ?';
 
             const offset = (page - 1) * limit;
 
@@ -250,7 +284,7 @@ export class SQLusers extends Iusers {
             const [posts] = await connection.query(q, [userId, limit, offset]);
 
             if (!posts?.length) {
-                return { message: "EMPTY_WATCH_HISTORY" };
+                return { message: 'EMPTY_WATCH_HISTORY' };
             }
 
             const totalPages = Math.ceil(totalPosts / limit);
@@ -258,7 +292,12 @@ export class SQLusers extends Iusers {
             const hasPrevPage = page > 1;
 
             return {
-                postsInfo: { totalPosts, totalPages, hasNextPage, hasPrevPage },
+                postsInfo: {
+                    totalPosts,
+                    totalPages,
+                    hasNextPage,
+                    hasPrevPage,
+                },
                 posts,
             };
         } catch (err) {
@@ -268,12 +307,16 @@ export class SQLusers extends Iusers {
 
     async clearWatchHistory(userId) {
         try {
-            const q = "DELETE FROM watch_history WHERE user_id = ?";
+            const q = 'DELETE FROM watch_history WHERE user_id = ?';
             const response = await connection.query(q, [userId]);
             if (response.affectedRows === 0) {
-                throw new Error({ message: "CLEARING_WATCH_HISTORY_DB_ISSUE" });
+                throw new Error({
+                    message: 'CLEARING_WATCH_HISTORY_DB_ISSUE',
+                });
             }
-            return { message: "WATCH_HISTORY_CLEARED_SUCCESSFULLY" };
+            return {
+                message: 'WATCH_HISTORY_CLEARED_SUCCESSFULLY',
+            };
         } catch (err) {
             throw err;
         }

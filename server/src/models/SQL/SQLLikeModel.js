@@ -1,6 +1,6 @@
-import { Ilikes } from "../../interfaces/likeInterface.js";
-import { connection } from "../../server.js";
-import { verifyOrderBy } from "../../utils/verifyOrderBy.js";
+import { Ilikes } from '../../interfaces/likeInterface.js';
+import { connection } from '../../server.js';
+import { verifyOrderBy } from '../../utils/verifyOrderBy.js';
 
 export class SQLlikes extends Ilikes {
     async getLikedPosts(userId, orderBy, limit, page) {
@@ -31,7 +31,7 @@ export class SQLlikes extends Ilikes {
                 `;
 
             const countQ =
-                "SELECT COUNT(*) AS totalPosts FROM post_likes WHERE user_id = ? AND is_liked = 1";
+                'SELECT COUNT(*) AS totalPosts FROM post_likes WHERE user_id = ? AND is_liked = 1';
 
             const offset = (page - 1) * limit;
 
@@ -39,7 +39,7 @@ export class SQLlikes extends Ilikes {
             const [posts] = await connection.query(q, [userId, limit, offset]);
 
             if (!posts?.length) {
-                return { message: "NO_LIKED_POSTS" };
+                return { message: 'NO_LIKED_POSTS' };
             }
 
             const totalPages = Math.ceil(totalPosts / limit);
@@ -47,7 +47,12 @@ export class SQLlikes extends Ilikes {
             const hasPrevPage = page > 1;
 
             return {
-                postsInfo: { totalPosts, totalPages, hasNextPage, hasPrevPage },
+                postsInfo: {
+                    totalPosts,
+                    totalPages,
+                    hasNextPage,
+                    hasPrevPage,
+                },
                 posts,
             };
         } catch (err) {
@@ -57,8 +62,12 @@ export class SQLlikes extends Ilikes {
 
     async togglePostLike(postId, userId, likedStatus) {
         try {
-            const q = "CALL togglePostLike(?, ?, ?)";
-            const [[[response]]] = await connection.query(q, [userId, postId, likedStatus]);
+            const q = 'CALL togglePostLike(?, ?, ?)';
+            const [[[response]]] = await connection.query(q, [
+                userId,
+                postId,
+                likedStatus,
+            ]);
             return response;
         } catch (err) {
             throw err;
@@ -67,8 +76,12 @@ export class SQLlikes extends Ilikes {
 
     async toggleCommentLike(commentId, userId, likedStatus) {
         try {
-            const q = "CALL toggleCommentLike(?, ?, ?)";
-            const [[[response]]] = await connection.query(q, [userId, commentId, likedStatus]);
+            const q = 'CALL toggleCommentLike(?, ?, ?)';
+            const [[[response]]] = await connection.query(q, [
+                userId,
+                commentId,
+                likedStatus,
+            ]);
             return response;
         } catch (err) {
             throw err;

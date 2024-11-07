@@ -1,4 +1,4 @@
-import { Ifollowers } from "../../interfaces/followerInterface.js";
+import { Ifollowers } from '../../interfaces/followerInterface.js';
 
 export class MongoDBfollowers extends Ifollowers {
     async getFollowers(channelId) {

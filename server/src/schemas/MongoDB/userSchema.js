@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
 
 const userSchema = new Schema({
     user_id: {
@@ -22,7 +22,7 @@ const userSchema = new Schema({
     },
     user_bio: {
         type: String,
-        default: "",
+        default: '',
     },
     user_avatar: {
         type: String,
@@ -46,7 +46,7 @@ const userSchema = new Schema({
     },
     refresh_token: {
         type: String,
-        default: "",
+        default: '',
     },
 });
 
@@ -54,13 +54,13 @@ const savedPostSchema = {
     post_id: {
         type: String,
         required: true,
-        ref: "posts",
+        ref: 'posts',
     },
     user_id: {
         type: String,
         required: true,
-        ref: "users",
-        index: true
+        ref: 'users',
+        index: true,
     },
 };
 
@@ -68,13 +68,13 @@ const watchHistorySchema = {
     post_id: {
         type: String,
         required: true,
-        ref: "posts",
+        ref: 'posts',
     },
     user_id: {
         type: String,
         required: true,
-        ref: "users",
-        index: true
+        ref: 'users',
+        index: true,
     },
     watchedAt: {
         type: Date,
@@ -82,7 +82,7 @@ const watchHistorySchema = {
     },
 };
 
-const User = model("User", userSchema);
-const SavedPost = model("SavedPost", savedPostSchema);
-const WatchHistory = model("WatchHistory", watchHistorySchema);
+const User = model('User', userSchema);
+const SavedPost = model('SavedPost', savedPostSchema);
+const WatchHistory = model('WatchHistory', watchHistorySchema);
 export { User, SavedPost, WatchHistory };

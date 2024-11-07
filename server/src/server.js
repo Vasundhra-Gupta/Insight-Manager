@@ -1,6 +1,6 @@
-import "./config/envLoader.js";
-import { app } from "./app.js";
-import { dbInstance } from "./db/connectDB.js";
+import './config/envLoader.js';
+import { app } from './app.js';
+import { dbInstance } from './db/connectDB.js';
 
 const PORT = process.env.PORT || 4000;
 

@@ -1,4 +1,4 @@
-import { model, now, Schema } from "mongoose";
+import { model, now, Schema } from 'mongoose';
 
 const commentSchema = new Schema({
     comment_id: {
@@ -8,12 +8,12 @@ const commentSchema = new Schema({
     },
     user_id: {
         type: String,
-        ref: "users",
+        ref: 'users',
         required: true,
     },
     post_id: {
         type: String,
-        ref: "posts",
+        ref: 'posts',
         required: true,
     },
     comment_content: {
@@ -26,4 +26,4 @@ const commentSchema = new Schema({
     },
 });
 
-export const Comment = model("Comment", commentSchema);
+export const Comment = model('Comment', commentSchema);

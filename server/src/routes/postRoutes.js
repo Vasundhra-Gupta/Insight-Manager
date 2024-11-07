@@ -1,6 +1,6 @@
-import express from "express";
+import express from 'express';
 export const postRouter = express.Router();
-import { upload, verifyJwt, optionalVerifyJwt } from "../middlewares/index.js";
+import { upload, verifyJwt, optionalVerifyJwt } from '../middlewares/index.js';
 
 import {
     getPost,
@@ -13,26 +13,28 @@ import {
     togglePostVisibility,
     getSavedPosts,
     toggleSavePost,
-} from "../controllers/postController.js";
+} from '../controllers/postController.js';
 
-postRouter.route("/all").get(getRandomPosts);
+postRouter.route('/all').get(getRandomPosts);
 
-postRouter.route("/channel/:channelId").get(getPosts);
+postRouter.route('/channel/:channelId').get(getPosts);
 
-postRouter.route("/post/:postId").get(optionalVerifyJwt, getPost);
+postRouter.route('/post/:postId').get(optionalVerifyJwt, getPost);
 
 postRouter.use(verifyJwt);
 
-postRouter.route("/add").post(upload.single("postImage"), addPost);
+postRouter.route('/add').post(upload.single('postImage'), addPost);
 
-postRouter.route("/delete/:postId").delete(deletePost);
+postRouter.route('/delete/:postId').delete(deletePost);
 
-postRouter.route("/update-details/:postId").patch(updatePostDetails);
+postRouter.route('/update-details/:postId').patch(updatePostDetails);
 
-postRouter.route("/update-image/:postId").patch(upload.single("postImage"), updatePostImage);
+postRouter
+    .route('/update-image/:postId')
+    .patch(upload.single('postImage'), updatePostImage);
 
-postRouter.route("/toggle-visibility/:postId").patch(togglePostVisibility);
+postRouter.route('/toggle-visibility/:postId').patch(togglePostVisibility);
 
-postRouter.route("/saved").get(getSavedPosts);
+postRouter.route('/saved').get(getSavedPosts);
 
-postRouter.route("/toggle-save/:postId").post(toggleSavePost);
+postRouter.route('/toggle-save/:postId').post(toggleSavePost);

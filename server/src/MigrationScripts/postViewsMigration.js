@@ -1,19 +1,23 @@
-import { connection } from "../server.js";
-import { SERVER_ERROR } from "../constants/errorCodes.js";
-import { PostView } from "../schemas/MongoDB/postSchema.js";
+import { connection } from '../server.js';
+import { SERVER_ERROR } from '../constants/errorCodes.js';
+import { PostView } from '../schemas/MongoDB/postSchema.js';
 
 export async function migratePostViews(req, res, next) {
     try {
-        const [SQLviews] = await connection.query("SELECT * FROM post_views");
+        const [SQLviews] = await connection.query('SELECT * FROM post_views');
         console.log(SQLviews);
 
         if (SQLviews.length) {
-            const SQLviewKeys = SQLviews.map((v) => `${v.post_id} ${v.user_identifier}`);
+            const SQLviewKeys = SQLviews.map(
+                (v) => `${v.post_id} ${v.user_identifier}`
+            );
 
             const MongoDBviews = await PostView.find();
             console.log(MongoDBviews);
 
-            const MongoDBviewKeys = MongoDBviews.map((v) => `${v.post_id} ${v.user_identifier}`);
+            const MongoDBviewKeys = MongoDBviews.map(
+                (v) => `${v.post_id} ${v.user_identifier}`
+            );
 
             const newViews = [];
 
@@ -38,7 +42,9 @@ export async function migratePostViews(req, res, next) {
                     post_id: v.post_id,
                     user_identifier: v.user_identifier,
                 }));
-                await PostView.deleteMany({ $or: deleteFilters });
+                await PostView.deleteMany({
+                    $or: deleteFilters,
+                });
             }
 
             console.log(
@@ -48,16 +54,16 @@ export async function migratePostViews(req, res, next) {
             const count = PostView.countDocuments();
             if (count) {
                 await PostView.deleteMany();
-                console.log("CLEARED MONGODB VIEWS\n");
+                console.log('CLEARED MONGODB VIEWS\n');
             } else {
-                console.log("NO_VIEWS_TO_MIGRATE");
+                console.log('NO_VIEWS_TO_MIGRATE');
             }
         }
 
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while migrating views",
+            message: 'something went wrong while migrating views',
             error: err.message,
         });
     }

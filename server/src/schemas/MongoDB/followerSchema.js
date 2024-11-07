@@ -1,16 +1,16 @@
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
 
 const followerSchema = new Schema({
     follower_id: {
         type: String,
-        ref: "users",
+        ref: 'users',
         required: true,
     },
     following_id: {
         type: String,
-        ref: "users",
+        ref: 'users',
         required: true,
     },
 });
 
-export const Follower = model("Follower", followerSchema);
+export const Follower = model('Follower', followerSchema);

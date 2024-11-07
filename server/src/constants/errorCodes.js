@@ -5,9 +5,9 @@ const FORBIDDEN = 403;
 
 const COOKIE_OPTIONS = {
     httpOnly: true,
-    path: "/",
+    path: '/',
     secure: true,
-    sameSite: "None",
+    sameSite: 'None',
 };
 
 export { OK, BAD_REQUEST, SERVER_ERROR, FORBIDDEN, COOKIE_OPTIONS };

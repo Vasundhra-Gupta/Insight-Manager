@@ -1,5 +1,5 @@
-import mysql from "mysql2";
-import mongoose from "mongoose";
+import mysql from 'mysql2';
+import mongoose from 'mongoose';
 
 class DBConnection {
     constructor() {
@@ -18,22 +18,25 @@ class DBConnection {
         try {
             if (!this.connection) {
                 switch (process.env.DATABASE_TYPE) {
-                    case "SQL": {
+                    case 'SQL': {
                         await this.connectMYSQL();
                         break;
                     }
-                    case "MongoDB": {
+                    case 'MongoDB': {
                         await this.connectMongoDB();
                         break;
                     }
                     default: {
-                        throw new Error("Unsupported Database Type");
+                        throw new Error('Unsupported Database Type');
                     }
                 }
             }
             return this.connection;
         } catch (err) {
-            return console.log("Didn't connected to the database.", err.message);
+            return console.log(
+                "Didn't connected to the database.",
+                err.message
+            );
         }
     };
 
@@ -50,7 +53,9 @@ class DBConnection {
 
             // Testing the connection
             const conn = await this.connection.getConnection();
-            console.log(`Connected to mysql successfully, host: ${conn.config.host}`);
+            console.log(
+                `Connected to mysql successfully, host: ${conn.config.host}`
+            );
             conn.release();
         } catch (err) {
             return console.log("mysql didn't connected !!", err);
@@ -82,7 +87,10 @@ class DBConnection {
             }
             return this.migrationConnection;
         } catch (err) {
-            return console.log("Error in connection MongoDB for migration.", err.message);
+            return console.log(
+                'Error in connection MongoDB for migration.',
+                err.message
+            );
         }
     }
 
@@ -95,7 +103,10 @@ class DBConnection {
             }
             return;
         } catch (err) {
-            return console.log("Error in closing Mongo's migration connection.", err.message);
+            return console.log(
+                "Error in closing Mongo's migration connection.",
+                err.message
+            );
         }
     }
 }

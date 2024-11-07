@@ -1,11 +1,11 @@
-import { connection } from "../server.js"; // still has SQL connection in this connection variable.
-import { Post } from "../schemas/MongoDB/postSchema.js";
-import { SERVER_ERROR } from "../constants/errorCodes.js";
+import { connection } from '../server.js'; // still has SQL connection in this connection variable.
+import { Post } from '../schemas/MongoDB/postSchema.js';
+import { SERVER_ERROR } from '../constants/errorCodes.js';
 
 export async function migratePosts(req, res, next) {
     try {
         // Fetch all posts from SQL
-        const [SQLposts] = await connection.query("SELECT * FROM posts");
+        const [SQLposts] = await connection.query('SELECT * FROM posts');
         console.log(SQLposts);
 
         if (SQLposts.length) {
@@ -25,10 +25,14 @@ export async function migratePosts(req, res, next) {
                     newPosts.push(post);
                 } else {
                     // If exists, compare
-                    const existingMongoPost = MongoDBposts.find((c) => c.post_id === post.post_id);
+                    const existingMongoPost = MongoDBposts.find(
+                        (c) => c.post_id === post.post_id
+                    );
                     if (
                         Object.entries(existingMongoPost).some(
-                            ([key, value]) => Object.keys(post).includes(key) && value !== post[key]
+                            ([key, value]) =>
+                                Object.keys(post).includes(key) &&
+                                value !== post[key]
                         )
                         // existingMongoPost.post_title !== post.post_title ||
                         // existingMongoPost.post_content !== post.post_content ||
@@ -44,7 +48,9 @@ export async function migratePosts(req, res, next) {
             }
 
             // 2. Find deleted records (records in MongoDB but not in SQL)
-            const deletedPosts = MongoDBposts.filter((p) => !SQLpostIds.includes(p.post_id));
+            const deletedPosts = MongoDBposts.filter(
+                (p) => !SQLpostIds.includes(p.post_id)
+            );
 
             // 3. Insert
             if (newPosts.length > 0) {
@@ -74,7 +80,9 @@ export async function migratePosts(req, res, next) {
             // 5. Delete
             if (deletedPosts.length > 0) {
                 const deletedPostsIds = deletedPosts.map((p) => p.post_id);
-                await Post.deleteMany({ post_id: { $in: deletedPostsIds } });
+                await Post.deleteMany({
+                    post_id: { $in: deletedPostsIds },
+                });
             }
 
             console.log(
@@ -84,19 +92,17 @@ export async function migratePosts(req, res, next) {
             const count = await Post.countDocuments();
             if (count) {
                 await Post.deleteMany();
-                console.log("CLEARED MONGODB POSTS\n");
+                console.log('CLEARED MONGODB POSTS\n');
             } else {
-                console.log("NO_POSTS_TO_MIGRATE");
+                console.log('NO_POSTS_TO_MIGRATE');
             }
         }
 
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while migrating posts",
+            message: 'something went wrong while migrating posts',
             error: err.message,
         });
     }
 }
-
-

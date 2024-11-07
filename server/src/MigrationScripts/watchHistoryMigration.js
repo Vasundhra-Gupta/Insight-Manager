@@ -1,14 +1,18 @@
-import { connection } from "../server.js";
-import { WatchHistory } from "../schemas/MongoDB/userSchema.js";
-import { SERVER_ERROR } from "../constants/errorCodes.js";
+import { connection } from '../server.js';
+import { WatchHistory } from '../schemas/MongoDB/userSchema.js';
+import { SERVER_ERROR } from '../constants/errorCodes.js';
 
 export async function migrateWatchHistory(req, res, next) {
     try {
-        const [SQLwatchHistory] = await connection.query("SELECT * FROM watch_history");
+        const [SQLwatchHistory] = await connection.query(
+            'SELECT * FROM watch_history'
+        );
         console.log(SQLwatchHistory);
 
         if (SQLwatchHistory.length) {
-            const SQLwatchHistoryKeys = SQLwatchHistory.map((w) => `${w.post_id} ${w.user_id}`);
+            const SQLwatchHistoryKeys = SQLwatchHistory.map(
+                (w) => `${w.post_id} ${w.user_id}`
+            );
 
             const MongoDBwatchHistory = await WatchHistory.find();
             console.log(MongoDBwatchHistory);
@@ -27,10 +31,15 @@ export async function migrateWatchHistory(req, res, next) {
                 } else {
                     // If exists, compare
                     const existingMongoHistoryPost = MongoDBwatchHistory.find(
-                        (p) => p.user_id === post.user_id && p.post_id === post.post_id
+                        (p) =>
+                            p.user_id === post.user_id &&
+                            p.post_id === post.post_id
                     );
 
-                    if (existingMongoHistoryPost.watchedAt.getTime() !== post.watchedAt.getTime()) {
+                    if (
+                        existingMongoHistoryPost.watchedAt.getTime() !==
+                        post.watchedAt.getTime()
+                    ) {
                         // or use JSON.stringify()
                         // If different, push to updatedUsers array
                         updatedWatchHistory.push(post);
@@ -70,7 +79,9 @@ export async function migrateWatchHistory(req, res, next) {
                     post_id: w.post_id,
                     user_id: w.user_id,
                 }));
-                await WatchHistory.deleteMany({ $or: deleteFilters });
+                await WatchHistory.deleteMany({
+                    $or: deleteFilters,
+                });
             }
 
             console.log(
@@ -80,16 +91,16 @@ export async function migrateWatchHistory(req, res, next) {
             const count = await WatchHistory.countDocuments();
             if (count) {
                 await WatchHistory.deleteMany();
-                console.log("CLEARED MONGODB WATCHHISTORY");
+                console.log('CLEARED MONGODB WATCHHISTORY');
             } else {
-                console.log("NO POSTS TO MIGRATE IN WATCH HISTORY");
+                console.log('NO POSTS TO MIGRATE IN WATCH HISTORY');
             }
         }
 
         next();
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while migrating watch history.",
+            message: 'something went wrong while migrating watch history.',
             error: err.message,
         });
     }

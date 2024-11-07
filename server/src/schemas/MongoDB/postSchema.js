@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
 
 const postSchema = new Schema({
     post_id: {
@@ -21,7 +21,7 @@ const postSchema = new Schema({
     },
     post_ownerId: {
         type: String,
-        ref: "users", 
+        ref: 'users',
         required: true,
     },
     post_visibility: {
@@ -31,7 +31,7 @@ const postSchema = new Schema({
     },
     post_category: {
         type: String,
-        ref: "categories", 
+        ref: 'categories',
         required: true,
     },
     post_createdAt: {
@@ -47,18 +47,18 @@ const postSchema = new Schema({
 const postViewSchema = new Schema({
     post_id: {
         type: String,
-        ref: "posts",
+        ref: 'posts',
         required: true,
         index: true,
     },
     user_identifier: {
         type: String,
-        ref: "users",
+        ref: 'users',
         required: true,
-    }
+    },
 });
 
-const Post = model("Post", postSchema);
-const PostView = model("PostView", postViewSchema)
+const Post = model('Post', postSchema);
+const PostView = model('PostView', postViewSchema);
 
-export {Post, PostView}
+export { Post, PostView };

@@ -1,10 +1,11 @@
-import { Ifollowers } from "../../interfaces/followerInterface.js";
-import { connection } from "../../server.js";
+import { Ifollowers } from '../../interfaces/followerInterface.js';
+import { connection } from '../../server.js';
 
 export class SQLfollowers extends Ifollowers {
     async getFollowers(channelId) {
         try {
-            const q1 = "(SELECT COUNT(follower_id) FROM followers f1 WHERE f1.following_id = f.follower_id) AS totalFollowers";
+            const q1 =
+                '(SELECT COUNT(follower_id) FROM followers f1 WHERE f1.following_id = f.follower_id) AS totalFollowers';
             const q = `
                 SELECT 
                     u.user_id, 
@@ -27,7 +28,8 @@ export class SQLfollowers extends Ifollowers {
 
     async getFollowings(channelId) {
         try {
-            const q1 = "(SELECT COUNT(follower_id) FROM followers f1 WHERE f1.following_id = f.following_id) AS totalFollowers";
+            const q1 =
+                '(SELECT COUNT(follower_id) FROM followers f1 WHERE f1.following_id = f.following_id) AS totalFollowers';
             const q = `
                 SELECT 
                     u.user_id, 
@@ -69,11 +71,13 @@ export class SQLfollowers extends Ifollowers {
             // if (!response) {
             //     throw new Error({ message: "FOLLOWING_RECORD_CREATION_DB_ISSUE" });
             // }
-            
 
-            // using PL/SQL Procedures 
-            const q = "CALL toggleFollow(?, ?)";
-            const [[[response]]] = await connection.query(q, [channelId, userId]);
+            // using PL/SQL Procedures
+            const q = 'CALL toggleFollow(?, ?)';
+            const [[[response]]] = await connection.query(q, [
+                channelId,
+                userId,
+            ]);
             return response;
         } catch (err) {
             throw err;

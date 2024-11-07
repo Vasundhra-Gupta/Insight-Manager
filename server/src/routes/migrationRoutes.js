@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 export const migrationRouter = express.Router();
 import {
     migrateUsers,
@@ -11,10 +11,10 @@ import {
     migratePostViews,
     migrateSavedPosts,
     migrateWatchHistory,
-} from "../MigrationScripts/index.js";
+} from '../MigrationScripts/index.js';
 
 migrationRouter
-    .route("/db")
+    .route('/db')
     .post(
         migrateUsers,
         migratePosts,
@@ -28,22 +28,22 @@ migrationRouter
         migrateWatchHistory
     );
 
-migrationRouter.route("/users").post(migrateUsers);
+migrationRouter.route('/users').post(migrateUsers);
 
-migrationRouter.route("/posts").post(migratePosts);
+migrationRouter.route('/posts').post(migratePosts);
 
-migrationRouter.route("/comments").post(migrateComments);
+migrationRouter.route('/comments').post(migrateComments);
 
-migrationRouter.route("/followers").post(migrateFollowers);
+migrationRouter.route('/followers').post(migrateFollowers);
 
-migrationRouter.route("/categories").post(migrateCategories);
+migrationRouter.route('/categories').post(migrateCategories);
 
-migrationRouter.route("/post-likes").post(migratePostLikes);
+migrationRouter.route('/post-likes').post(migratePostLikes);
 
-migrationRouter.route("/comment-likes").post(migrateCommentLikes);
+migrationRouter.route('/comment-likes').post(migrateCommentLikes);
 
-migrationRouter.route("/views").post(migratePostViews);
+migrationRouter.route('/views').post(migratePostViews);
 
-migrationRouter.route("/saved").post(migrateSavedPosts);
+migrationRouter.route('/saved').post(migrateSavedPosts);
 
-migrationRouter.route("/history").post(migrateWatchHistory);
+migrationRouter.route('/history').post(migrateWatchHistory);

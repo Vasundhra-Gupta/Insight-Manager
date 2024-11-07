@@ -1,15 +1,15 @@
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
 
 const postLikeSchema = new Schema({
     post_id: {
         type: String,
-        ref: "posts",
+        ref: 'posts',
         required: true,
         index: true,
     },
     user_id: {
         type: String,
-        ref: "users",
+        ref: 'users',
         required: true,
     },
     is_liked: {
@@ -21,13 +21,13 @@ const postLikeSchema = new Schema({
 const commentLikeSchema = new Schema({
     comment_id: {
         type: String,
-        ref: "comments",
+        ref: 'comments',
         required: true,
         index: true,
     },
     user_id: {
         type: String,
-        ref: "users",
+        ref: 'users',
         required: true,
     },
     is_liked: {
@@ -36,7 +36,7 @@ const commentLikeSchema = new Schema({
     },
 });
 
-const PostLike = model("PostLike", postLikeSchema);
-const CommentLike = model("CommentLike", commentLikeSchema);
+const PostLike = model('PostLike', postLikeSchema);
+const CommentLike = model('CommentLike', commentLikeSchema);
 
 export { PostLike, CommentLike };

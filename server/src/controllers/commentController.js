@@ -1,16 +1,18 @@
-import { OK, BAD_REQUEST, SERVER_ERROR } from "../constants/errorCodes.js";
-import validator from "validator";
-import { v4 as uuid } from "uuid";
-import getServiceObject from "../db/serviceObjects.js";
+import { OK, BAD_REQUEST, SERVER_ERROR } from '../constants/errorCodes.js';
+import validator from 'validator';
+import { v4 as uuid } from 'uuid';
+import getServiceObject from '../db/serviceObjects.js';
 
-export const commentObject = getServiceObject("comments");
+export const commentObject = getServiceObject('comments');
 
 const getComments = async (req, res) => {
     try {
         const { postId } = req.params;
-        const { orderBy = "desc" } = req.query;
+        const { orderBy = 'desc' } = req.query;
         if (!postId || !validator.isUUID(postId)) {
-            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'POSTID_MISSING_OR_INVALID' });
         }
 
         const comments = await commentObject.getComments(
@@ -21,7 +23,7 @@ const getComments = async (req, res) => {
         return res.status(OK).json(comments);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while getting the post comments",
+            message: 'something went wrong while getting the post comments',
             error: err.message,
         });
     }
@@ -31,14 +33,19 @@ const getComment = async (req, res) => {
     try {
         const { commentId } = req.params;
         if (!commentId || !validator.isUUID(commentId)) {
-            return res.status(BAD_REQUEST).json({ message: "COMMENTID_MISSING_OR_INVALID" });
+            return res.status(BAD_REQUEST).json({
+                message: 'COMMENTID_MISSING_OR_INVALID',
+            });
         }
 
-        const comment = await commentObject.getComment(commentId, req.user?.user_id);
+        const comment = await commentObject.getComment(
+            commentId,
+            req.user?.user_id
+        );
         return res.status(OK).json(comment);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while getting the comment",
+            message: 'something went wrong while getting the comment',
             error: err.message,
         });
     }
@@ -52,19 +59,23 @@ const addComment = async (req, res) => {
         const commentId = uuid();
 
         if (!user_id) {
-            return res.status(BAD_REQUEST).json({ message: "USERID_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: 'USERID_MISSING' });
         }
 
         if (!postId || !validator.isUUID(postId)) {
-            return res.status(BAD_REQUEST).json({ message: "POSTID_MISSING_OR_INVALID" });
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'POSTID_MISSING_OR_INVALID' });
         }
 
         if (!commentId) {
-            throw new Error({ message: "COMMENTID_CREATION_UUID_ISSUE" });
+            throw new Error({
+                message: 'COMMENTID_CREATION_UUID_ISSUE',
+            });
         }
 
         if (!commentContent) {
-            return res.status(BAD_REQUEST).json({ message: "CONTENT_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: 'CONTENT_MISSING' });
         }
 
         const comment = await commentObject.createComment(
@@ -76,7 +87,7 @@ const addComment = async (req, res) => {
         return res.status(OK).json(comment);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while creating the comment",
+            message: 'something went wrong while creating the comment',
             error: err.message,
         });
     }
@@ -87,14 +98,16 @@ const deleteComment = async (req, res) => {
         const { commentId } = req.params;
 
         if (!commentId || !validator.isUUID(commentId)) {
-            return res.status(BAD_REQUEST).json({ message: "COMMENTID_MISSING_OR_INVALID" });
+            return res.status(BAD_REQUEST).json({
+                message: 'COMMENTID_MISSING_OR_INVALID',
+            });
         }
 
         const result = await commentObject.deleteComment(commentId);
         return res.status(OK).json(result);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while deleting the comment",
+            message: 'something went wrong while deleting the comment',
             error: err.message,
         });
     }
@@ -106,17 +119,22 @@ const updateComment = async (req, res) => {
         const { commentId } = req.params;
 
         if (!commentContent) {
-            return res.status(BAD_REQUEST).json({ message: "CONTENT_MISSING" });
+            return res.status(BAD_REQUEST).json({ message: 'CONTENT_MISSING' });
         }
         if (!commentId || !validator.isUUID(commentId)) {
-            return res.status(BAD_REQUEST).json({ message: "COMMENTID_MISSING_OR_INVALID" });
+            return res.status(BAD_REQUEST).json({
+                message: 'COMMENTID_MISSING_OR_INVALID',
+            });
         }
 
-        const updatedComment = await commentObject.editComment(commentId, commentContent);
+        const updatedComment = await commentObject.editComment(
+            commentId,
+            commentContent
+        );
         res.status(OK).json(updatedComment);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
-            message: "something went wrong while editing the comment",
+            message: 'something went wrong while editing the comment',
             error: err.message,
         });
     }

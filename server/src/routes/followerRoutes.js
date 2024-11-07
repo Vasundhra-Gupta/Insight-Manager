@@ -1,11 +1,15 @@
-import express from "express";
+import express from 'express';
 export const followerRouter = express.Router();
-import { verifyJwt } from "../middlewares/authMiddleware.js";
+import { verifyJwt } from '../middlewares/authMiddleware.js';
 
-import { getFollowers, getFollowings, toggleFollow } from "../controllers/followerController.js";
+import {
+    getFollowers,
+    getFollowings,
+    toggleFollow,
+} from '../controllers/followerController.js';
 
-followerRouter.route("/follows/:channelId").get(getFollowings);
+followerRouter.route('/follows/:channelId').get(getFollowings);
 
-followerRouter.route("/toggle-follow/:channelId").post(verifyJwt, toggleFollow);
+followerRouter.route('/toggle-follow/:channelId').post(verifyJwt, toggleFollow);
 
-followerRouter.route("/:channelId").get(getFollowers);
+followerRouter.route('/:channelId').get(getFollowers);
