@@ -7,8 +7,8 @@ export const verifyPassword = async (password, hashedPassword) => {
             return { message: 'WRONG_CREDENTIALS' };
         }
     } catch (err) {
-        throw new Error({
-            message: `something went wrong while validating the password, err: ${err.message}`,
-        });
+        throw new Error(
+            `something went wrong while validating the password, err: ${err.message}`
+        );
     }
 };

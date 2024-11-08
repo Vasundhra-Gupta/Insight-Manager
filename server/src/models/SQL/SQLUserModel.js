@@ -51,9 +51,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({
-                    message: 'USER_CREATION_DB_ISSUE',
-                });
+                throw new Error('USER_CREATION_DB_ISSUE');
             }
             const { refresh_token, ...createdUser } = user; // to exclude the password from the response
             return createdUser;
@@ -69,9 +67,7 @@ export class SQLusers extends Iusers {
             const [result] = await connection.query(q, [userId]);
 
             if (result.affectedRows === 0) {
-                throw new Error({
-                    message: 'USER_DELETION_DB_ISSUE',
-                });
+                throw new Error('USER_DELETION_DB_ISSUE');
             }
         } catch (err) {
             throw err;
@@ -86,9 +82,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.refresh_token !== '') {
-                throw new Error({
-                    message: 'REFRESH_TOKEN_NOT_DELETED_IN_DB',
-                });
+                throw new Error('REFRESH_TOKEN_NOT_DELETED_IN_DB');
             }
             return user;
         } catch (err) {
@@ -102,9 +96,7 @@ export class SQLusers extends Iusers {
             await connection.query(q, [refreshToken, userId]);
             const user = await this.getUser(userId);
             if (user?.refresh_token === '') {
-                throw new Error({
-                    message: 'REFRESH_TOKEN_NOT_SAVED_IN_DB',
-                });
+                throw new Error('REFRESH_TOKEN_NOT_SAVED_IN_DB');
             }
         } catch (err) {
             throw err;
@@ -129,9 +121,7 @@ export class SQLusers extends Iusers {
             const q = 'SELECT * FROM channel_view WHERE user_id = ?';
             const [[response]] = await connection.query(q, [channelId]);
             if (!response) {
-                throw new Error({
-                    message: 'CHANNEL_FETCHING_DB_ISSUE',
-                });
+                throw new Error('CHANNEL_FETCHING_DB_ISSUE');
             }
 
             return { ...response, isFollowed };
@@ -150,9 +140,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({
-                    message: 'ACCOUNT_DETAILS_UPDATION_DB_ISSUE',
-                });
+                throw new Error('ACCOUNT_DETAILS_UPDATION_DB_ISSUE');
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -172,9 +160,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({
-                    message: 'PROFILE_DETAILS_UPDATION_DB_ISSUE',
-                });
+                throw new Error('PROFILE_DETAILS_UPDATION_DB_ISSUE');
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -193,9 +179,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({
-                    message: 'PASSWORD_UPDATION_DB_ISSUE',
-                });
+                throw new Error('PASSWORD_UPDATION_DB_ISSUE');
             }
 
             const { user_password, refresh_token, ...updatedUser } = user; // we dont show password anywhere (no need to return though)
@@ -214,9 +198,7 @@ export class SQLusers extends Iusers {
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({
-                    message: 'AVATAR_UPDATION_DB_ISSUE',
-                });
+                throw new Error('AVATAR_UPDATION_DB_ISSUE');
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;
@@ -228,16 +210,14 @@ export class SQLusers extends Iusers {
 
     async updateCoverImage(userId, coverImage) {
         try {
-            const q = 'UPDATE users SET user_coverImage=? WHERE user_id= ?';
+            const q = 'UPDATE users SET user_coverImage = ? WHERE user_id = ?';
 
             await connection.query(q, [coverImage, userId]);
 
             const user = await this.getUser(userId);
 
             if (user?.message) {
-                throw new Error({
-                    message: 'COVERIMAGE_UPDATION_DB_ISSUE',
-                });
+                throw new Error('COVERIMAGE_UPDATION_DB_ISSUE');
             }
 
             const { user_password, refresh_token, ...updatedUser } = user;

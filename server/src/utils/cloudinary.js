@@ -10,9 +10,7 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
-            throw new Error({
-                message: 'CLOUDIANRY_FILE_PATH_MISSING',
-            });
+            throw new Error('CLOUDIANRY_FILE_PATH_MISSING');
         }
 
         const response = await cloudinary.uploader.upload(localFilePath, {
@@ -26,16 +24,16 @@ const uploadOnCloudinary = async (localFilePath) => {
         return response;
     } catch (err) {
         fs.unlinkSync(localFilePath);
-        throw new Error({
-            message: `SERVER_ERROR_UPLOADING_CLOUDINARY_UTIL, err: ${err.message}`,
-        });
+        throw new Error(
+            `SERVER_ERROR_UPLOADING_CLOUDINARY_UTIL, err: ${err.message}`
+        );
     }
 };
 
 const deleteFromCloudinary = async (URL) => {
     try {
         if (!URL) {
-            throw new Error({ message: 'CLOUDINARY_URL_MISSING' });
+            throw new Error('CLOUDINARY_URL_MISSING');
         }
 
         const publicId = URL.split('/').pop().split('.')[0];
@@ -48,9 +46,9 @@ const deleteFromCloudinary = async (URL) => {
 
         return response; // {result:"ok"}
     } catch (err) {
-        throw new Error({
-            message: `SERVER_ERROR_DELETION_CLOUDINARY_UTIL, err: ${err.message}`,
-        });
+        throw new Error(
+            `SERVER_ERROR_DELETION_CLOUDINARY_UTIL, err: ${err.message}`
+        );
     }
 };
 

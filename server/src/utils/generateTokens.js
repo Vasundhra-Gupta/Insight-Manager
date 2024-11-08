@@ -20,9 +20,9 @@ const generateAccessToken = async (userId) => {
 
         return accessToken;
     } catch (err) {
-        throw new Error({
-            message: `something went wrong while generating the access token, err: ${err.message}`,
-        });
+        throw new Error(
+            `something went wrong while generating the access token, err: ${err.message}`
+        );
     }
 };
 
@@ -46,9 +46,9 @@ const generateRefreshToken = async (userId) => {
 
         return refreshToken;
     } catch (err) {
-        throw new Error({
-            message: `something went wrong while generating the refresh token, err: ${err.message}`,
-        });
+        throw new Error(
+            `something went wrong while generating the refresh token, err: ${err.message}`
+        );
     }
 };
 

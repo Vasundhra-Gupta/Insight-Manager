@@ -18,16 +18,19 @@ import {
 
 export const userObject = getServiceObject('users');
 
-// pending form validity
 const registerUser = async (req, res) => {
     let coverImage, avatar;
     try {
-        const { userName, firstName, lastName, email, password } = req.body;
+        const {
+            userName,
+            firstName,
+            lastName = NULL,
+            email,
+            password,
+        } = req.body;
         const userId = uuid();
         if (!userId) {
-            throw new Error({
-                message: 'USERID_CREATION_UUID_ISSUE',
-            });
+            throw new Error('USERID_CREATION_UUID_ISSUE');
         }
         if (!userName || !firstName || !email || !password) {
             return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
@@ -53,9 +56,7 @@ const registerUser = async (req, res) => {
             if (req.files?.coverImage) {
                 const coverImageLocalPath = req.files.coverImage[0].path;
                 if (!coverImageLocalPath) {
-                    throw new Error({
-                        message: 'COVERIMAGE_LOCALPATH_MULTER_ISSUE',
-                    });
+                    throw new Error('COVERIMAGE_LOCALPATH_MULTER_ISSUE');
                 }
                 fs.unlinkSync(coverImageLocalPath);
             }
@@ -64,33 +65,25 @@ const registerUser = async (req, res) => {
 
         const avatarLocalPath = req.files.avatar[0].path;
         if (!avatarLocalPath) {
-            throw new Error({
-                message: 'AVATAR_LOCALPATH_MULTER_ISSUE',
-            });
+            throw new Error('AVATAR_LOCALPATH_MULTER_ISSUE');
         }
         avatar = await uploadOnCloudinary(avatarLocalPath);
         if (!avatar) {
-            throw new Error({
-                message: 'AVATAR_UPLOAD_CLOUDINARY_ISSUE',
-            });
+            throw new Error('AVATAR_UPLOAD_CLOUDINARY_ISSUE');
         }
-        const avatarURL = avatar.url;
+        const avatarURL = avatar?.url;
 
         if (req.files?.coverImage) {
             const coverImageLocalPath = req.files.coverImage[0].path;
             if (!coverImageLocalPath) {
-                throw new Error({
-                    message: 'COVERIMAGE_LOCALPATH_MULTER_ISSUE',
-                });
+                throw new Error('COVERIMAGE_LOCALPATH_MULTER_ISSUE');
             }
             coverImage = await uploadOnCloudinary(coverImageLocalPath);
             if (!coverImage) {
-                throw new Error({
-                    message: 'COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE',
-                });
+                throw new Error('COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE');
             }
         }
-        const coverImageURL = coverImage.url;
+        const coverImageURL = coverImage?.url;
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userObject.createUser(
@@ -186,16 +179,12 @@ const deleteAccount = async (req, res) => {
         // delete its avatar & coverimage from cloudinary
         const response1 = await deleteFromCloudinary(user.user_coverImage);
         if (response1.result !== 'ok') {
-            throw new Error({
-                message: 'COVERIMAGE_DELETION_CLOUDINARY_ISSUE',
-            });
+            throw new Error('COVERIMAGE_DELETION_CLOUDINARY_ISSUE');
         }
 
         const response2 = await deleteFromCloudinary(user.user_avatar);
         if (response2.result !== 'ok') {
-            throw new Error({
-                message: 'AVATAR_DELETION_CLOUDINARY_ISSUE',
-            });
+            throw new Error('AVATAR_DELETION_CLOUDINARY_ISSUE');
         }
 
         await userObject.deleteUser(user.user_id);
@@ -393,28 +382,23 @@ const updateAvatar = async (req, res) => {
             return res.status(BAD_REQUEST).json({ message: 'MISSING_AVATAR' });
         }
 
-        const avatarLocalPath = req.file.path;
+        const avatarLocalPath = req.file?.path;
+
         if (!avatarLocalPath) {
-            throw new Error({
-                message: 'AVATAR_LOCALPATH_MULTER_ISSUE',
-            });
+            throw new Error('AVATAR_LOCALPATH_MULTER_ISSUE');
         }
 
         avatar = await uploadOnCloudinary(avatarLocalPath);
         if (!avatar) {
-            throw new Error({
-                message: 'AVATAR_UPLOAD_CLOUDINARY_ISSUE',
-            });
+            throw new Error('AVATAR_UPLOAD_CLOUDINARY_ISSUE');
         }
-        const avatarURL = avatar.url;
+        const avatarURL = avatar?.url;
         const updatedUser = await userObject.updateAvatar(user_id, avatarURL);
 
         if (updatedUser) {
             const response = await deleteFromCloudinary(user_avatar);
             if (response.result !== 'ok') {
-                throw new Error({
-                    message: 'OLD_AVATAR_DELETION_CLOUDINARY_ISSUE',
-                });
+                throw new Error('OLD_AVATAR_DELETION_CLOUDINARY_ISSUE');
             }
         }
 
@@ -445,32 +429,28 @@ const updateCoverImage = async (req, res) => {
                 .json({ message: 'MISSING_COVERIMAGE' });
         }
 
-        const coverImageLocalPath = req.file.path;
+        const coverImageLocalPath = req.file?.path;
+
         if (!coverImageLocalPath) {
-            throw new Error({
-                message: 'COVERIMAGE_LOCALPATH_MULTER_ISSUE',
-            });
+            throw new Error('COVERIMAGE_LOCALPATH_MULTER_ISSUE');
         }
 
         coverImage = await uploadOnCloudinary(coverImageLocalPath);
         if (!coverImage) {
-            throw new Error({
-                message: 'COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE',
-            });
+            throw new Error('COVERIMAGE_UPLOAD_CLOUDINARY_ISSUE');
         }
 
-        const coverImageURL = coverImage.url;
+        const coverImageURL = coverImage?.url;
+
         const updatedUser = await userObject.updateCoverImage(
             user_id,
             coverImageURL
         );
 
-        if (updatedUser) {
+        if (updatedUser && user_coverImage) {
             const response = await deleteFromCloudinary(user_coverImage);
             if (response.result !== 'ok') {
-                throw new Error({
-                    message: 'OLD_COVERIMAGE_DELETION_CLOUDINARY_ISSUE',
-                });
+                throw new Error('OLD_COVERIMAGE_DELETION_CLOUDINARY_ISSUE');
             }
         }
 

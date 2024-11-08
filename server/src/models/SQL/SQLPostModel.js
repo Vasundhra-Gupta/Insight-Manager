@@ -271,9 +271,7 @@ export class SQLposts extends Iposts {
                 userIdentifier,
             ]);
             if (!response1) {
-                throw new Error({
-                    message: 'VIEW_INCREMENT_DB_ISSUE',
-                });
+                throw new Error('VIEW_INCREMENT_DB_ISSUE');
             }
             return { message: 'VIEW_INCREMENTED_SUCCESSFULLY' };
         } catch (err) {

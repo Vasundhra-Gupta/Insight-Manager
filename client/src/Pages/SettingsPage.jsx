@@ -32,7 +32,7 @@ export default function SettingsPage() {
                 </div>
 
                 {/* avatar */}
-                <div className="w-fit relative ">
+                <div className="w-fit relative">
                     <div className="size-[120px]">
                         <img
                             alt="user avatar"

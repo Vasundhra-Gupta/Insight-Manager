@@ -95,14 +95,14 @@ export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }
                         ref={ref}
                     />
 
-                    <div className="w-full bg-green-400 flex flex-col items-center justify-center gap-4 mt-3">
-                        {error.coverImage && (
-                            <div className="w-full text-center text-sm text-red-500">
-                                {error.coverImage}
-                            </div>
-                        )}
+                    {error.coverImage && (
+                        <div className="w-full text-center text-sm text-red-500">
+                            {error.coverImage}
+                        </div>
+                    )}
 
-                        {/* sbumit btn */}
+                    {/* sbumit btn */}
+                    <div className="w-full flex items-center justify-center mt-4">
                         <Button
                             btnText={loading ? "Uploading..." : "Upload"}
                             disabled={disabled}

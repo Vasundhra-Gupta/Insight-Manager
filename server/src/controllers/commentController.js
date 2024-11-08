@@ -69,9 +69,7 @@ const addComment = async (req, res) => {
         }
 
         if (!commentId) {
-            throw new Error({
-                message: 'COMMENTID_CREATION_UUID_ISSUE',
-            });
+            throw new Error('COMMENTID_CREATION_UUID_ISSUE');
         }
 
         if (!commentContent) {

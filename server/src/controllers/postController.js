@@ -107,9 +107,7 @@ const addPost = async (req, res) => {
         const postId = uuid();
 
         if (!postId) {
-            throw new Error({
-                message: 'POSTID_CREATION_UUID_ISSUE',
-            });
+            throw new Error('POSTID_CREATION_UUID_ISSUE');
         }
 
         if (!user_id) {
@@ -128,16 +126,12 @@ const addPost = async (req, res) => {
 
         const postImageLocalPath = req.file.path;
         if (!postImageLocalPath) {
-            throw new Error({
-                message: 'POSTIMAGE_LOCALPATH_MULTER_ISSUE',
-            });
+            throw new Error('POSTIMAGE_LOCALPATH_MULTER_ISSUE');
         }
 
         postImage = await uploadOnCloudinary(postImageLocalPath);
         if (!postImage) {
-            throw new Error({
-                message: 'POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE',
-            });
+            throw new Error('POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE');
         }
 
         const postImageURL = postImage.url;
@@ -186,9 +180,9 @@ const deletePost = async (req, res) => {
 
         const response = await deleteFromCloudinary(post.post_image);
         if (response.result !== 'ok') {
-            throw new Error({
-                message: 'POSTIMAGE_DELETION_IMAGE_DELETION_CLOUDINARY_ISSUE',
-            });
+            throw new Error(
+                'POSTIMAGE_DELETION_IMAGE_DELETION_CLOUDINARY_ISSUE'
+            );
         }
 
         await postObject.deletePost(postId);
@@ -277,31 +271,26 @@ const updatePostImage = async (req, res) => {
                 .json({ message: 'MISSING_POSTIMAGE' });
         }
 
-        const postImageLocalPath = req.file.path;
+        const postImageLocalPath = req.file?.path;
         if (!postImageLocalPath) {
-            throw new Error({
-                message: 'POSTIMAGE_LOCALPATH_MULTER_ISSUE',
-            });
+            throw new Error('POSTIMAGE_LOCALPATH_MULTER_ISSUE');
         }
 
         postImage = await uploadOnCloudinary(postImageLocalPath);
         if (!postImage) {
-            throw new Error({
-                message: 'POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE',
-            });
+            throw new Error('POSTIMAGE_UPLOAD_CLOUDINARY_ISSUE');
         }
 
         const response = await deleteFromCloudinary(post.post_image);
         if (response.result !== 'ok') {
-            throw new Error({
-                message: 'OLD_POSTIMAGE_DELETION_CLODUINARY_ISSUE',
-            });
+            throw new Error('OLD_POSTIMAGE_DELETION_CLODUINARY_ISSUE');
         }
 
-        const postImageURL = postImage.url;
+        const postImageURL = postImage?.url;
 
         const now = new Date();
         const updatedAt = getCurrentTimestamp(now);
+
         const updatedPost = await postObject.updatePostImage(
             postId,
             postImageURL,

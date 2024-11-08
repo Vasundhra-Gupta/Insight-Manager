@@ -67,62 +67,64 @@ export default function UpdateAvatar({ className, setUpdateAvatarPopup }) {
                 Update Avatar
             </div>
 
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="file"
-                    name="avatar"
-                    id="avatar"
-                    className="hidden"
-                    onChange={handleChange}
-                    ref={ref}
-                />
-
-                {/* cross */}
+            {/* preview */}
+            <div className="w-full flex items-center justify-center">
                 <Button
-                    type="button"
                     btnText={
-                        <div className="size-[23px] fill-none stroke-slate-700">{icons.cross}</div>
+                        <img
+                            src={avatarPreview}
+                            alt="preview"
+                            className={`size-[150px] rounded-full border-[0.2rem] ${
+                                error.avatar ? "border-red-500" : "border-green-500"
+                            }`}
+                        />
                     }
-                    onClick={() => {
-                        setUpdateAvatarPopup(false);
-                    }}
-                    className="absolute top-1 right-1 bg-transparent"
+                    type="button"
+                    className="rounded-full size-fit overflow-hidden"
+                    onClick={() => ref.current.click()}
                 />
+            </div>
 
-                {/* preview */}
-                <div className="w-full flex items-center justify-center">
-                    <Button
-                        btnText={
-                            <img
-                                src={avatarPreview}
-                                alt="preview"
-                                className={`size-[150px] rounded-full border-[0.2rem] ${
-                                    error.avatar ? "border-red-500" : "border-green-500"
-                                }`}
-                            />
-                        }
-                        type="button"
-                        className="rounded-full size-fit overflow-hidden"
-                        onClick={() => ref.current.click()}
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="file"
+                        name="avatar"
+                        id="avatar"
+                        className="hidden"
+                        onChange={handleChange}
+                        ref={ref}
                     />
-                </div>
 
-                {error.avatar && (
-                    <div className="text-sm mt-4 px-2 text-red-500 w-full text-center">
-                        {error.avatar}
+                    {error.avatar && (
+                        <div className="text-sm mt-4 px-2 text-red-500 w-full text-center">
+                            {error.avatar}
+                        </div>
+                    )}
+
+                    {/* upload btn */}
+                    <div className="w-full mt-4 flex items-center justify-center">
+                        <Button
+                            btnText={loading ? "Uploading..." : "Upload"}
+                            disabled={disabled}
+                            onMouseOver={onMouseOver}
+                            type="submit"
+                        />
                     </div>
-                )}
+                </form>
+            </div>
 
-                {/* upload btn */}
-                <div className="w-full mt-4 flex items-center justify-center">
-                    <Button
-                        btnText={loading ? "Uploading..." : "Upload"}
-                        disabled={disabled}
-                        onMouseOver={onMouseOver}
-                        type="submit"
-                    />
-                </div>
-            </form>
+            {/* cross */}
+            <Button
+                type="button"
+                btnText={
+                    <div className="size-[23px] fill-none stroke-slate-700">{icons.cross}</div>
+                }
+                onClick={() => {
+                    setUpdateAvatarPopup(false);
+                }}
+                className="absolute top-1 right-1 bg-transparent"
+            />
         </div>
     );
 }

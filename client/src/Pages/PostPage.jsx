@@ -91,7 +91,6 @@ export default function PostPage() {
                         };
                     }
                 });
-                setShowPopup(true);
             }
         } catch (err) {
             navigate("/server-error");
