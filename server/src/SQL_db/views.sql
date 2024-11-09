@@ -13,15 +13,15 @@ SELECT
 	(SELECT COUNT(p.post_id) FROM posts p where p.post_ownerId = u.user_id) AS totalPosts, 
 	(SELECT COUNT(f1.follower_id) FROM followers f1 WHERE f1.following_id = u.user_id) AS totalFollowers,
 	(SELECT COUNT(f2.following_id) FROM followers f2 WHERE f2.follower_id = u.user_id) AS totalFollowings,
-    (SELECT COUNT(*) FROM post_likes l NATURAL JOIN posts p WHERE p.post_ownerId = u.user_id AND l.is_liked = 1 ) AS totalLikes,
-	(SELECT IFNULL(COUNT(*),0) FROM post_views v NATURAL JOIN posts p WHERE p.post_ownerId = u.user_id) AS totalChannelViews
+    (SELECT COUNT(*) FROM post_likes l NATURAL JOIN posts p WHERE p.post_ownerId = u.user_id AND l.is_liked = 1) AS totalLikes,
+	(SELECT IFNULL(COUNT(*), 0) FROM post_views v NATURAL JOIN posts p WHERE p.post_ownerId = u.user_id) AS totalChannelViews
 FROM users u;
 
 
 -- post view
 CREATE VIEW post_view AS 
 SELECT  
-	p.*,
+	p.*, 
     c.category_name,
     (SELECT COUNT(*) FROM post_likes l WHERE p.post_id = l.post_id AND is_liked = 1) AS totalLikes,
     (SELECT COUNT(*) FROM post_likes l WHERE p.post_id = l.post_id AND is_liked = 0) AS totalDislikes,
