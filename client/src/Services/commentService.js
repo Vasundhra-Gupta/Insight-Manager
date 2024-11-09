@@ -1,9 +1,12 @@
 class CommentService {
-    async getComments(postId, orderBy = "desc") {
+    async getComments(postId, orderBy = 'desc') {
         try {
-            const res = await fetch(`/api/v1/comments/post/${postId}?orderBy=${orderBy}`, {
-                method: "GET",
-            });
+            const res = await fetch(
+                `/api/v1/comments/post/${postId}?orderBy=${orderBy}`,
+                {
+                    method: 'GET',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
@@ -21,7 +24,7 @@ class CommentService {
     async getComment(commentId) {
         try {
             const res = await fetch(`/api/v1/comments/${commentId}`, {
-                method: "GET",
+                method: 'GET',
             });
 
             const data = await res.json();
@@ -40,9 +43,9 @@ class CommentService {
     async addComment(postId, content) {
         try {
             const res = await fetch(`/api/v1/comments/${postId}`, {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ commentContent: content }),
             });
 
@@ -62,9 +65,9 @@ class CommentService {
     async updateComment(commentId, content) {
         try {
             const res = await fetch(`/api/v1/comments/${commentId}`, {
-                method: "PATCH",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ commentContent: content }),
             });
 
@@ -84,8 +87,8 @@ class CommentService {
     async deleteComment(commentId) {
         try {
             const res = await fetch(`/api/v1/comments/${commentId}`, {
-                method: "DELETE",
-                credentials: "include",
+                method: 'DELETE',
+                credentials: 'include',
             });
 
             const data = await res.json();

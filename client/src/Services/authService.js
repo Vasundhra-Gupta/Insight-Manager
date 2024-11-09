@@ -1,9 +1,9 @@
 class AuthService {
     async login(inputs) {
         try {
-            const res = await fetch("/api/v1/users/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch('/api/v1/users/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs),
             });
 
@@ -27,8 +27,8 @@ class AuthService {
                 formData.append(key, value);
             });
 
-            const res = await fetch("/api/v1/users/register", {
-                method: "POST",
+            const res = await fetch('/api/v1/users/register', {
+                method: 'POST',
                 body: formData,
             });
 
@@ -54,9 +54,9 @@ class AuthService {
 
     async logout() {
         try {
-            const res = await fetch("/api/v1/users/logout", {
-                method: "PATCH",
-                credentials: "include",
+            const res = await fetch('/api/v1/users/logout', {
+                method: 'PATCH',
+                credentials: 'include',
             });
 
             const data = await res.json();
@@ -74,10 +74,10 @@ class AuthService {
 
     async deleteAccount(password) {
         try {
-            const res = await fetch("/api/v1/users/delete", {
-                method: "DELETE",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch('/api/v1/users/delete', {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ password }),
             });
 
@@ -96,9 +96,9 @@ class AuthService {
 
     async getCurrentUser() {
         try {
-            const res = await fetch("/api/v1/users/current", {
-                method: "GET",
-                credentials: "include",
+            const res = await fetch('/api/v1/users/current', {
+                method: 'GET',
+                credentials: 'include',
             });
 
             const data = await res.json();

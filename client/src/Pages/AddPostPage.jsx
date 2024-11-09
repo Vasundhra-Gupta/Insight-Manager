@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { fileRestrictions, verifyExpression } from "../Utils";
-import { Button, RTE } from "../Components";
-import { usePopupContext } from "../Context";
-import { postService } from "../Services";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { fileRestrictions, verifyExpression } from '../Utils';
+import { Button, RTE } from '../Components';
+import { usePopupContext } from '../Context';
+import { postService } from '../Services';
 
 export default function AddPostPage() {
     const [inputs, setInputs] = useState({
-        title: "",
+        title: '',
         postImage: null,
-        content: "",
-        category: "",
+        content: '',
+        category: '',
     });
     const [thumbnailPreview, setThumbnailPreview] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -18,8 +18,8 @@ export default function AddPostPage() {
     const navigate = useNavigate();
     const { setShowPopup, setPopupText } = usePopupContext();
     const [error, setError] = useState({
-        title: "",
-        postImage: "",
+        title: '',
+        postImage: '',
     });
 
     function handleChange(e) {
@@ -41,7 +41,10 @@ export default function AddPostPage() {
             };
             reader.readAsDataURL(file);
         } else {
-            setError((prevError) => ({ ...prevError, postImage: "thumbnail is required." }));
+            setError((prevError) => ({
+                ...prevError,
+                postImage: 'thumbnail is required.',
+            }));
         }
     }
 
@@ -58,12 +61,12 @@ export default function AddPostPage() {
             setLoading(true);
             const res = await postService.addPost(inputs);
             if (res && !res.message) {
-                setPopupText("Post Created Successfully 🤗");
+                setPopupText('Post Created Successfully 🤗');
                 setShowPopup(true);
                 navigate(`/post/${postId}`);
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setLoading(false);
         }
@@ -80,7 +83,14 @@ export default function AddPostPage() {
         }
     }
 
-    const categories = ["Art", "Science", "Sci-Fi", "Entertainment", "Technical", "Others"];
+    const categories = [
+        'Art',
+        'Science',
+        'Sci-Fi',
+        'Entertainment',
+        'Technical',
+        'Others',
+    ];
 
     const categoryElements = categories?.map((category) => (
         <div key={category} className="flex items-center justify-start gap-2">
@@ -107,7 +117,8 @@ export default function AddPostPage() {
                         <div>
                             <div className="flex items-center justify-start gap-2">
                                 <label htmlFor="title">
-                                    <span className="text-red-500">* </span>Title :
+                                    <span className="text-red-500">* </span>
+                                    Title :
                                 </label>
                                 {error.title && (
                                     <div className="pt-[0.09rem] text-red-500 text-sm">
@@ -132,7 +143,8 @@ export default function AddPostPage() {
                         <div>
                             <div className="flex items-center justify-start gap-2">
                                 <label htmlFor="postImage">
-                                    <span className="text-red-500">* </span>Thumbnail :
+                                    <span className="text-red-500">* </span>
+                                    Thumbnail :
                                 </label>
                                 {error.postImage && (
                                     <div className="pt-[0.09rem] text-red-500 text-sm">
@@ -187,7 +199,7 @@ export default function AddPostPage() {
 
                     <div className="w-full text-center mt-10">
                         <Button
-                            btnText={loading ? "Uploading..." : "Upload"}
+                            btnText={loading ? 'Uploading...' : 'Upload'}
                             type="submit"
                             disabled={disabled}
                             onMouseOver={onMouseOver}

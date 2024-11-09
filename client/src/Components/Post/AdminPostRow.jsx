@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
-import { icons } from "../../Assets/icons";
-import { formatDateExact } from "../../Utils";
-import { postService } from "../../Services";
-import { Button } from "..";
-import { usePopupContext } from "../../Context";
+import { useNavigate } from 'react-router-dom';
+import { icons } from '../../Assets/icons';
+import { formatDateExact } from '../../Utils';
+import { postService } from '../../Services';
+import { Button } from '..';
+import { usePopupContext } from '../../Context';
 
 export default function AdminPostRow({ post, reference, setPosts }) {
     const {
@@ -38,20 +38,22 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                 );
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
     async function deletePost() {
         try {
             const res = await postService.deletePost(post_id);
-            if (res && res.message === "DELETION_SUCCESSFULL") {
-                setPopupText("Post Deleted Successfully 🙂");
+            if (res && res.message === 'DELETION_SUCCESSFULL') {
+                setPopupText('Post Deleted Successfully 🙂');
                 setShowPopup(true);
-                setPosts((prev) => prev.filter((post) => post.post_id !== post_id));
+                setPosts((prev) =>
+                    prev.filter((post) => post.post_id !== post_id)
+                );
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -96,7 +98,11 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                     className="flex items-center justify-start w-full cursor-pointer"
                 >
                     <div className="size-[45px] rounded-full overflow-hidden">
-                        <img src={post_image} alt={post_title} className="size-full object-cover" />
+                        <img
+                            src={post_image}
+                            alt={post_title}
+                            className="size-full object-cover"
+                        />
                     </div>
                     <div className="text-[1.1rem] font-medium ml-4 overflow-hidden text-ellipsis whitespace-nowrap max-w-[250px]">
                         {post_title}
@@ -105,7 +111,9 @@ export default function AdminPostRow({ post, reference, setPosts }) {
             </td>
 
             <td className=" text-center text-[1.1rem]">{category_name}</td>
-            <td className=" text-center text-[1.1rem]">{formatDateExact(post_createdAt)}</td>
+            <td className=" text-center text-[1.1rem]">
+                {formatDateExact(post_createdAt)}
+            </td>
             <td className=" text-center text-[1.1rem] ">{totalViews}</td>
             <td className=" text-center text-[1.1rem]">{totalComments}</td>
 
@@ -125,12 +133,20 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                     <Button
                         onClick={deletePost}
                         className="size-[27px] fill-none stroke-[#b5b4b4] hover:stroke-[#a40000] "
-                        btnText={<div className="size-[20px] fill-black">{icons.delete}</div>}
+                        btnText={
+                            <div className="size-[20px] fill-black">
+                                {icons.delete}
+                            </div>
+                        }
                     />
                     <Button
                         onClick={() => navigate(`/update/:${post_id}`)}
                         className="size-[25px] fill-none stroke-[#b5b4b4] hover:stroke-[#8871ee]"
-                        btnText={<div className="size-[20px] fill-black">{icons.edit}</div>}
+                        btnText={
+                            <div className="size-[20px] fill-black">
+                                {icons.edit}
+                            </div>
+                        }
                     />
                 </div>
             </td>

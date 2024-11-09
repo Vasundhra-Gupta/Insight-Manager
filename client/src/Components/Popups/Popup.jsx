@@ -1,26 +1,26 @@
-import { useEffect } from "react";
-import { usePopupContext } from "../../Context";
-import { AnimatePresence, motion } from "framer-motion";
-import { icons } from "../../Assets/icons";
+import { useEffect } from 'react';
+import { usePopupContext } from '../../Context';
+import { AnimatePresence, motion } from 'framer-motion';
+import { icons } from '../../Assets/icons';
 
 export default function Popup() {
     const { showPopup, popupText, setShowPopup } = usePopupContext();
 
     const popupVariants = {
         initial: {
-            x: "100vw",
+            x: '100vw',
         },
         final: {
             x: 0,
             transition: {
-                type: "spring",
+                type: 'spring',
                 stiffness: 200,
             },
         },
         exit: {
-            x: "100vw",
+            x: '100vw',
             transition: {
-                type: "spring",
+                type: 'spring',
                 stiffness: 200,
             },
         },
@@ -28,12 +28,12 @@ export default function Popup() {
 
     const progressVariants = {
         initial: {
-            width: "0%",
+            width: '0%',
         },
         final: {
-            width: "100%",
+            width: '100%',
             transition: {
-                type: "tween",
+                type: 'tween',
                 duration: 4,
             },
         },
@@ -65,7 +65,9 @@ export default function Popup() {
                     </div>
 
                     <div className="flex items-center justify-start gap-2 mt-2 mr-8">
-                        <div className="size-[22px] fill-green-600">{icons.check}</div>
+                        <div className="size-[22px] fill-green-600">
+                            {icons.check}
+                        </div>
                         <div>{popupText}</div>
                     </div>
 

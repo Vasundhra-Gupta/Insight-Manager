@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Button, SavedPostView } from "../Components";
-import { postService } from "../Services";
-import { useNavigate } from "react-router-dom";
-import { icons } from "../Assets/icons";
-import { paginate } from "../Utils";
-import { LIMIT } from "../Constants/constants";
-import { useUserContext } from "../Context";
+import { useEffect, useState } from 'react';
+import { Button, SavedPostView } from '../Components';
+import { postService } from '../Services';
+import { useNavigate } from 'react-router-dom';
+import { icons } from '../Assets/icons';
+import { paginate } from '../Utils';
+import { LIMIT } from '../Constants/constants';
+import { useUserContext } from '../Context';
 
 export default function SavedPostsPage() {
     const [posts, setPosts] = useState([]);
@@ -28,7 +28,7 @@ export default function SavedPostsPage() {
                     setPostsInfo(res.postsInfo);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -60,7 +60,9 @@ export default function SavedPostsPage() {
         <div>
             {loading ? (
                 page === 1 ? (
-                    <div className="w-full text-center">loading first batch...</div>
+                    <div className="w-full text-center">
+                        loading first batch...
+                    </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">

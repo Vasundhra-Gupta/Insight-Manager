@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useChannelContext, useUserContext } from "../../Context";
-import { postService } from "../../Services";
-import { icons } from "../../Assets/icons";
-import { PostCardView, Button } from "..";
-import { paginate } from "../../Utils";
-import { LIMIT } from "../../Constants/constants";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useChannelContext, useUserContext } from '../../Context';
+import { postService } from '../../Services';
+import { icons } from '../../Assets/icons';
+import { PostCardView, Button } from '..';
+import { paginate } from '../../Utils';
+import { LIMIT } from '../../Constants/constants';
 
 export default function ChannelPosts() {
     const { channel } = useChannelContext();
@@ -21,13 +21,17 @@ export default function ChannelPosts() {
         (async function getChannelPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getPosts(channel.user_id, LIMIT, page);
+                const res = await postService.getPosts(
+                    channel.user_id,
+                    LIMIT,
+                    page
+                );
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -54,11 +58,13 @@ export default function ChannelPosts() {
                         <Button
                             btnText={
                                 <div className="flex items-center justify-center gap-2">
-                                    <div className="size-[20px] fill-white">{icons.plus}</div>
+                                    <div className="size-[20px] fill-white">
+                                        {icons.plus}
+                                    </div>
                                     <div>New Post</div>
                                 </div>
                             }
-                            onClick={() => navigate("/add")}
+                            onClick={() => navigate('/add')}
                         />
                     </div>
                 )}
@@ -66,7 +72,9 @@ export default function ChannelPosts() {
 
             {loading ? (
                 page === 1 ? (
-                    <div className="w-full text-center">loading first batch...</div>
+                    <div className="w-full text-center">
+                        loading first batch...
+                    </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">

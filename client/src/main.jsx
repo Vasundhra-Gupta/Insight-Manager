@@ -1,14 +1,14 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import "./Styles/index.css";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import './Styles/index.css';
 
 import {
     Route,
     createBrowserRouter,
     createRoutesFromElements,
     RouterProvider,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 import {
     LoginPage,
@@ -27,11 +27,11 @@ import {
     AdminPage,
     UpdatePostPage,
     SavedPostsPage,
-} from "./Pages";
+} from './Pages';
 
-import { UserContextProvider } from "./Context/UserContext";
-import { ChannelContextProvider } from "./Context/ChannelContext";
-import { PopupContextProvider } from "./Context/PopupContext";
+import { UserContextProvider } from './Context/UserContext';
+import { ChannelContextProvider } from './Context/ChannelContext';
+import { PopupContextProvider } from './Context/PopupContext';
 
 import {
     DeleteAccount,
@@ -40,7 +40,7 @@ import {
     UpdatePassword,
     ChannelAbout,
     ChannelPosts,
-} from "./Components";
+} from './Components';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -115,7 +115,7 @@ const router = createBrowserRouter(
     )
 );
 
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById('root')).render(
     // <StrictMode>
     <UserContextProvider>
         <RouterProvider router={router} />

@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { verifyExpression } from "../../Utils";
-import { useNavigate } from "react-router-dom";
-import { userService } from "../../Services";
-import { Button } from "..";
+import { useState } from 'react';
+import { verifyExpression } from '../../Utils';
+import { useNavigate } from 'react-router-dom';
+import { userService } from '../../Services';
+import { Button } from '..';
 
 export default function UpdatePassword() {
     const initialInputs = {
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
     };
     const nullErrors = {
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
     };
     const [inputs, setInputs] = useState(initialInputs);
     const [error, setError] = useState(nullErrors);
@@ -28,7 +28,7 @@ export default function UpdatePassword() {
 
     async function handleBlur(e) {
         const { name, value } = e.target;
-        if (value && name === "newPassword") {
+        if (value && name === 'newPassword') {
             verifyExpression(name, value, setError);
         }
     }
@@ -50,12 +50,13 @@ export default function UpdatePassword() {
             if (inputs.newPassword !== inputs.confirmPassword) {
                 setError((prevError) => ({
                     ...prevError,
-                    confirmPassword: "confirm password should match new password",
+                    confirmPassword:
+                        'confirm password should match new password',
                 }));
             } else if (inputs.oldPassword === inputs.newPassword) {
                 setError((prevError) => ({
                     ...prevError,
-                    newPassword: "new password should not match old password",
+                    newPassword: 'new password should not match old password',
                 }));
             } else {
                 const res = await userService.updatePassword(
@@ -69,7 +70,7 @@ export default function UpdatePassword() {
                 }
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setDisabled(false);
             setLoading(false);
@@ -78,24 +79,24 @@ export default function UpdatePassword() {
 
     const inputFields = [
         {
-            name: "oldPassword",
-            type: "password",
-            placeholder: "Enter current Password",
-            label: "Old Password",
+            name: 'oldPassword',
+            type: 'password',
+            placeholder: 'Enter current Password',
+            label: 'Old Password',
             required: true,
         },
         {
-            name: "newPassword",
-            type: "password",
-            placeholder: "Create new password",
-            label: "New Password",
+            name: 'newPassword',
+            type: 'password',
+            placeholder: 'Create new password',
+            label: 'New Password',
             required: true,
         },
         {
-            name: "confirmPassword",
-            type: "password",
-            placeholder: "Confirm new password",
-            label: "Confirm Password",
+            name: 'confirmPassword',
+            type: 'password',
+            placeholder: 'Confirm new password',
+            label: 'Confirm Password',
             required: true,
         },
     ];
@@ -108,7 +109,9 @@ export default function UpdatePassword() {
                     {field.label} :
                 </label>
                 {error[field.name] && (
-                    <div className="pt-[0.09rem] text-red-500 text-sm">{error[field.name]}</div>
+                    <div className="pt-[0.09rem] text-red-500 text-sm">
+                        {error[field.name]}
+                    </div>
                 )}
             </div>
             <input
@@ -122,8 +125,10 @@ export default function UpdatePassword() {
                 required={field.required}
                 className="bg-transparent border-[0.01rem]"
             />
-            {field.name === "newPassword" && (
-                <div className="text-sm text-white">Password must be 8-12 characters.</div>
+            {field.name === 'newPassword' && (
+                <div className="text-sm text-white">
+                    Password must be 8-12 characters.
+                </div>
             )}
         </div>
     ));
@@ -144,7 +149,7 @@ export default function UpdatePassword() {
                         }}
                     />
                     <Button
-                        btnText={loading ? "Updating..." : "Update"}
+                        btnText={loading ? 'Updating...' : 'Update'}
                         type="submit"
                         disabled={disabled}
                         onMouseOver={onMouseOver}

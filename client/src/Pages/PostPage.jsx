@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, NavLink } from "react-router-dom";
-import { followerService, likeService, postService } from "../Services";
-import { Button, Comments, Recemendations } from "../Components";
-import { formatDateRelative } from "../Utils";
-import { useUserContext, usePopupContext } from "../Context";
-import { icons } from "../Assets/icons";
-import parse from "html-react-parser";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams, NavLink } from 'react-router-dom';
+import { followerService, likeService, postService } from '../Services';
+import { Button, Comments, Recemendations } from '../Components';
+import { formatDateRelative } from '../Utils';
+import { useUserContext, usePopupContext } from '../Context';
+import { icons } from '../Assets/icons';
+import parse from 'html-react-parser';
 
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
-    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
+        usePopupContext();
     const [post, setPost] = useState({});
     const { user } = useUserContext();
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function PostPage() {
                     setPost(res);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -35,11 +36,11 @@ export default function PostPage() {
         try {
             if (!user) {
                 setShowLoginPopup(true);
-                setLoginPopupText("Like");
+                setLoginPopupText('Like');
                 return;
             }
             const res = await likeService.togglePostLike(postId, true);
-            if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
+            if (res && res.message === 'POST_LIKE_TOGGLED_SUCCESSFULLY') {
                 setPost((prev) => {
                     if (prev.isLiked) {
                         return {
@@ -61,7 +62,7 @@ export default function PostPage() {
                 });
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -69,11 +70,11 @@ export default function PostPage() {
         try {
             if (!user) {
                 setShowLoginPopup(true);
-                setLoginPopupText("Dislike");
+                setLoginPopupText('Dislike');
                 return;
             }
             const res = await likeService.togglePostLike(postId, false);
-            if (res && res.message === "POST_LIKE_TOGGLED_SUCCESSFULLY") {
+            if (res && res.message === 'POST_LIKE_TOGGLED_SUCCESSFULLY') {
                 setPost((prev) => {
                     if (prev.isDisliked) {
                         return {
@@ -85,7 +86,9 @@ export default function PostPage() {
                         return {
                             ...prev,
                             totalDislikes: prev.totalDislikes + 1,
-                            totalLikes: prev.isLiked ? prev.totalLikes - 1 : prev.totalLikes,
+                            totalLikes: prev.isLiked
+                                ? prev.totalLikes - 1
+                                : prev.totalLikes,
                             isDisliked: true,
                             isLiked: false,
                         };
@@ -93,7 +96,7 @@ export default function PostPage() {
                 });
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -101,14 +104,12 @@ export default function PostPage() {
         try {
             if (!user) {
                 setShowLoginPopup(true);
-                setLoginPopupText("Follow");
+                setLoginPopupText('Follow');
                 return;
             }
             const res = await followerService.toggleFollow(post.post_ownerId);
             if (
-                res &&
-                (res.message === "FOLLOWED_SUCCESSFULLY" ||
-                    res.message === "UNFOLLOWED_SUCCESSFULLY")
+                res && res.message === 'FOLLOW_TOGGLED_SUCCESSFULLY'
             ) {
                 setPost((prev) => ({
                     ...prev,
@@ -116,7 +117,7 @@ export default function PostPage() {
                 }));
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -124,27 +125,23 @@ export default function PostPage() {
         try {
             if (!user) {
                 setShowLoginPopup(true);
-                setLoginPopupText("Save");
+                setLoginPopupText('Save');
                 return;
             }
             const res = await postService.toggleSavePost(postId);
-            if (
-                res &&
-                (res.message === "POST_UNSAVED_SUCCESSFULLY" ||
-                    res.message === "POST_SAVED_SUCCESSFULLY")
-            ) {
+            if (res && res.message === 'POST_SAVE_TOGGLED_SUCCESSFULLY') {
                 setPopupText(
                     `${
-                        res.message === "POST_SAVED_SUCCESSFULLY"
-                            ? "Post Saved Successfully 🤗"
-                            : "Post Unsaved Successfully 🙂"
+                        post.isSaved
+                            ? 'Post Unsaved Successfully 🙂'
+                            : 'Post Saved Successfully 🤗'
                     }`
                 );
                 setShowPopup(true);
                 setPost((prev) => ({ ...prev, isSaved: !prev.isSaved }));
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -164,12 +161,15 @@ export default function PostPage() {
                         />
                     </div>
 
-                    <div className="text-3xl font-medium w-full">{post.post_title}</div>
+                    <div className="text-3xl font-medium w-full">
+                        {post.post_title}
+                    </div>
 
                     <div>
                         <div>{post.category_name}</div>
                         <div>
-                            {post.totalViews} views &bull; {formatDateRelative(post.post_createdAt)}
+                            {post.totalViews} views &bull;{' '}
+                            {formatDateRelative(post.post_createdAt)}
                         </div>
                     </div>
 
@@ -199,11 +199,17 @@ export default function PostPage() {
                                 {user?.user_name === post.userName ? (
                                     <Button
                                         btnText="Edit"
-                                        onClick={() => navigate(`/update/${post.post_id}`)}
+                                        onClick={() =>
+                                            navigate(`/update/${post.post_id}`)
+                                        }
                                     />
                                 ) : (
                                     <Button
-                                        btnText={post.isFollowed ? "Unfollow" : "Follow"}
+                                        btnText={
+                                            post.isFollowed
+                                                ? 'Unfollow'
+                                                : 'Follow'
+                                        }
                                         onClick={toggleFollow}
                                     />
                                 )}
@@ -219,8 +225,8 @@ export default function PostPage() {
                                             <div
                                                 className={`${
                                                     post.isLiked
-                                                        ? "fill-white stroke-black"
-                                                        : "fill-none stroke-white"
+                                                        ? 'fill-white stroke-black'
+                                                        : 'fill-none stroke-white'
                                                 } size-[20px]`}
                                             >
                                                 {icons.like}
@@ -236,8 +242,8 @@ export default function PostPage() {
                                             <div
                                                 className={`${
                                                     post.isDisliked
-                                                        ? "fill-white stroke-black"
-                                                        : "fill-none stroke-white"
+                                                        ? 'fill-white stroke-black'
+                                                        : 'fill-none stroke-white'
                                                 } size-[20px]`}
                                             >
                                                 {icons.dislike}
@@ -256,8 +262,8 @@ export default function PostPage() {
                                         <div
                                             className={`${
                                                 post.isSaved
-                                                    ? "fill-white stroke-black"
-                                                    : "fill-none stroke-white"
+                                                    ? 'fill-white stroke-black'
+                                                    : 'fill-none stroke-white'
                                             } size-[20px]`}
                                         >
                                             {icons.save}
@@ -269,7 +275,9 @@ export default function PostPage() {
                         </div>
                     </div>
 
-                    <div className="w-full text-md">{parse(post.post_content)}</div>
+                    <div className="w-full text-md">
+                        {parse(post.post_content)}
+                    </div>
                 </div>
 
                 {/* comments */}

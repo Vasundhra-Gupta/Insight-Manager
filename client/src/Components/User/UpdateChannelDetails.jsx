@@ -1,21 +1,21 @@
-import { useState } from "react";
-import { useUserContext } from "../../Context";
-import { verifyExpression } from "../../Utils";
-import { useNavigate } from "react-router-dom";
-import { userService } from "../../Services";
-import { Button } from "..";
+import { useState } from 'react';
+import { useUserContext } from '../../Context';
+import { verifyExpression } from '../../Utils';
+import { useNavigate } from 'react-router-dom';
+import { userService } from '../../Services';
+import { Button } from '..';
 
 export default function UpdateChannelDetails() {
     const { user, setUser } = useUserContext();
     const initialInputs = {
         userName: user?.user_name,
         bio: user?.user_bio,
-        password: "",
+        password: '',
     };
     const nullErrors = {
-        userName: "",
-        bio: "", //100 characters
-        password: "",
+        userName: '',
+        bio: '', //100 characters
+        password: '',
     };
     const [inputs, setInputs] = useState(initialInputs);
     const [error, setError] = useState(nullErrors);
@@ -30,17 +30,22 @@ export default function UpdateChannelDetails() {
 
     async function handleBlur(e) {
         const { name, value } = e.target;
-        if (value && name !== "password") {
+        if (value && name !== 'password') {
             verifyExpression(name, value, setError);
         }
     }
 
     async function onMouseOver() {
         if (
-            Object.entries(inputs).some(([key, value]) => !value && key !== "bio") ||
-            Object.entries(error).some(([key, value]) => value !== "" && key !== "password") ||
+            Object.entries(inputs).some(
+                ([key, value]) => !value && key !== 'bio'
+            ) ||
+            Object.entries(error).some(
+                ([key, value]) => value !== '' && key !== 'password'
+            ) ||
             !Object.entries(inputs).some(
-                ([key, value]) => value !== initialInputs[key] && key !== "password"
+                ([key, value]) =>
+                    value !== initialInputs[key] && key !== 'password'
             )
         ) {
             setDisabled(true);
@@ -58,12 +63,12 @@ export default function UpdateChannelDetails() {
             const res = await userService.updateChannelDetails(inputs);
             if (res && !res.message) {
                 setUser(res);
-                setInputs((prev) => ({ ...prev, password: "" }));
+                setInputs((prev) => ({ ...prev, password: '' }));
             } else {
                 setError((prev) => ({ ...prev, password: res.message }));
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setLoading(false);
             setDisabled(false);
@@ -72,23 +77,23 @@ export default function UpdateChannelDetails() {
 
     const inputFields = [
         {
-            name: "userName",
-            type: "text",
-            placeholder: "Enter your user name",
-            label: "Username",
+            name: 'userName',
+            type: 'text',
+            placeholder: 'Enter your user name',
+            label: 'Username',
             required: true,
         },
         {
-            name: "password",
-            type: "password",
-            placeholder: "Enter your password",
-            label: "Password",
+            name: 'password',
+            type: 'password',
+            placeholder: 'Enter your password',
+            label: 'Password',
             required: true,
         },
         {
-            name: "bio",
-            placeholder: "Add channel bio",
-            label: "Bio",
+            name: 'bio',
+            placeholder: 'Add channel bio',
+            label: 'Bio',
             required: false,
         },
     ];
@@ -101,10 +106,12 @@ export default function UpdateChannelDetails() {
                     {field.label} :
                 </label>
                 {error[field.name] && (
-                    <div className="pt-[0.09rem] text-red-500 text-sm">{error[field.name]}</div>
+                    <div className="pt-[0.09rem] text-red-500 text-sm">
+                        {error[field.name]}
+                    </div>
                 )}
             </div>
-            {field.name !== "bio" ? (
+            {field.name !== 'bio' ? (
                 <input
                     type={field.type}
                     name={field.name}
@@ -147,7 +154,7 @@ export default function UpdateChannelDetails() {
                         }}
                     />
                     <Button
-                        btnText={loading ? "Updating..." : "Update"}
+                        btnText={loading ? 'Updating...' : 'Update'}
                         type="submit"
                         disabled={disabled}
                         onMouseOver={onMouseOver}

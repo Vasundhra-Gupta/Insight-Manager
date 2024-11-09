@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, NavLink, Outlet } from "react-router-dom";
-import { Button } from "../Components";
-import { userService, followerService } from "../Services";
-import { useChannelContext, useUserContext, usePopupContext } from "../Context";
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, NavLink, Outlet } from 'react-router-dom';
+import { Button } from '../Components';
+import { userService, followerService } from '../Services';
+import { useChannelContext, useUserContext, usePopupContext } from '../Context';
 
 export default function ChannelPage() {
     const { userName } = useParams();
@@ -23,7 +23,7 @@ export default function ChannelPage() {
                     setChannel(null);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -34,25 +34,28 @@ export default function ChannelPage() {
         try {
             if (!user) {
                 setShowLoginPopup(true);
-                setLoginPopupText("Follow");
+                setLoginPopupText('Follow');
                 return;
             }
             const res = await followerService.toggleFollow(channel.user_id);
             if (
                 res &&
-                (res.message === "FOLLOWED_SUCCESSFULLY" ||
-                    res.message === "UNFOLLOWED_SUCCESSFULLY")
+                (res.message === 'FOLLOWED_SUCCESSFULLY' ||
+                    res.message === 'UNFOLLOWED_SUCCESSFULLY')
             ) {
-                setChannel((prev) => ({ ...prev, isFollowed: !prev.isFollowed }));
+                setChannel((prev) => ({
+                    ...prev,
+                    isFollowed: !prev.isFollowed,
+                }));
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
     const tabs = [
-        { name: "posts", path: "" },
-        { name: "About", path: "about" },
+        { name: 'posts', path: '' },
+        { name: 'About', path: 'about' },
     ];
     const tabElements = tabs?.map((tab) => (
         <NavLink
@@ -60,7 +63,7 @@ export default function ChannelPage() {
             to={tab.path}
             end
             className={({ isActive }) =>
-                `${isActive ? "border-[#8871ee]" : "border-white"} border-b-[0.01rem] w-full`
+                `${isActive ? 'border-[#8871ee]' : 'border-white'} border-b-[0.01rem] w-full`
             }
         >
             <div className="w-full text-center">{tab.name}</div>
@@ -100,10 +103,13 @@ export default function ChannelPage() {
                             {channel.user_firstName} {channel.user_lastName}
                         </div>
 
-                        <div className="text-[#dadada] text-[17px]">@{channel.user_name}</div>
+                        <div className="text-[#dadada] text-[17px]">
+                            @{channel.user_name}
+                        </div>
 
                         <div className="flex gap-1 items-center justify-start text-[#a5a5a5] text-[15px]">
-                            {channel.totalFollowers} followers &bull; {channel.totalFollowings}
+                            {channel.totalFollowers} followers &bull;{' '}
+                            {channel.totalFollowings}
                             followings
                         </div>
                     </div>
@@ -115,14 +121,14 @@ export default function ChannelPage() {
                         <Button
                             btnText="Edit"
                             onClick={() => {
-                                navigate("/settings");
+                                navigate('/settings');
                             }}
                         />
                     </div>
                 ) : (
                     <div className="">
                         <Button
-                            btnText={channel.isFollowed ? "UnFollow" : "Follow"}
+                            btnText={channel.isFollowed ? 'UnFollow' : 'Follow'}
                             onClick={toggleFollow}
                         />
                     </div>
@@ -130,7 +136,9 @@ export default function ChannelPage() {
             </div>
 
             {/* tabs */}
-            <div className="flex gap-2 justify-evenly w-full px-2">{tabElements}</div>
+            <div className="flex gap-2 justify-evenly w-full px-2">
+                {tabElements}
+            </div>
 
             <hr className="mt-2" />
 

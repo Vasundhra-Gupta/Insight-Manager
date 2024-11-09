@@ -2,8 +2,8 @@ class UserService {
     async getChannelProfile(username) {
         try {
             const res = await fetch(`/api/v1/users/channel/${username}`, {
-                method: "GET",
-                credentials: "include",
+                method: 'GET',
+                credentials: 'include',
             });
 
             const data = await res.json();
@@ -21,10 +21,10 @@ class UserService {
 
     async updateAccountDetails(inputs) {
         try {
-            const res = await fetch("/api/v1/users/update-account", {
-                method: "PATCH",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch('/api/v1/users/update-account', {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs),
             });
 
@@ -36,17 +36,19 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updateAccountDetails service: ${err.message}`);
+            console.error(
+                `error in updateAccountDetails service: ${err.message}`
+            );
             throw err;
         }
     }
 
     async updateChannelDetails(inputs) {
         try {
-            const res = await fetch("/api/v1/users/update-channel", {
-                method: "PATCH",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch('/api/v1/users/update-channel', {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs),
             });
 
@@ -58,7 +60,9 @@ class UserService {
             }
             return data;
         } catch (err) {
-            console.error(`error in updateChannelDetails service: ${err.message}`);
+            console.error(
+                `error in updateChannelDetails service: ${err.message}`
+            );
             throw err;
         }
     }
@@ -66,11 +70,11 @@ class UserService {
     async updateAvatar(avatar) {
         try {
             const formData = new FormData();
-            formData.append("avatar", avatar);
+            formData.append('avatar', avatar);
 
-            const res = await fetch("/api/v1/users/update-avatar", {
-                method: "PATCH",
-                credentials: "include",
+            const res = await fetch('/api/v1/users/update-avatar', {
+                method: 'PATCH',
+                credentials: 'include',
                 body: formData,
             });
 
@@ -90,11 +94,11 @@ class UserService {
     async updateCoverImage(coverImage) {
         try {
             const formData = new FormData();
-            formData.append("coverImage", coverImage);
+            formData.append('coverImage', coverImage);
 
-            const res = await fetch("/api/v1/users/update-coverImage", {
-                method: "PATCH",
-                credentials: "include",
+            const res = await fetch('/api/v1/users/update-coverImage', {
+                method: 'PATCH',
+                credentials: 'include',
                 body: formData,
             });
 
@@ -113,10 +117,10 @@ class UserService {
 
     async updatePassword(newPassword, oldPassword) {
         try {
-            const res = await fetch("/api/v1/users/update-password", {
-                method: "PATCH",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch('/api/v1/users/update-password', {
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     newPassword,
                     oldPassword,
@@ -136,12 +140,15 @@ class UserService {
         }
     }
 
-    async getWatchHistory(limit = 10, page = 1, orderBy = "desc") {
+    async getWatchHistory(limit = 10, page = 1, orderBy = 'desc') {
         try {
-            const res = await fetch(`/api/v1/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/users/history?orderBy=${orderBy}&limit=${limit}&page=${page}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
@@ -158,9 +165,9 @@ class UserService {
 
     async clearWatchHistory() {
         try {
-            const res = await fetch("/api/v1/users/history", {
-                method: "DELETE",
-                credentials: "include",
+            const res = await fetch('/api/v1/users/history', {
+                method: 'DELETE',
+                credentials: 'include',
             });
 
             const data = await res.json();

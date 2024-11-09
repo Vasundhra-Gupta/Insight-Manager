@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { Button, Logout } from "..";
-import { useUserContext } from "../../Context";
+import { useNavigate } from 'react-router-dom';
+import { Button, Logout } from '..';
+import { useUserContext } from '../../Context';
 
 export default function Header() {
     const { user, setUser } = useUserContext();
@@ -15,14 +15,14 @@ export default function Header() {
                 <div className="flex gap-2">
                     <Button
                         onClick={() => {
-                            navigate("/register");
+                            navigate('/register');
                         }}
                         btnText="Sign Up"
                     />
 
                     <Button
                         onClick={() => {
-                            navigate("/login");
+                            navigate('/login');
                         }}
                         btnText="Login"
                     />

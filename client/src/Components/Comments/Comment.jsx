@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { usePopupContext, useUserContext } from "../../Context";
-import { commentService, likeService } from "../../Services";
-import { formatDateRelative } from "../../Utils";
-import { icons } from "../../Assets/icons";
-import { Button } from "..";
+import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { usePopupContext, useUserContext } from '../../Context';
+import { commentService, likeService } from '../../Services';
+import { formatDateRelative } from '../../Utils';
+import { icons } from '../../Assets/icons';
+import { Button } from '..';
 
 export default function Comment({ comment, setComments }) {
     const {
@@ -21,7 +21,8 @@ export default function Comment({ comment, setComments }) {
     } = comment;
     const navigate = useNavigate();
     const { user } = useUserContext();
-    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
+        usePopupContext();
     const [newContent, setNewContent] = useState(comment_content);
     const [isEditing, setIsEditing] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -30,11 +31,11 @@ export default function Comment({ comment, setComments }) {
         try {
             if (!user) {
                 setShowLoginPopup(true);
-                setLoginPopupText("Follow");
+                setLoginPopupText('Follow');
                 return;
             }
             const res = await likeService.toggleCommentLike(comment_id, true);
-            if (res && res.message === "COMMENT_LIKE_TOGGLED_SUCCESSFULLY") {
+            if (res && res.message === 'COMMENT_LIKE_TOGGLED_SUCCESSFULLY') {
                 setComments((prev) =>
                     prev.map((item) => {
                         if (item.comment_id === comment_id) {
@@ -50,7 +51,9 @@ export default function Comment({ comment, setComments }) {
                                     isLiked: 1,
                                     likes: item.likes + 1,
                                     dislikes:
-                                        item.isLiked === 0 ? item.dislikes - 1 : item.dislikes, // -1 (no interaction hi rha hoga)
+                                        item.isLiked === 0
+                                            ? item.dislikes - 1
+                                            : item.dislikes, // -1 (no interaction hi rha hoga)
                                 };
                             }
                         } else return item;
@@ -58,7 +61,7 @@ export default function Comment({ comment, setComments }) {
                 );
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -66,11 +69,11 @@ export default function Comment({ comment, setComments }) {
         try {
             if (!user) {
                 setShowLoginPopup(true);
-                setLoginPopupText("Follow");
+                setLoginPopupText('Follow');
                 return;
             }
             const res = await likeService.toggleCommentLike(comment_id, false);
-            if (res && res.message === "COMMENT_LIKE_TOGGLED_SUCCESSFULLY") {
+            if (res && res.message === 'COMMENT_LIKE_TOGGLED_SUCCESSFULLY') {
                 setComments((prev) =>
                     prev.map((item) => {
                         if (item.comment_id === comment_id) {
@@ -85,7 +88,10 @@ export default function Comment({ comment, setComments }) {
                                     ...item,
                                     isLiked: 0,
                                     dislikes: item.dislikes + 1,
-                                    likes: item.isLiked === 1 ? item.likes - 1 : item.likes,
+                                    likes:
+                                        item.isLiked === 1
+                                            ? item.likes - 1
+                                            : item.likes,
                                 };
                             }
                         } else return item;
@@ -93,7 +99,7 @@ export default function Comment({ comment, setComments }) {
                 );
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -101,7 +107,10 @@ export default function Comment({ comment, setComments }) {
         try {
             e.preventDefault();
             setIsUpdating(true);
-            const res = await commentService.updateComment(comment_id, newContent);
+            const res = await commentService.updateComment(
+                comment_id,
+                newContent
+            );
             if (res && !res.message) {
                 setComments((prev) =>
                     prev.map((item) => {
@@ -115,10 +124,10 @@ export default function Comment({ comment, setComments }) {
                 );
                 setIsEditing(false);
                 setShowPopup(true);
-                setPopupText("Comment Edited Successfully 🙂");
+                setPopupText('Comment Edited Successfully 🙂');
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setIsUpdating(false);
         }
@@ -127,13 +136,15 @@ export default function Comment({ comment, setComments }) {
     async function deleteComment() {
         try {
             const res = await commentService.deleteComment(comment_id);
-            if (res && res.message === "COMMENT_DELETED_SUCCESSFULLY") {
-                setComments((prev) => prev.filter((item) => item.comment_id !== comment_id));
+            if (res && res.message === 'COMMENT_DELETED_SUCCESSFULLY') {
+                setComments((prev) =>
+                    prev.filter((item) => item.comment_id !== comment_id)
+                );
                 setShowPopup(true);
-                setPopupText("Comment Deleted Successfully 🙂");
+                setPopupText('Comment Deleted Successfully 🙂');
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -161,7 +172,9 @@ export default function Comment({ comment, setComments }) {
 
                             <div className="text-sm">&bull;</div>
 
-                            <div className="text-sm">{formatDateRelative(comment_createdAt)}</div>
+                            <div className="text-sm">
+                                {formatDateRelative(comment_createdAt)}
+                            </div>
                         </div>
 
                         <div className="text-sm">@{user_name}</div>
@@ -190,10 +203,15 @@ export default function Comment({ comment, setComments }) {
                             />
 
                             {/* submit btn */}
-                            <Button type="submit" btnText={isUpdating ? "Updating..." : "Update"} />
+                            <Button
+                                type="submit"
+                                btnText={isUpdating ? 'Updating...' : 'Update'}
+                            />
                         </form>
                     ) : (
-                        <div className="text-ellipsis line-clamp-2">{comment_content}</div>
+                        <div className="text-ellipsis line-clamp-2">
+                            {comment_content}
+                        </div>
                     )}
 
                     <div className="flex items-center justify-start gap-2 mt-2">
@@ -204,8 +222,8 @@ export default function Comment({ comment, setComments }) {
                                     <div
                                         className={`${
                                             isLiked === 1
-                                                ? "fill-white stroke-black"
-                                                : "fill-none stroke-white"
+                                                ? 'fill-white stroke-black'
+                                                : 'fill-none stroke-white'
                                         } size-[20px]`}
                                     >
                                         {icons.like}
@@ -222,8 +240,8 @@ export default function Comment({ comment, setComments }) {
                                     <div
                                         className={`${
                                             isLiked === 0
-                                                ? "fill-white stroke-black"
-                                                : "fill-none stroke-white"
+                                                ? 'fill-white stroke-black'
+                                                : 'fill-none stroke-white'
                                         } size-[20px]`}
                                     >
                                         {icons.dislike}
@@ -239,12 +257,18 @@ export default function Comment({ comment, setComments }) {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-2 absolute top-2 right-2">
                         <Button
                             onClick={() => setIsEditing(true)}
-                            btnText={<div className="size-[20px]">{icons.edit}</div>}
+                            btnText={
+                                <div className="size-[20px]">{icons.edit}</div>
+                            }
                         />
 
                         <Button
                             onClick={deleteComment}
-                            btnText={<div className="size-[20px]">{icons.delete}</div>}
+                            btnText={
+                                <div className="size-[20px]">
+                                    {icons.delete}
+                                </div>
+                            }
                         />
                     </div>
                 )}

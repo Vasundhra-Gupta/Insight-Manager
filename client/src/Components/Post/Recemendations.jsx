@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { postService } from "../../Services";
-import { paginate } from "../../Utils";
-import { icons } from "../../Assets/icons";
-import { LIMIT } from "../../Constants/constants";
-import { PostListView } from "..";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { postService } from '../../Services';
+import { paginate } from '../../Utils';
+import { icons } from '../../Assets/icons';
+import { LIMIT } from '../../Constants/constants';
+import { PostListView } from '..';
 
 export default function Recemendations({ category }) {
     const [posts, setPosts] = useState([]);
@@ -17,13 +17,17 @@ export default function Recemendations({ category }) {
         (async function getPosts() {
             try {
                 setLoading(true);
-                const res = await postService.getRandomPosts(page, LIMIT, category);
+                const res = await postService.getRandomPosts(
+                    page,
+                    LIMIT,
+                    category
+                );
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -45,7 +49,9 @@ export default function Recemendations({ category }) {
         <div className="w-full h-full">
             {loading ? (
                 page === 1 ? (
-                    <div className="w-full text-center">loading first batch...</div>
+                    <div className="w-full text-center">
+                        loading first batch...
+                    </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">

@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUserContext, usePopupContext } from "../../Context";
-import { authService } from "../../Services";
-import { Button } from "..";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUserContext, usePopupContext } from '../../Context';
+import { authService } from '../../Services';
+import { Button } from '..';
 
 export default function Logout() {
     const [loading, setLoading] = useState(false);
@@ -16,11 +16,11 @@ export default function Logout() {
             const res = await authService.logout();
             if (res && !res.message) {
                 setUser(null);
-                setPopupText("LogOut Successfull 🙂");
+                setPopupText('LogOut Successfull 🙂');
                 setShowPopup(true);
             }
         } catch (err) {
-            navigate("/servor-error");
+            navigate('/servor-error');
         } finally {
             setLoading(false);
         }
@@ -31,7 +31,7 @@ export default function Logout() {
             <Button
                 onClick={handleClick}
                 disabled={loading}
-                btnText={loading ? "Logging Out..." : "Logout"}
+                btnText={loading ? 'Logging Out...' : 'Logout'}
             />
         </div>
     );

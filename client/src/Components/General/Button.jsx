@@ -1,4 +1,9 @@
-export default function Button({ disabled = false, className = "", btnText, ...props }) {
+export default function Button({
+    disabled = false,
+    className = '',
+    btnText,
+    ...props
+}) {
     return (
         <div className="">
             <button

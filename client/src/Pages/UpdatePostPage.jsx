@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, RTE } from "../Components";
-import { verifyExpression, fileRestrictions } from "../Utils";
-import { postService } from "../Services";
-import { useUserContext,usePopupContext } from "../Context";
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, RTE } from '../Components';
+import { verifyExpression, fileRestrictions } from '../Utils';
+import { postService } from '../Services';
+import { useUserContext, usePopupContext } from '../Context';
 
 export default function UpdatePostPage() {
     const [inputs, setInputs] = useState({
-        title: "",
+        title: '',
         postImage: null,
-        content: "",
-        category: "",
+        content: '',
+        category: '',
     });
     const [error, setError] = useState({
-        title: "",
-        postImage: "",
+        title: '',
+        postImage: '',
     });
     const { postId } = useParams();
     const [post, setPost] = useState({});
@@ -23,7 +23,7 @@ export default function UpdatePostPage() {
     const [uploading, setUploading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const { setShowPopup, setPopupText } = usePopupContext();
-    const [defaultRTEValue, setDefaultRTEValue] = useState("");
+    const [defaultRTEValue, setDefaultRTEValue] = useState('');
     const navigate = useNavigate();
     const { user } = useUserContext();
 
@@ -44,7 +44,7 @@ export default function UpdatePostPage() {
                     setThumbnailPreview(res.post_image);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -70,7 +70,10 @@ export default function UpdatePostPage() {
             };
             reader.readAsDataURL(file);
         } else {
-            setError((prevError) => ({ ...prevError, postImage: "thumbnail is required." }));
+            setError((prevError) => ({
+                ...prevError,
+                postImage: 'thumbnail is required.',
+            }));
         }
     }
 
@@ -94,14 +97,17 @@ export default function UpdatePostPage() {
                 },
                 postId
             );
-            const res1 = await postService.updatePostImage(inputs.postImage, postId);
+            const res1 = await postService.updatePostImage(
+                inputs.postImage,
+                postId
+            );
             if (res && res1 && !res.message && !res1.message) {
-                setPopupText("Post Updated Successfully 🤗");
+                setPopupText('Post Updated Successfully 🤗');
                 setShowPopup(true);
                 navigate(`/post/${postId}`);
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setUploading(false);
             setDisabled(false);
@@ -119,7 +125,14 @@ export default function UpdatePostPage() {
         }
     }
 
-    const categories = ["Art", "Science", "Sci-Fi", "Entertainment", "Technical", "Others"];
+    const categories = [
+        'Art',
+        'Science',
+        'Sci-Fi',
+        'Entertainment',
+        'Technical',
+        'Others',
+    ];
 
     const categoryElements = categories?.map((category) => (
         <div key={category} className="flex items-center justify-start gap-2">
@@ -148,7 +161,8 @@ export default function UpdatePostPage() {
                         <div>
                             <div className="flex items-center justify-start gap-2">
                                 <label htmlFor="title">
-                                    <span className="text-red-500">* </span>Title :
+                                    <span className="text-red-500">* </span>
+                                    Title :
                                 </label>
                                 {error.title && (
                                     <div className="pt-[0.09rem] text-red-500 text-sm">
@@ -173,7 +187,8 @@ export default function UpdatePostPage() {
                         <div>
                             <div className="flex items-center justify-start gap-2">
                                 <label htmlFor="postImage">
-                                    <span className="text-red-500">* </span>Thumbnail :
+                                    <span className="text-red-500">* </span>
+                                    Thumbnail :
                                 </label>
                                 {error.postImage && (
                                     <div className="pt-[0.09rem] text-red-500 text-sm">
@@ -229,7 +244,7 @@ export default function UpdatePostPage() {
 
                     <div className="w-full text-center mt-10">
                         <Button
-                            btnText={uploading ? "Updating..." : "Update"}
+                            btnText={uploading ? 'Updating...' : 'Update'}
                             type="submit"
                             disabled={disabled}
                             onMouseOver={onMouseOver}

@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { formatDateRelative } from "../../Utils";
+import { Link, useNavigate } from 'react-router-dom';
+import { formatDateRelative } from '../../Utils';
 
 export default function PostListView({ post, reference, children }) {
     const {
@@ -27,7 +27,9 @@ export default function PostListView({ post, reference, children }) {
             </div>
 
             <div className="w-full flex flex-col items-start justify-start gap-y-4">
-                <div className="text-xl font-medium text-white">{post_title}</div>
+                <div className="text-xl font-medium text-white">
+                    {post_title}
+                </div>
 
                 <Link
                     to={`/channel/${userName}`}
@@ -52,7 +54,8 @@ export default function PostListView({ post, reference, children }) {
                 </Link>
 
                 <div className="text-sm text-[#b0b0b0]">
-                    {totalViews} views &bull; {formatDateRelative(post_createdAt)}
+                    {totalViews} views &bull;{' '}
+                    {formatDateRelative(post_createdAt)}
                 </div>
             </div>
 

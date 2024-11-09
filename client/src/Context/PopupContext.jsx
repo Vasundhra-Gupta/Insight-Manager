@@ -1,18 +1,18 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const PopupContext = createContext();
 
 export const PopupContextProvider = ({ children }) => {
     const [showPopup, setShowPopup] = useState(false);
-    const [popupText, setPopupText] = useState("");
+    const [popupText, setPopupText] = useState('');
     const [showLoginPopup, setShowLoginPopup] = useState(false);
-    const [loginPopupText, setLoginPopupText] = useState("");
+    const [loginPopupText, setLoginPopupText] = useState('');
 
     const location = useLocation();
 
     useEffect(() => {
-        setLoginPopupText("");
+        setLoginPopupText('');
         setShowLoginPopup(false);
     }, [location]);
 

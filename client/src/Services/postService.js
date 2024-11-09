@@ -1,10 +1,15 @@
 class PostService {
-    async getRandomPosts(page = 1, limit = 10, category = "", orderBy = "desc") {
+    async getRandomPosts(
+        page = 1,
+        limit = 10,
+        category = '',
+        orderBy = 'desc'
+    ) {
         try {
             const res = await fetch(
                 `/api/v1/posts/all?limit=${limit}&orderBy=${orderBy}&page=${page}&category=${category}`,
                 {
-                    method: "GET",
+                    method: 'GET',
                 }
             );
 
@@ -21,12 +26,12 @@ class PostService {
         }
     }
 
-    async getPosts(channelId, limit = 10, page = 1, orderBy = "desc") {
+    async getPosts(channelId, limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
                 `/api/v1/posts/channel/${channelId}?limit=${limit}&orderBy=${orderBy}&page=${page}`,
                 {
-                    method: "GET",
+                    method: 'GET',
                 }
             );
 
@@ -46,8 +51,8 @@ class PostService {
     async getPost(postId) {
         try {
             const res = await fetch(`/api/v1/posts/post/${postId}`, {
-                method: "GET",
-                credentials: "include",
+                method: 'GET',
+                credentials: 'include',
             });
 
             const data = await res.json();
@@ -66,9 +71,9 @@ class PostService {
     async updatePostDetails(inputs, postId) {
         try {
             const res = await fetch(`/api/v1/posts/update-details/${postId}`, {
-                method: "PATCH",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
+                method: 'PATCH',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(inputs), // title, content & category
             });
 
@@ -88,11 +93,11 @@ class PostService {
     async updatePostImage(postImage, postId) {
         try {
             const formData = new FormData();
-            formData.append("postImage", postImage);
+            formData.append('postImage', postImage);
 
             const res = await fetch(`/api/v1/posts/update-image/${postId}`, {
-                method: "PATCH",
-                credentials: "include",
+                method: 'PATCH',
+                credentials: 'include',
                 body: formData,
             });
 
@@ -112,8 +117,8 @@ class PostService {
     async deletePost(postId) {
         try {
             const res = await fetch(`/api/v1/posts/delete/${postId}`, {
-                method: "DELETE",
-                credentials: "include",
+                method: 'DELETE',
+                credentials: 'include',
             });
 
             const data = await res.json();
@@ -136,9 +141,9 @@ class PostService {
                 formData.append(key, value);
             });
 
-            const res = await fetch("/api/v1/posts/add", {
-                method: "POST",
-                credentials: "include",
+            const res = await fetch('/api/v1/posts/add', {
+                method: 'POST',
+                credentials: 'include',
                 body: formData,
             });
 
@@ -157,10 +162,13 @@ class PostService {
 
     async togglePostVisibility(postId) {
         try {
-            const res = await fetch(`/api/v1/posts/toggle-visibility/${postId}`, {
-                method: "PATCH",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/posts/toggle-visibility/${postId}`,
+                {
+                    method: 'PATCH',
+                    credentials: 'include',
+                }
+            );
 
             const data = await res.json();
             console.log(data);
@@ -170,18 +178,20 @@ class PostService {
             }
             return data;
         } catch (err) {
-            console.error(`error in togglePostVisibility service: ${err.message}`);
+            console.error(
+                `error in togglePostVisibility service: ${err.message}`
+            );
             throw err;
         }
     }
 
-    async getSavedPosts(limit = 10, page = 1, orderBy = "desc") {
+    async getSavedPosts(limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
                 `/api/v1/posts/saved?orderBy=${orderBy}&limit=${limit}&page=${page}`,
                 {
-                    method: "GET",
-                    credentials: "include",
+                    method: 'GET',
+                    credentials: 'include',
                 }
             );
 
@@ -201,8 +211,8 @@ class PostService {
     async toggleSavePost(postId) {
         try {
             const res = await fetch(`/api/v1/posts/toggle-save/${postId}`, {
-                method: "POST",
-                credentials: "include",
+                method: 'POST',
+                credentials: 'include',
             });
 
             const data = await res.json();

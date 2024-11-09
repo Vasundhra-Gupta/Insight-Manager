@@ -1,20 +1,25 @@
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../Context";
-import { fileRestrictions } from "../../Utils";
-import { userService } from "../../Services";
-import { icons } from "../../Assets/icons";
-import { Button } from "..";
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../Context';
+import { fileRestrictions } from '../../Utils';
+import { userService } from '../../Services';
+import { icons } from '../../Assets/icons';
+import { Button } from '..';
 
-export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }) {
+export default function UpdateCoverImage({
+    className,
+    setUpdateCoverImagePopup,
+}) {
     const { user, setUser } = useUserContext();
     const [coverImage, setCoverImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [error, setError] = useState({
-        coverImage: "",
+        coverImage: '',
     });
-    const [coverImagePreview, setCoverImagePreview] = useState(user.user_coverImage);
+    const [coverImagePreview, setCoverImagePreview] = useState(
+        user.user_coverImage
+    );
     const navigate = useNavigate();
     const ref = useRef();
 
@@ -52,7 +57,7 @@ export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }
                 setUser(res);
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setLoading(false);
             setDisabled(false);
@@ -76,7 +81,9 @@ export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }
                         alt="preview"
                         src={coverImagePreview}
                         className={`object-cover h-full w-full ${
-                            error.coverImage ? "border-red-500" : "border-green-500"
+                            error.coverImage
+                                ? 'border-red-500'
+                                : 'border-green-500'
                         } `}
                     />
                 }
@@ -104,7 +111,7 @@ export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }
                     {/* sbumit btn */}
                     <div className="w-full flex items-center justify-center mt-4">
                         <Button
-                            btnText={loading ? "Uploading..." : "Upload"}
+                            btnText={loading ? 'Uploading...' : 'Upload'}
                             disabled={disabled}
                             onMouseOver={onMouseOver}
                             type="submit"
@@ -118,7 +125,9 @@ export default function UpdateCoverImage({ className, setUpdateCoverImagePopup }
                 <Button
                     type="button"
                     btnText={
-                        <div className="size-[23px] fill-none stroke-slate-700">{icons.cross}</div>
+                        <div className="size-[23px] fill-none stroke-slate-700">
+                            {icons.cross}
+                        </div>
                     }
                     onClick={() => {
                         setUpdateCoverImagePopup(false);

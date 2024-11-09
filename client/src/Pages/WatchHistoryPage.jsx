@@ -1,11 +1,11 @@
-import { icons } from "../Assets/icons";
-import { Button, PostListView } from "../Components";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { userService } from "../Services";
-import { paginate, formatDateRelative } from "../Utils";
-import { LIMIT } from "../Constants/constants";
-import { useUserContext } from "../Context";
+import { icons } from '../Assets/icons';
+import { Button, PostListView } from '../Components';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { userService } from '../Services';
+import { paginate, formatDateRelative } from '../Utils';
+import { LIMIT } from '../Constants/constants';
+import { useUserContext } from '../Context';
 
 export default function WatchHistoryPage() {
     const [posts, setPosts] = useState([]);
@@ -28,7 +28,7 @@ export default function WatchHistoryPage() {
                     setPostsInfo(res.postsInfo);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -38,12 +38,12 @@ export default function WatchHistoryPage() {
     async function clearHistory() {
         try {
             const res = await userService.clearWatchHistory();
-            if (res && res.message === "WATCH_HISTORY_CLEARED_SUCCESSFULLY") {
+            if (res && res.message === 'WATCH_HISTORY_CLEARED_SUCCESSFULLY') {
                 setPosts([]);
                 setPostsInfo({});
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         }
     }
 
@@ -66,7 +66,9 @@ export default function WatchHistoryPage() {
         <div className="w-full h-full overflow-scroll">
             {loading ? (
                 page === 1 ? (
-                    <div className="w-full text-center">loading first batch...</div>
+                    <div className="w-full text-center">
+                        loading first batch...
+                    </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
@@ -81,7 +83,9 @@ export default function WatchHistoryPage() {
                         <Button
                             btnText={
                                 <div className="flex items-center justify-center gap-2">
-                                    <div className="size-[20px]">{icons.delete}</div>
+                                    <div className="size-[20px]">
+                                        {icons.delete}
+                                    </div>
                                     <div>Clear Watch History</div>
                                 </div>
                             }

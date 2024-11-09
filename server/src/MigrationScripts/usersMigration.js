@@ -35,15 +35,6 @@ export async function migrateUsers(req, res, next) {
                                 Object.keys(user).includes(key) &&
                                 value !== user[key]
                         )
-                        // existingMongoUser.user_name !== user.user_name ||
-                        // existingMongoUser.user_firstName !== user.user_firstName ||
-                        // existingMongoUser.user_lastName !== user.user_lastName ||
-                        // existingMongoUser.user_email !== user.user_email ||
-                        // existingMongoUser.user_avatar !== user.user_avatar ||
-                        // existingMongoUser.user_coverImage !== user.user_coverImage ||
-                        // existingMongoUser.refresh_token !== user.refresh_token ||
-                        // existingMongoUser.user_bio !== user.user_bio ||
-                        // existingMongoUser.user_password !== user.user_password
                     ) {
                         // If different, push to updatedUsers array
                         updatedUsers.push(user);

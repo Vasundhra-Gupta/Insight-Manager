@@ -1,3 +1,3 @@
 export default function ServerErrorPage() {
-  return <div>ServerErrorPage</div>;
+    return <div>ServerErrorPage</div>;
 }

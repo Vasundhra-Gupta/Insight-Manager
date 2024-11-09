@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { LikedPostView } from "../Components";
-import { likeService } from "../Services";
-import { paginate } from "../Utils";
-import { icons } from "../Assets/icons";
-import { LIMIT } from "../Constants/constants";
-import { useUserContext } from "../Context";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LikedPostView } from '../Components';
+import { likeService } from '../Services';
+import { paginate } from '../Utils';
+import { icons } from '../Assets/icons';
+import { LIMIT } from '../Constants/constants';
+import { useUserContext } from '../Context';
 
 export default function LikedPostsPage() {
     const [posts, setPosts] = useState([]);
@@ -29,12 +29,12 @@ export default function LikedPostsPage() {
                     setPostsInfo(res.postsInfo);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
         })();
-    }, [page,user]);
+    }, [page, user]);
 
     // displaying posts
     const postElements = posts?.map((post, index) => (
@@ -51,7 +51,9 @@ export default function LikedPostsPage() {
         <div>
             {loading ? (
                 page === 1 ? (
-                    <div className="w-full text-center">loading first batch...</div>
+                    <div className="w-full text-center">
+                        loading first batch...
+                    </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
                         <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">

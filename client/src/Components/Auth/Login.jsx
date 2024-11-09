@@ -1,19 +1,20 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useUserContext, usePopupContext } from "../../Context";
-import { authService } from "../../Services";
-import { Button } from "..";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUserContext, usePopupContext } from '../../Context';
+import { authService } from '../../Services';
+import { Button } from '..';
 
 export default function Login() {
     const [inputs, setInputs] = useState({
-        loginInput: "",
-        password: "",
+        loginInput: '',
+        password: '',
     });
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState('');
     const { setUser } = useUserContext();
-    const { setShowPopup, setPopupText, showLoginPopup, setShowLoginPopup } = usePopupContext();
+    const { setShowPopup, setPopupText, showLoginPopup, setShowLoginPopup } =
+        usePopupContext();
     const navigate = useNavigate();
 
     function handleChange(e) {
@@ -33,22 +34,22 @@ export default function Login() {
         e.preventDefault();
         setLoading(true);
         setDisabled(true);
-        setError("");
+        setError('');
         try {
             const res = await authService.login(inputs, setLoading);
             if (res && !res.message) {
                 setUser(res);
-                setPopupText("Login Successfully 😉");
+                setPopupText('Login Successfully 😉');
                 setShowPopup(true);
                 if (!showLoginPopup) {
-                    navigate("/");
+                    navigate('/');
                 }
             } else {
                 setUser(null);
                 setError(res.message);
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setDisabled(false);
             setLoading(false);
@@ -60,19 +61,19 @@ export default function Login() {
 
     const inputFields = [
         {
-            type: "text",
-            name: "loginInput",
-            label: "Username or Email",
+            type: 'text',
+            name: 'loginInput',
+            label: 'Username or Email',
             value: inputs.loginInput,
-            placeholder: "Enter username or email",
+            placeholder: 'Enter username or email',
             required: true,
         },
         {
-            type: "password",
-            name: "password",
-            label: "Password",
+            type: 'password',
+            name: 'password',
+            label: 'Password',
             value: inputs.password,
-            placeholder: "Enter password",
+            placeholder: 'Enter password',
             required: true,
         },
     ];
@@ -101,7 +102,11 @@ export default function Login() {
 
     return (
         <div>
-            {error && <div className="text-red-500 w-full text-center mb-3">{error}</div>}
+            {error && (
+                <div className="text-red-500 w-full text-center mb-3">
+                    {error}
+                </div>
+            )}
 
             <form
                 onSubmit={handleSubmit}
@@ -112,7 +117,7 @@ export default function Login() {
                 <div>
                     <Button
                         onMouseOver={onMouseOver}
-                        btnText={loading ? "logging in ..." : "Login"}
+                        btnText={loading ? 'logging in ...' : 'Login'}
                         disabled={disabled}
                     />
                 </div>

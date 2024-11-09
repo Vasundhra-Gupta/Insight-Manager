@@ -1,7 +1,7 @@
-import { NavLink } from "react-router-dom";
-import { useChannelContext, usePopupContext } from "../../Context";
-import { formatDateExact } from "../../Utils";
-import { icons } from "../../Assets/icons";
+import { NavLink } from 'react-router-dom';
+import { useChannelContext, usePopupContext } from '../../Context';
+import { formatDateExact } from '../../Utils';
+import { icons } from '../../Assets/icons';
 
 export default function ChannelAbout() {
     const { channel } = useChannelContext();
@@ -21,7 +21,7 @@ export default function ChannelAbout() {
     function copyEmail() {
         window.navigator.clipboard.writeText(user_email);
         setShowPopup(true);
-        setPopupText("Email Copied to Clipboard 🤗");
+        setPopupText('Email Copied to Clipboard 🤗');
     }
 
     return (
@@ -38,7 +38,9 @@ export default function ChannelAbout() {
 
             <div className="flex flex-col gap-2 items-start justify-start mt-2 text-lg">
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">{icons.email}</div>
+                    <div className="size-[20px] fill-[#b5b4b4]">
+                        {icons.email}
+                    </div>
 
                     <div className="flex  items-center justify-center gap-1">
                         <div className="cursor-pointer text-blue-600 hover:text-blue-700 ">
@@ -55,7 +57,9 @@ export default function ChannelAbout() {
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[23px] fill-[#b5b4b4]">{icons.globe}</div>
+                    <div className="size-[23px] fill-[#b5b4b4]">
+                        {icons.globe}
+                    </div>
                     <NavLink
                         to={`/channel/${user_name}`}
                         className="text-blue-600 hover:text-blue-700 pb-1"
@@ -65,22 +69,30 @@ export default function ChannelAbout() {
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">{icons.people}</div>
+                    <div className="size-[20px] fill-[#b5b4b4]">
+                        {icons.people}
+                    </div>
                     <div>{totalFollowers} followers</div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">{icons.posts}</div>
+                    <div className="size-[20px] fill-[#b5b4b4]">
+                        {icons.posts}
+                    </div>
                     <div>{totalPosts} posts</div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">{icons.eye}</div>
+                    <div className="size-[20px] fill-[#b5b4b4]">
+                        {icons.eye}
+                    </div>
                     <div>{totalChannelViews} views</div>
                 </div>
 
                 <div className="flex items-center justify-start gap-3">
-                    <div className="size-[20px] fill-[#b5b4b4]">{icons.date}</div>
+                    <div className="size-[20px] fill-[#b5b4b4]">
+                        {icons.date}
+                    </div>
                     <div>Joined on {formatDateExact(user_createdAt)}</div>
                 </div>
             </div>

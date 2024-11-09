@@ -1,18 +1,18 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useUserContext, usePopupContext } from "../../Context";
-import { authService } from "../../Services";
-import { Button } from "..";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useUserContext, usePopupContext } from '../../Context';
+import { authService } from '../../Services';
+import { Button } from '..';
 
-export default function DeleteAccount({ className = "" }) {
+export default function DeleteAccount({ className = '' }) {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [error, setError] = useState('');
     const { setUser } = useUserContext();
     const navigate = useNavigate();
     const [check, setCheck] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const { setShowPopup, setPopupText } = usePopupContext();
-    const [password, setPassword] = useState("");
+    const [password, setPassword] = useState('');
 
     async function handleClick() {
         setLoading(true);
@@ -21,13 +21,13 @@ export default function DeleteAccount({ className = "" }) {
             const res = await authService.deleteAccount(password);
             if (res && !res.message) {
                 setUser(null);
-                setPopupText("Account Deleted Successfully 😕");
+                setPopupText('Account Deleted Successfully 😕');
                 setShowPopup(true);
             } else {
                 setError(res?.message);
             }
         } catch (err) {
-            navigate("/servor-error");
+            navigate('/servor-error');
         } finally {
             setDisabled(false);
             setLoading(false);
@@ -58,7 +58,8 @@ export default function DeleteAccount({ className = "" }) {
                         id="deleteCheckBox"
                     />
                     <label htmlFor="deleteCheckBox">
-                        are you sure you want to delete the account permanently ?
+                        are you sure you want to delete the account permanently
+                        ?
                     </label>
                 </div>
 
@@ -82,7 +83,7 @@ export default function DeleteAccount({ className = "" }) {
                     onMouseOver={onMouseOver}
                     disabled={disabled}
                     onClick={handleClick}
-                    btnText={loading ? "Deleting..." : "Delete"}
+                    btnText={loading ? 'Deleting...' : 'Delete'}
                 />
             </div>
         </div>

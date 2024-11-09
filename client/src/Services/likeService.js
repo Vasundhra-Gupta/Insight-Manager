@@ -4,8 +4,8 @@ class LikeService {
             const res = await fetch(
                 `/api/v1/likes/toggle-post-like/${postId}?likedStatus=${likedStatus}`,
                 {
-                    method: "PATCH",
-                    credentials: "include",
+                    method: 'PATCH',
+                    credentials: 'include',
                 }
             );
 
@@ -27,8 +27,8 @@ class LikeService {
             const res = await fetch(
                 `/api/v1/likes/toggle-comment-like/${commentId}?likedStatus=${likedStatus}`,
                 {
-                    method: "PATCH",
-                    credentials: "include",
+                    method: 'PATCH',
+                    credentials: 'include',
                 }
             );
 
@@ -45,13 +45,13 @@ class LikeService {
         }
     }
 
-    async getLikedPosts(limit = 10, page = 1, orderBy = "desc") {
+    async getLikedPosts(limit = 10, page = 1, orderBy = 'desc') {
         try {
             const res = await fetch(
                 `/api/v1/likes?limit=${limit}&page=${page}&orderBy=${orderBy}`,
                 {
-                    method: "GET",
-                    credentials: "include",
+                    method: 'GET',
+                    credentials: 'include',
                 }
             );
 

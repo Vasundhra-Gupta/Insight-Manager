@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { authService } from "../Services";
-import { useUserContext } from "../Context";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../Components";
-import { verifyExpression, fileRestrictions } from "../Utils";
+import { useState } from 'react';
+import { authService } from '../Services';
+import { useUserContext } from '../Context';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../Components';
+import { verifyExpression, fileRestrictions } from '../Utils';
 
 export default function RegisterPage() {
     const [inputs, setInputs] = useState({
-        firstName: "",
-        lastName: "",
-        userName: "",
-        email: "",
-        password: "",
+        firstName: '',
+        lastName: '',
+        userName: '',
+        email: '',
+        password: '',
         avatar: null,
         coverImage: null,
     });
 
     const [error, setError] = useState({
-        root: "",
-        firstName: "",
-        lastName: "",
-        userName: "",
-        email: "",
-        password: "",
-        avatar: "",
-        coverImage: "",
+        root: '',
+        firstName: '',
+        lastName: '',
+        userName: '',
+        email: '',
+        password: '',
+        avatar: '',
+        coverImage: '',
     });
     const [disabled, setDisabled] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -42,9 +42,12 @@ export default function RegisterPage() {
             setInputs((prev) => ({ ...prev, [name]: files[0] }));
             fileRestrictions(files[0], name, setError);
         } else {
-            name === "avatar"
-                ? setError((prevError) => ({ ...prevError, avatar: "avatar is required." }))
-                : setError((prevError) => ({ ...prevError, coverImage: "" }));
+            name === 'avatar'
+                ? setError((prevError) => ({
+                      ...prevError,
+                      avatar: 'avatar is required.',
+                  }))
+                : setError((prevError) => ({ ...prevError, coverImage: '' }));
         }
     }
 
@@ -58,9 +61,12 @@ export default function RegisterPage() {
     function onMouseOver() {
         if (
             Object.entries(inputs).some(
-                ([key, value]) => !value && key !== "coverImage" && key !== "lastName"
+                ([key, value]) =>
+                    !value && key !== 'coverImage' && key !== 'lastName'
             ) ||
-            Object.entries(error).some(([key, value]) => value !== "" && key !== "root")
+            Object.entries(error).some(
+                ([key, value]) => value !== '' && key !== 'root'
+            )
         ) {
             setDisabled(true);
         } else {
@@ -76,12 +82,12 @@ export default function RegisterPage() {
             const res = await authService.register(inputs);
             if (res && !res.message) {
                 setUser(res);
-                navigate("/");
+                navigate('/');
             } else {
                 setError((prev) => ({ ...prev, root: res.message }));
             }
         } catch (err) {
-            navigate("/server-error");
+            navigate('/server-error');
         } finally {
             setDisabled(false);
             setLoading(false);
@@ -92,51 +98,51 @@ export default function RegisterPage() {
 
     const inputFields = [
         {
-            type: "text",
-            name: "userName",
-            label: "Username",
-            placeholder: "Enter user name",
+            type: 'text',
+            name: 'userName',
+            label: 'Username',
+            placeholder: 'Enter user name',
             required: true,
         },
         {
-            type: "text",
-            name: "firstName",
-            label: "FirstName",
-            placeholder: "Enter first name",
+            type: 'text',
+            name: 'firstName',
+            label: 'FirstName',
+            placeholder: 'Enter first name',
             required: true,
         },
         {
-            type: "text",
-            name: "lastName",
-            label: "LastName",
-            placeholder: "Enter last name",
+            type: 'text',
+            name: 'lastName',
+            label: 'LastName',
+            placeholder: 'Enter last name',
             required: false,
         },
         {
-            type: "text",
-            name: "email",
-            label: "Email",
-            placeholder: "Enter email",
+            type: 'text',
+            name: 'email',
+            label: 'Email',
+            placeholder: 'Enter email',
             required: true,
         },
         {
-            type: "password",
-            name: "password",
-            label: "Password",
-            placeholder: "Create password",
+            type: 'password',
+            name: 'password',
+            label: 'Password',
+            placeholder: 'Create password',
             required: true,
         },
     ];
 
     const fileFields = [
         {
-            name: "avatar",
-            label: "Avatar",
+            name: 'avatar',
+            label: 'Avatar',
             required: true,
         },
         {
-            name: "coverImage",
-            label: "CoverImage",
+            name: 'coverImage',
+            label: 'CoverImage',
             required: false,
         },
     ];
@@ -149,7 +155,9 @@ export default function RegisterPage() {
                     {field.label} :
                 </label>
                 {error[field.name] && (
-                    <div className="pt-[0.09rem] text-red-500 text-sm">{error[field.name]}</div>
+                    <div className="pt-[0.09rem] text-red-500 text-sm">
+                        {error[field.name]}
+                    </div>
                 )}
             </div>
             <div>
@@ -164,7 +172,7 @@ export default function RegisterPage() {
                     className="bg-transparent border-[0.01rem] w-[300px]"
                 />
             </div>
-            {field.name === "password" && (
+            {field.name === 'password' && (
                 <div className="text-xs">password must be 8-12 characters.</div>
             )}
         </div>
@@ -172,7 +180,9 @@ export default function RegisterPage() {
 
     const fileElements = fileFields.map((field) => (
         <div key={field.name}>
-            {error[field.name] && <div className="text-red-500">{error[field.name]}</div>}
+            {error[field.name] && (
+                <div className="text-red-500">{error[field.name]}</div>
+            )}
             <div>
                 <label htmlFor={field.name}>
                     {field.required && <span className="text-red-500">* </span>}
@@ -197,7 +207,9 @@ export default function RegisterPage() {
                 <div>Create new account</div>
 
                 {error.root && (
-                    <div className="text-red-500 w-full text-center mb-4">{error.root}</div>
+                    <div className="text-red-500 w-full text-center mb-4">
+                        {error.root}
+                    </div>
                 )}
 
                 <form
@@ -213,7 +225,7 @@ export default function RegisterPage() {
                             className="w-full"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
-                            btnText={loading ? "Signing Up..." : "Sign Up"}
+                            btnText={loading ? 'Signing Up...' : 'Sign Up'}
                         />
                     </div>
                 </form>

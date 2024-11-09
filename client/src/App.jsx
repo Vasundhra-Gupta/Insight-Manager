@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Layout } from "./Components";
-import { useUserContext } from "./Context";
-import { authService } from "./Services";
-import { icons } from "./Assets/icons";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Layout } from './Components';
+import { useUserContext } from './Context';
+import { authService } from './Services';
+import { icons } from './Assets/icons';
 
 export default function App() {
     const { setUser } = useUserContext();
@@ -20,7 +20,7 @@ export default function App() {
                     setUser(null);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }

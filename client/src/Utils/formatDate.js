@@ -1,4 +1,4 @@
-import { formatDistanceToNow, parseISO, format } from "date-fns";
+import { formatDistanceToNow, parseISO, format } from 'date-fns';
 
 function formatDateRelative(timeStamp) {
     return formatDistanceToNow(parseISO(timeStamp), { addSuffix: true });
@@ -6,7 +6,7 @@ function formatDateRelative(timeStamp) {
 
 function formatDateExact(timeStamp) {
     const date = new Date(timeStamp);
-    return format(date, "dd/mm/yyyy");
+    return format(date, 'dd/mm/yyyy');
 }
 
 export { formatDateRelative, formatDateExact };

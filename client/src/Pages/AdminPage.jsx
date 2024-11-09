@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AdminPostRow, Button } from "../Components";
-import { userService, postService } from "../Services";
-import { useUserContext } from "../Context";
-import { paginate } from "../Utils";
-import { LIMIT } from "../Constants/constants";
-import { icons } from "../Assets/icons";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AdminPostRow, Button } from '../Components';
+import { userService, postService } from '../Services';
+import { useUserContext } from '../Context';
+import { paginate } from '../Utils';
+import { LIMIT } from '../Constants/constants';
+import { icons } from '../Assets/icons';
 
 export default function AdminPage() {
     const { user } = useUserContext();
@@ -14,7 +14,7 @@ export default function AdminPage() {
     const [postsLoading, setPostsLoading] = useState(false);
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
 
@@ -27,7 +27,7 @@ export default function AdminPage() {
                     setStatsData(res);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setLoading(false);
             }
@@ -38,13 +38,17 @@ export default function AdminPage() {
         (async function getChannelPosts() {
             try {
                 setPostsLoading(true);
-                const res = await postService.getPosts(user.user_id, LIMIT, page);
+                const res = await postService.getPosts(
+                    user.user_id,
+                    LIMIT,
+                    page
+                );
                 if (res && !res.message) {
                     setPosts((prev) => [...prev, ...res.posts]);
                     setPostsInfo(res.postsInfo);
                 }
             } catch (err) {
-                navigate("/server-error");
+                navigate('/server-error');
             } finally {
                 setPostsLoading(false);
             }
@@ -53,25 +57,28 @@ export default function AdminPage() {
 
     const stats = [
         {
-            name: "Total Likes",
+            name: 'Total Likes',
             value: statsData.totalLikes,
         },
         {
-            name: "Total Views",
+            name: 'Total Views',
             value: statsData.totalChannelViews,
         },
         {
-            name: "Total Posts",
+            name: 'Total Posts',
             value: statsData.totalPosts,
         },
         {
-            name: "Total Followers",
+            name: 'Total Followers',
             value: statsData.totalFollowers,
         },
     ];
 
     const statElements = stats?.map((item) => (
-        <div key={item.name} className="border-[0.01rem] rounded-lg p-4 bg-slate-900">
+        <div
+            key={item.name}
+            className="border-[0.01rem] rounded-lg p-4 bg-slate-900"
+        >
             <div className="text-2xl font-medium">{item.name}</div>
             <div className="mt-4 text-xl">{item.value}</div>
         </div>
@@ -110,11 +117,12 @@ export default function AdminPage() {
                     </div>
                     <div className="mt-4">
                         <div className="text-3xl font-medium">
-                            Welcome Back, {user.user_firstName} {user.user_lastName}
+                            Welcome Back, {user.user_firstName}{' '}
+                            {user.user_lastName}
                         </div>
                         <div className="text-sm mt-1 text-[#c2c2c2]">
-                            Track you channel's progress, Seamless post Management & Elevated
-                            Results.
+                            Track you channel's progress, Seamless post
+                            Management & Elevated Results.
                         </div>
                     </div>
                 </div>
@@ -123,11 +131,13 @@ export default function AdminPage() {
                     <Button
                         btnText={
                             <div className="flex items-center justify-center gap-2">
-                                <div className="size-[20px] fill-white">{icons.plus}</div>
+                                <div className="size-[20px] fill-white">
+                                    {icons.plus}
+                                </div>
                                 <div>New Post</div>
                             </div>
                         }
-                        onClick={() => navigate("/add-post")}
+                        onClick={() => navigate('/add-post')}
                     />
                 </div>
             </div>
@@ -152,17 +162,33 @@ export default function AdminPage() {
                 <table className=" border-[0.1rem] border-[#b5b4b4] w-full text-nowrap text-[#efefef]">
                     <thead>
                         <tr className="w-full border-b-[0.1rem] border-[#b5b4b4]">
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Toggle</th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Visibility</th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Post</th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Category</th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Toggle
+                            </th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Visibility
+                            </th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Post
+                            </th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Category
+                            </th>
                             <th className="text-[1.13rem] font-bold py-[18px] px-6">
                                 Date uploaded
                             </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Views</th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Comments</th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Ratings</th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">Options</th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Views
+                            </th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Comments
+                            </th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Ratings
+                            </th>
+                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
+                                Options
+                            </th>
                         </tr>
                     </thead>
 
@@ -171,7 +197,9 @@ export default function AdminPage() {
 
                 {postsLoading &&
                     (page === 1 ? (
-                        <div className="w-full text-center">loading first batch...</div>
+                        <div className="w-full text-center">
+                            loading first batch...
+                        </div>
                     ) : (
                         <div className="flex items-center justify-center my-2 w-full">
                             <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">

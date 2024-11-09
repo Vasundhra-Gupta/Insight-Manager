@@ -1,8 +1,12 @@
-import { Outlet } from "react-router-dom";
-import { Button, UpdateAvatarPopup, UpdateCoverImagePopup } from "../Components";
-import { useUserContext } from "../Context";
-import { icons } from "../Assets/icons";
-import { useState } from "react";
+import { Outlet } from 'react-router-dom';
+import {
+    Button,
+    UpdateAvatarPopup,
+    UpdateCoverImagePopup,
+} from '../Components';
+import { useUserContext } from '../Context';
+import { icons } from '../Assets/icons';
+import { useState } from 'react';
 
 export default function SettingsPage() {
     const { user } = useUserContext();
@@ -24,7 +28,11 @@ export default function SettingsPage() {
 
                     <div>
                         <Button
-                            btnText={<div className="size-[35px]">{icons.upload}</div>}
+                            btnText={
+                                <div className="size-[35px]">
+                                    {icons.upload}
+                                </div>
+                            }
                             onClick={() => setUpdateCoverImagePopup(true)}
                             className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
                         />
@@ -43,7 +51,11 @@ export default function SettingsPage() {
 
                     <div>
                         <Button
-                            btnText={<div className="size-[35px]">{icons.upload}</div>}
+                            btnText={
+                                <div className="size-[35px]">
+                                    {icons.upload}
+                                </div>
+                            }
                             onClick={() => setUpdateAvatarPopup(true)}
                             className="absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] rounded-md p-1 bg-[#b5b4b4] border-[0.01rem] border-[#bbbbbb] bg-opacity-70 stroke-black fill-[#4d4d4d]"
                         />
@@ -55,17 +67,23 @@ export default function SettingsPage() {
                     <div className="text-2xl font-medium">
                         {user.user_firstName} {user.user_lastName}
                     </div>
-                    <div className="text-lg text-[#afafaf]">@{user.user_name}</div>
+                    <div className="text-lg text-[#afafaf]">
+                        @{user.user_name}
+                    </div>
                 </div>
             </div>
 
             {/* popups */}
             <div>
                 {updateAvatarPopup && (
-                    <UpdateAvatarPopup setUpdateAvatarPopup={setUpdateAvatarPopup} />
+                    <UpdateAvatarPopup
+                        setUpdateAvatarPopup={setUpdateAvatarPopup}
+                    />
                 )}
                 {updateCoverImagePopup && (
-                    <UpdateCoverImagePopup setUpdateCoverImagePopup={setUpdateCoverImagePopup} />
+                    <UpdateCoverImagePopup
+                        setUpdateCoverImagePopup={setUpdateCoverImagePopup}
+                    />
                 )}
             </div>
 
