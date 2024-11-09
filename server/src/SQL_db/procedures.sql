@@ -17,7 +17,6 @@ BEGIN
     ELSE
         SELECT 'FOLLOW_TOGGLED_SUCCESSFULLY' AS message;
     END IF;
-    
 END$$
 DELIMITER ;
 
@@ -95,7 +94,6 @@ BEGIN
     ELSE 
         SELECT "POST_SAVE_TOGGLED_SUCCESSFULLY" AS message; 
     END IF;
-
 END $$
 DELIMITER ;
 
