@@ -149,49 +149,54 @@ export default function Comment({ comment, setComments }) {
     }
 
     return (
-        <div className="w-full">
-            <div className="relative flex items-start justify-start gap-2">
-                <div className="rounded-full size-[40px] overflow-hidden">
-                    <NavLink to={`/channel/${user_name}`}>
+        <div className="w-full mb-6 bg-white drop-shadow-lg relative flex items-start justify-start gap-x-4 rounded-xl p-4">
+            <div>
+                <NavLink to={`/channel/${user_name}`}>
+                    <div className="rounded-full size-[50px] overflow-hidden">
                         <img
                             src={user_avatar}
                             alt="comment owner avatar"
-                            className="object-cover size-full"
+                            className="size-full rounded-full hover:brightness-90"
                         />
-                    </NavLink>
-                </div>
+                    </div>
+                </NavLink>
+            </div>
 
-                <div className="flex flex-col items-start justify-start gap-1">
-                    <div>
-                        <div className="flex items-center justify-start gap-2">
-                            <div>
-                                <NavLink to={`/channel/${user_name}`}>
-                                    {user_firstName} {user_lastName}
-                                </NavLink>
-                            </div>
-
-                            <div className="text-sm">&bull;</div>
-
-                            <div className="text-sm">
-                                {formatDateRelative(comment_createdAt)}
-                            </div>
+            <div className="w-full">
+                <div>
+                    <div className="flex items-center justify-start gap-2">
+                        <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
+                            <NavLink to={`/channel/${user_name}`}>
+                                {user_firstName} {user_lastName}
+                            </NavLink>
                         </div>
 
-                        <div className="text-sm">@{user_name}</div>
+                        <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
+                            &bull; {' ' + formatDateRelative(comment_createdAt)}
+                        </div>
                     </div>
 
-                    {isEditing ? (
-                        <form onSubmit={editComment}>
-                            <input
-                                type="text"
-                                placeholder="Add a comment"
-                                name="comment"
-                                value={newContent}
-                                autoFocus
-                                onChange={(e) => setNewContent(e.target.value)}
-                                className="bg-transparent border-[0.01rem] rounded-lg p-2 indent-2 text-white"
-                            />
+                    <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">
+                        @{user_name}
+                    </div>
+                </div>
 
+                {isEditing ? (
+                    <form
+                        onSubmit={editComment}
+                        className="w-full flex items-center justify-between gap-4 mt-2"
+                    >
+                        <input
+                            type="text"
+                            placeholder="Add a comment"
+                            name="comment"
+                            value={newContent}
+                            autoFocus
+                            onChange={(e) => setNewContent(e.target.value)}
+                            className="w-full bg-transparent border-[0.01rem] rounded-lg p-[5px] indent-2 text-black"
+                        />
+
+                        <div className="flex items-center gap-x-3">
                             {/* reset btn */}
                             <Button
                                 type="button"
@@ -200,79 +205,87 @@ export default function Comment({ comment, setComments }) {
                                     setNewContent(comment_content);
                                 }}
                                 btnText="Cancel"
+                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
                             />
 
                             {/* submit btn */}
                             <Button
                                 type="submit"
                                 btnText={isUpdating ? 'Updating...' : 'Update'}
+                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
                             />
-                        </form>
-                    ) : (
-                        <div className="text-ellipsis line-clamp-2">
-                            {comment_content}
                         </div>
-                    )}
-
-                    <div className="flex items-center justify-start gap-2 mt-2">
-                        <Button
-                            onClick={handleLike}
-                            btnText={
-                                <div className="flex items-center justify-center gap-2">
-                                    <div
-                                        className={`${
-                                            isLiked === 1
-                                                ? 'fill-white stroke-black'
-                                                : 'fill-none stroke-white'
-                                        } size-[20px]`}
-                                    >
-                                        {icons.like}
-                                    </div>
-                                    <div>{likes}</div>
-                                </div>
-                            }
-                        />
-
-                        <Button
-                            onClick={handleDislike}
-                            btnText={
-                                <div className="flex items-center justify-center gap-2">
-                                    <div
-                                        className={`${
-                                            isLiked === 0
-                                                ? 'fill-white stroke-black'
-                                                : 'fill-none stroke-white'
-                                        } size-[20px]`}
-                                    >
-                                        {icons.dislike}
-                                    </div>
-                                    <div>{dislikes}</div>
-                                </div>
-                            }
-                        />
-                    </div>
-                </div>
-
-                {user_name === user?.user_name && (
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 absolute top-2 right-2">
-                        <Button
-                            onClick={() => setIsEditing(true)}
-                            btnText={
-                                <div className="size-[20px]">{icons.edit}</div>
-                            }
-                        />
-
-                        <Button
-                            onClick={deleteComment}
-                            btnText={
-                                <div className="size-[20px]">
-                                    {icons.delete}
-                                </div>
-                            }
-                        />
+                    </form>
+                ) : (
+                    <div className="hover:cursor-text text-[17px] text-black text-ellipsis line-clamp-2 mt-2">
+                        {comment_content}
                     </div>
                 )}
+
+                <div className="bg-[#f0efef] rounded-full overflow-hidden mt-4 drop-shadow-lg hover:bg-[#ebeaea] w-fit">
+                    <Button
+                        onClick={handleLike}
+                        btnText={
+                            <div className="flex items-center justify-center gap-2">
+                                <div
+                                    className={`${
+                                        isLiked === 1
+                                            ? 'fill-[#4977ec] stroke-[#4977ec]'
+                                            : 'fill-none stroke-black'
+                                    } size-[20px]`}
+                                >
+                                    {icons.like}
+                                </div>
+                                <div className="text-black">{likes}</div>
+                            </div>
+                        }
+                        className="bg-[#f0efef] py-[5px] px-2 hover:bg-[#ebeaea] border-r-[0.1rem] border-[#e6e6e6]"
+                    />
+
+                    <Button
+                        onClick={handleDislike}
+                        btnText={
+                            <div className="flex items-center justify-center gap-2">
+                                <div
+                                    className={`${
+                                        isLiked === 0
+                                            ? 'fill-[#4977ec] stroke-[#4977ec]'
+                                            : 'fill-none stroke-black'
+                                    } size-[20px]`}
+                                >
+                                    {icons.dislike}
+                                </div>
+                                <div className="text-black">{dislikes}</div>
+                            </div>
+                        }
+                        className="bg-[#f0efef] py-[5px] px-2 hover:bg-[#ebeaea]"
+                    />
+                </div>
             </div>
+
+            {user_name === user?.user_name && !isEditing && (
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 absolute top-2 right-2">
+                    <Button
+                        onClick={() => setIsEditing(true)}
+                        btnText={
+                            <div className="size-[20px] group-hover:fill-[#4977ec]">
+                                {icons.edit}
+                            </div>
+                        }
+                        className="bg-[#f0efef] p-3 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                    />
+
+                    <Button
+                        onClick={deleteComment}
+                        btnText={
+                            <div className="size-[20px] group-hover:fill-red-700">
+                                {icons.delete}
+                            </div>
+                        }
+                        className="bg-[#f0efef] p-3 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                    />
+                </div>
+            )}
         </div>
     );
 }

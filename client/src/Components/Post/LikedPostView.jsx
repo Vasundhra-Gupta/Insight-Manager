@@ -6,7 +6,7 @@ import { icons } from '../../Assets/icons';
 
 export default function LikedPostView({ post, reference }) {
     const { post_id } = post;
-    const [isLiked, setIsLiked] = useState(false);
+    const [isLiked, setIsLiked] = useState(true);
     const navigate = useNavigate();
 
     async function toggleLike() {
@@ -25,18 +25,22 @@ export default function LikedPostView({ post, reference }) {
             {/* children */}
             <div
                 className="absolute top-2 right-2"
-                onClick={(e) => e.stopPropagation}
+                onClick={(e) => e.stopPropagation()}
             >
                 <Button
                     btnText={
-                        <div className="size-[20px]">
-                            {isLiked ? icons.undo : icons.delete}
-                        </div>
+                        isLiked ? (
+                            <div className="size-[20px] group-hover:fill-red-700">
+                                {icons.delete}
+                            </div>
+                        ) : (
+                            <div className="size-[20px] group-hover:fill-[#4977ec]">
+                                {icons.undo}
+                            </div>
+                        )
                     }
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLike();
-                    }}
+                    className="bg-[#f0efef] p-3 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                    onClick={toggleLike}
                 />
             </div>
         </PostListView>

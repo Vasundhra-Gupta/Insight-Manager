@@ -59,7 +59,10 @@ export default function HomePage() {
                     </div>
                 )
             ) : postElements.length > 0 ? (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
+                // <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
+                //     {postElements}
+                // </div>
+                <div className="">
                     {postElements}
                 </div>
             ) : (

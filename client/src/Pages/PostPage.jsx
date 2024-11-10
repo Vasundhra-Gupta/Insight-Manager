@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, NavLink } from 'react-router-dom';
+import { useNavigate, useParams, NavLink, Link } from 'react-router-dom';
 import { followerService, likeService, postService } from '../Services';
 import { Button, Comments, Recemendations } from '../Components';
 import { formatDateRelative } from '../Utils';
@@ -10,7 +10,8 @@ import parse from 'html-react-parser';
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
-    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } = usePopupContext();
+    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
+        usePopupContext();
     const [post, setPost] = useState({});
     const { user } = useUserContext();
     const navigate = useNavigate();
@@ -147,58 +148,194 @@ export default function PostPage() {
     ) : Object.keys(post).length === 0 ? (
         <div>Post Not Found !!</div>
     ) : (
-        <div className="w-full h-full flex items-start justify-start gap-6 overflow-scroll">
-            <div className="w-[70%] h-full">
-                <div>
-                    <div className="h-[500px]">
-                        <img
-                            src={post.post_image}
-                            alt="post image"
-                            className="object-cover w-full h-full"
-                        />
-                    </div>
+        <div className="relative w-full h-full flex flex-col items-start justify-start gap-y-6 overflow-y-scroll">
+            <div className="w-full">
+                <div className="w-full flex items-start justify-start flex-col xl:flex-row">
+                    {/* post */}
+                    <div className="w-full xl:w-[75%] h-full">
+                        {/* post image */}
+                        <div className="h-[300px] md:h-[350px] rounded-xl overflow-hidden">
+                            <img
+                                src={post.post_image}
+                                alt="post image"
+                                className="object-cover w-full h-full"
+                            />
+                        </div>
 
-                    <div className="text-3xl font-medium w-full">
-                        {post.post_title}
-                    </div>
+                        {/* post title */}
+                        <div className="hover:cursor-text text-2xl font-medium text-black mt-4">
+                            {post.post_title}
+                        </div>
 
-                    <div>
-                        <div>{post.category_name}</div>
-                        <div>
-                            {post.totalViews} views &bull;{' '}
-                            {formatDateRelative(post.post_createdAt)}
+                        <div className="flex items-center justify-between mt-3">
+                            {/* statistics */}
+                            <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
+                                {post.totalViews} views &bull; posted
+                                {' ' + formatDateRelative(post.post_createdAt)}
+                            </div>
+
+                            {/* like/dislike btn */}
+                            <div className="bg-[#f0efef] rounded-full overflow-hidden drop-shadow-lg hover:bg-[#ebeaea]">
+                                <Button
+                                    btnText={
+                                        <div className="flex items-center justify-center gap-2">
+                                            <div
+                                                className={`${
+                                                    post.isLiked
+                                                        ? 'fill-[#4977ec] stroke-[#4977ec]'
+                                                        : 'fill-none stroke-black'
+                                                } size-[20px]`}
+                                            >
+                                                {icons.like}
+                                            </div>
+                                            <div className="text-black">
+                                                {post.totalLikes}
+                                            </div>
+                                        </div>
+                                    }
+                                    onClick={toggleLike}
+                                    className="bg-[#f0efef] py-[7px] px-3 hover:bg-[#ebeaea] border-r-[0.1rem] border-[#e6e6e6]"
+                                />
+                                <Button
+                                    btnText={
+                                        <div className="flex items-center justify-center gap-2">
+                                            <div
+                                                className={`${
+                                                    post.isDisliked
+                                                        ? 'fill-[#4977ec] stroke-[#4977ec]'
+                                                        : 'fill-none stroke-black'
+                                                } size-[20px]`}
+                                            >
+                                                {icons.dislike}
+                                            </div>
+                                            <div className="text-black">
+                                                {post.totalDislikes}
+                                            </div>
+                                        </div>
+                                    }
+                                    onClick={toggleDislike}
+                                    className="bg-[#f0efef] py-[7px] px-3 hover:bg-[#ebeaea]"
+                                />
+                            </div>
+                        </div>
+
+                        {/* SMALL SCREEN */}
+                        {/* post category */}
+                        <div className="xl:hidden absolute top-2 left-2 hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-lg rounded-full w-fit px-4 py-[4px]">
+                            <div className="size-[10px] fill-[#2556d1]">
+                                {icons.dot}
+                            </div>
+                            <span className="text-[#2556d1] text-[16px]">
+                                {post.category_name.toUpperCase()}
+                            </span>
+                        </div>
+
+                        {/* saved btn */}
+                        <div className="xl:hidden absolute top-2 right-2 flex items-center justify-center">
+                            <Button
+                                btnText={
+                                    <div
+                                        className={`${
+                                            post.isSaved
+                                                ? 'fill-[#4977ec] '
+                                                : 'fill-white'
+                                        } size-[20px] stroke-[#4977ec] group-hover:stroke-[#2a4b9f]`}
+                                    >
+                                        {icons.save}
+                                    </div>
+                                }
+                                onClick={toggleSave}
+                                className="bg-[#f0efef] p-3 group rounded-full drop-shadow-lg hover:bg-[#ebeaea]"
+                            />
                         </div>
                     </div>
 
-                    <div className="flex flex-col">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center justify-start gap-3">
-                                <NavLink
-                                    to={`/channel/${post.userName}`}
-                                    className="size-[50px] rounded-full overflow-hidden"
-                                >
-                                    <img
-                                        src={post.avatar}
-                                        alt="post owner avatar"
-                                        className="object-cover size-full"
-                                    />
-                                </NavLink>
+                    {/* owner info */}
+                    <div className="w-full xl:w-[25%] flex flex-col xl:pl-8 xl:pr-1 xl:mt-0 mt-4">
+                        {/* BIGGER SCREEN */}
+                        <div className="hidden xl:flex items-center justify-between w-full">
+                            {/* post category */}
+                            <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-lg rounded-full w-fit px-4 py-[4px]">
+                                <div className="size-[10px] fill-[#2556d1]">
+                                    {icons.dot}
+                                </div>
+                                <span className="text-[#2556d1] text-[16px]">
+                                    {post.category_name.toUpperCase()}
+                                </span>
+                            </div>
 
-                                <div>
-                                    <div>
+                            {/* saved btn */}
+                            <div className="flex items-center justify-center">
+                                <Button
+                                    btnText={
+                                        <div
+                                            className={`${
+                                                post.isSaved
+                                                    ? 'fill-[#4977ec] '
+                                                    : 'fill-white'
+                                            } size-[20px] stroke-[#4977ec] group-hover:stroke-[#2a4b9f]`}
+                                        >
+                                            {icons.save}
+                                        </div>
+                                    }
+                                    onClick={toggleSave}
+                                    className="bg-[#f0efef] p-3 group rounded-full drop-shadow-lg hover:bg-[#ebeaea]"
+                                />
+                            </div>
+                        </div>
+
+                        {/* FOR BOTH SMALLER & BIGGER SCREEN */}
+                        <div className="w-full flex xl:flex-col items-center justify-between gap-4 xl:mt-10">
+                            <div className="flex gap-4 xl:flex-col items-center justify-start w-full">
+                                {/* avatar */}
+                                <div
+                                    onClick={(e) => {
+                                        navigate(`/channel/${post.userName}`);
+                                    }}
+                                    className="w-fit cursor-pointer"
+                                >
+                                    <div className="size-[60px] xl:size-[160px]">
+                                        <img
+                                            alt="post owner avatar"
+                                            src={post.avatar}
+                                            className="size-full object-cover rounded-full hover:brightness-90"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="w-full flex flex-col items-start xl:items-center justify-start">
+                                    <div
+                                        onClick={(e) => {
+                                            navigate(
+                                                `/channel/${post.userName}`
+                                            );
+                                        }}
+                                        className="w-fit cursor-pointer text-ellipsis line-clamp-1 text-lg xl:text-[21px] hover:text-[#5c5c5c] font-medium text-black"
+                                    >
                                         {post.firstName} {post.lastName}
                                     </div>
-                                    <div>@{post.userName}</div>
+
+                                    <div
+                                        onClick={(e) => {
+                                            navigate(
+                                                `/channel/${post.userName}`
+                                            );
+                                        }}
+                                        className="w-fit cursor-pointer text-black hover:text-[#5c5c5c] text-lg"
+                                    >
+                                        @{post.userName}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div>
+                            <div className="text-black text-lg">
                                 {user?.user_name === post.userName ? (
                                     <Button
                                         btnText="Edit"
                                         onClick={() =>
                                             navigate(`/update/${post.post_id}`)
                                         }
+                                        className="rounded-md text-white py-[4px] px-4 bg-[#4977ec] hover:bg-[#3b62c2]"
                                     />
                                 ) : (
                                     <Button
@@ -208,84 +345,43 @@ export default function PostPage() {
                                                 : 'Follow'
                                         }
                                         onClick={toggleFollow}
+                                        className="rounded-md py-[5px] px-4 text-white bg-[#4977ec] hover:bg-[#3b62c2]"
                                     />
                                 )}
                             </div>
                         </div>
-
-                        <div className="flex items-start justify-start gap-4">
-                            {/* like/dislike btn */}
-                            <div className="flex items-center justify-start gap-4">
-                                <Button
-                                    btnText={
-                                        <div className="flex items-center justify-center gap-2">
-                                            <div
-                                                className={`${
-                                                    post.isLiked
-                                                        ? 'fill-white stroke-black'
-                                                        : 'fill-none stroke-white'
-                                                } size-[20px]`}
-                                            >
-                                                {icons.like}
-                                            </div>
-                                            <div>{post.totalLikes}</div>
-                                        </div>
-                                    }
-                                    onClick={toggleLike}
-                                />
-                                <Button
-                                    btnText={
-                                        <div className="flex items-center justify-center gap-2">
-                                            <div
-                                                className={`${
-                                                    post.isDisliked
-                                                        ? 'fill-white stroke-black'
-                                                        : 'fill-none stroke-white'
-                                                } size-[20px]`}
-                                            >
-                                                {icons.dislike}
-                                            </div>
-                                            <div>{post.totalDislikes}</div>
-                                        </div>
-                                    }
-                                    onClick={toggleDislike}
-                                />
-                            </div>
-
-                            {/* saved btn */}
-                            <div>
-                                <Button
-                                    btnText={
-                                        <div
-                                            className={`${
-                                                post.isSaved
-                                                    ? 'fill-white stroke-black'
-                                                    : 'fill-none stroke-white'
-                                            } size-[20px]`}
-                                        >
-                                            {icons.save}
-                                        </div>
-                                    }
-                                    onClick={toggleSave}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="w-full text-md">
-                        {parse(post.post_content)}
                     </div>
                 </div>
 
-                {/* comments */}
-                <div>
-                    <Comments postId={postId} />
+                <hr className="mt-6" />
+
+                {/* content */}
+                <div className="text-black w-full text-md mt-6">
+                    {parse(post.post_content)}
                 </div>
             </div>
 
             {/* recemendations */}
-            <div className="w-[30%] bg-red-400">
-                <Recemendations category={post.category_name} />
+            <div className="w-full">
+                <hr className="mt-0 mb-6 w-full" />
+
+                <h2 className="text-black underline underline-offset-4 mb-8">
+                    Recommended Similar Posts
+                </h2>
+                <div className="w-full">
+                    <Recemendations category={post.category_name} />
+                </div>
+            </div>
+
+            {/* comments */}
+            <div className="w-full">
+                <hr className="mt-2 mb-6 w-full" />
+                <h2 className="text-black underline underline-offset-4 mb-8">
+                    Comments & Reviews
+                </h2>
+                <div className="w-full">
+                    <Comments postId={postId} />
+                </div>
             </div>
         </div>
     );

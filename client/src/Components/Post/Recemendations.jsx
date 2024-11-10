@@ -4,7 +4,7 @@ import { postService } from '../../Services';
 import { paginate } from '../../Utils';
 import { icons } from '../../Assets/icons';
 import { LIMIT } from '../../Constants/constants';
-import { PostListView } from '..';
+import { PostCardView } from '..';
 
 export default function Recemendations({ category }) {
     const [posts, setPosts] = useState([]);
@@ -38,10 +38,11 @@ export default function Recemendations({ category }) {
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
     const postElements = posts?.map((post, index) => (
-        <PostListView
+        <PostCardView
             key={post.post_id}
             post={post}
             reference={index + 1 === posts.length ? paginateRef : null}
+            showOwnerInfo={true}
         />
     ));
 
@@ -62,7 +63,7 @@ export default function Recemendations({ category }) {
                 )
             ) : (
                 postElements.length > 0 && (
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7 w-full">
+                    <div className="w-full overflow-x-auto grid grid-flow-col auto-cols-[minmax(350px,350px)] gap-6">
                         {postElements}
                     </div>
                 )

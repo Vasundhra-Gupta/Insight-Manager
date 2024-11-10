@@ -14,6 +14,7 @@ export class SQLlikes extends Ilikes {
                         c.user_lastName lastName,
                         c.user_avatar AS avatar,
                         p.post_id, 
+                        p.category_name,
                         p.post_updatedAt,
                         p.post_createdAt, 
                         p.post_title, 
@@ -25,7 +26,7 @@ export class SQLlikes extends Ilikes {
                     ON p.post_ownerId = c.user_id 
                     JOIN post_likes l
                     ON p.post_id = l.post_id 
-                    WHERE l.user_id = ? AND l.is_liked = 1 
+                    WHERE l.user_id = ? AND l.is_liked = 1
                     ORDER BY p.post_updatedAt ${orderBy.toUpperCase()} 
                     LIMIT ? OFFSET ?
                 `;

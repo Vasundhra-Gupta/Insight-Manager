@@ -6,16 +6,14 @@ import { icons } from '../../Assets/icons';
 
 export default function SavedPostView({ post, reference }) {
     const { post_id } = post;
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState(true);
     const navigate = useNavigate();
 
     async function toggleSave() {
         try {
             const res = await postService.toggleSavePost(post_id);
-            if (res) {
-                res.message === 'POST_SAVED_SUCCESSFULLY'
-                    ? setIsSaved(true)
-                    : setIsSaved(false);
+            if (res && res.message === 'POST_SAVE_TOGGLED_SUCCESSFULLY') {
+                setIsSaved((prev) => !prev);
             }
         } catch (err) {
             navigate('/server-error');
@@ -27,18 +25,22 @@ export default function SavedPostView({ post, reference }) {
             {/* children */}
             <div
                 className="absolute top-2 right-2"
-                onClick={(e) => e.stopPropagation}
+                onClick={(e) => e.stopPropagation()}
             >
                 <Button
                     btnText={
-                        <div className="size-[20px]">
-                            {isSaved ? icons.undo : icons.delete}
-                        </div>
+                        isSaved ? (
+                            <div className="size-[20px] group-hover:fill-red-700">
+                                {icons.delete}
+                            </div>
+                        ) : (
+                            <div className="size-[20px] group-hover:fill-[#4977ec]">
+                                {icons.undo}
+                            </div>
+                        )
                     }
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSave();
-                    }}
+                    className="bg-[#f0efef] p-3 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                    onClick={toggleSave}
                 />
             </div>
         </PostListView>

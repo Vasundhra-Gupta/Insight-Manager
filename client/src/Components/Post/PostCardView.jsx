@@ -1,11 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { formatDateRelative } from '../../Utils';
+import { Button } from '..';
+import { icons } from '../../Assets/icons';
 
-export default function PostCardView({ post, reference, isHomePage = false }) {
+export default function PostCardView({
+    post,
+    reference,
+    showOwnerInfo = false,
+    children,
+}) {
     const {
         post_id,
+        category_name,
         post_image,
-        post_views,
+        totalViews,
         post_title,
         post_createdAt,
         userName,
@@ -20,50 +28,89 @@ export default function PostCardView({ post, reference, isHomePage = false }) {
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="flex flex-col items-start justify-center gap-4"
+            className="min-w-[350px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 border-[0.01rem] bg-white drop-shadow-xl rounded-2xl overflow-hidden"
         >
-            <div>
-                <img alt="post image" src={post_image} />
+            {/* post image */}
+            <div className="h-[250px] drop-shadow-lg w-full rounded-xl overflow-hidden">
+                <img
+                    alt="post image"
+                    src={post_image}
+                    className="h-full object-cover w-full"
+                />
             </div>
 
-            {isHomePage ? (
-                <div className="flex items-center justify-start gap-y-4">
-                    <div>
-                        <Link
-                            to={`/channel/${userName}`}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <img alt="post owner avatar" src={avatar} />
-                        </Link>
+            <div className="w-full">
+                <div className="flex items-start justify-between w-full">
+                    {/* post category */}
+                    <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-lg rounded-full w-fit px-3 py-[2px]">
+                        <div className="size-[9px] fill-[#2556d1]">
+                            {icons.dot}
+                        </div>
+                        <span className="text-[#2556d1]">
+                            {category_name.toUpperCase()}
+                        </span>
                     </div>
 
-                    <div className="flex flex-col items-start justify-center gap-y-1">
-                        <div className="text-xl font-medium text-white">
-                            {post_title}
-                        </div>
-
-                        <div className="text-lg font-medium text-white">
-                            {firstName} {lastName}
-                        </div>
-
-                        <div className="text-sm text-[#888787]">
-                            {post_views} views &bull;{' '}
-                            {formatDateRelative(post_createdAt)}
-                        </div>
+                    {/* statistics */}
+                    <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
+                        {totalViews} views &bull; posted
+                        {' ' + formatDateRelative(post_createdAt)}
                     </div>
                 </div>
-            ) : (
-                <div className="flex flex-col items-start justify-center gap-y-1">
-                    <div className="text-xl font-medium text-white">
-                        {post_title}
-                    </div>
 
-                    <div className="text-sm text-[#888787]">
-                        {post_views} views &bull;{' '}
-                        {formatDateRelative(post_createdAt)}
-                    </div>
+                {/* post title */}
+                <div className="w-fit hover:cursor-text text-2xl font-medium text-black text-ellipsis line-clamp-1 mt-4">
+                    {post_title}
                 </div>
-            )}
+
+                {/* show owner info if home page */}
+                {showOwnerInfo && (
+                    <Link
+                        to={`/channel/${userName}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-start justify-start gap-3 mt-6"
+                    >
+                        {/* avatar */}
+                        <div>
+                            <div className="size-[50px]">
+                                <img
+                                    alt="post owner avatar"
+                                    src={avatar}
+                                    className="size-full rounded-full hover:brightness-90"
+                                />
+                            </div>
+                        </div>
+
+                        {/* channel info */}
+                        <div className="">
+                            <div className="text-ellipsis line-clamp-1 text-[18px] hover:text-[#5c5c5c] font-medium text-black w-fit">
+                                {firstName} {lastName}
+                            </div>
+
+                            <div className="text-black hover:text-[#5c5c5c] text-[16px] w-fit">
+                                @{userName}
+                            </div>
+                        </div>
+                    </Link>
+                )}
+
+                <div className="w-full flex items-center justify-end">
+                    <Button
+                        btnText={
+                            <div className="flex items-center justify-center gap-3">
+                                <span>Read more</span>
+                                <div className="size-[20px] fill-white">
+                                    {icons.rightArrow}
+                                </div>
+                            </div>
+                        }
+                        onClick={() => navigate(`/post/${post_id}`)}
+                        className="rounded-md p-2 px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
+                    />
+                </div>
+            </div>
+
+            {children}
         </div>
     );
 }

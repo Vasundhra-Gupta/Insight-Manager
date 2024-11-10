@@ -14,8 +14,10 @@ import LikedPostsPage from './LikedPostsPage';
 import AdminPage from './AdminPage';
 import UpdatePostPage from './UpdatePostPage';
 import SavedPostsPage from './SavedPostsPage';
+import AboutUsPage from './AboutUsPage';
 
 export {
+    AboutUsPage,
     HomePage,
     LoginPage,
     RegisterPage,

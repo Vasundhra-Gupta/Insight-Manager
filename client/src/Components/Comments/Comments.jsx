@@ -42,7 +42,7 @@ export default function Comments({ postId }) {
             setAddingComment(true);
             const res = await commentService.addComment(postId, input);
             if (res && !res.message) {
-                setComments((prev) => [...prev, res]);
+                setComments((prev) => [res, ...prev]);
                 setPopupText('Comment Added Successfully 🤗');
                 setShowPopup(true);
             }
@@ -68,7 +68,7 @@ export default function Comments({ postId }) {
         <div>
             <form
                 onSubmit={addComment}
-                className="flex  items-center justify-start gap-2"
+                className="w-full flex items-center justify-between gap-4 mt-2"
             >
                 <input
                     type="text"
@@ -77,27 +77,33 @@ export default function Comments({ postId }) {
                     id="comment"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    className="bg-transparent border-[0.01rem] rounded-lg indent-2 p-1"
+                    className="placeholder-black w-full bg-transparent border-black border-[0.01rem] shadow-md shadow-gray-200 rounded-lg p-[5px] indent-2 text-black"
                 />
-                <Button
-                    type="reset"
-                    btnText="Cancel"
-                    onClick={(e) => setInput('')}
-                />
-                <Button
-                    type="submit"
-                    btnText={addingComment ? 'adding...' : 'Comment'}
-                    disabled={addingComment}
-                />
+                <div className="flex items-center gap-x-3">
+                    <Button
+                        type="reset"
+                        btnText="Cancel"
+                        onClick={(e) => setInput('')}
+                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-4 py-1 group rounded-full drop-shadow-xl"
+                    />
+                    <Button
+                        type="submit"
+                        btnText={addingComment ? 'adding...' : 'Comment'}
+                        disabled={addingComment}
+                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-3 py-1 group rounded-full drop-shadow-xl"
+                    />
+                </div>
             </form>
 
             {comments.length > 0 ? (
-                <div>
-                    <div>{comments.length} Comments</div>
-                    <div>{commentElements}</div>
+                <div className="">
+                    <div className="mt-4 text-black">
+                        {comments.length} Comments
+                    </div>
+                    <div className="mt-4">{commentElements}</div>
                 </div>
             ) : (
-                <div>No Comments Found !!</div>
+                <div className="text-black mt-4">No Comments Found !!</div>
             )}
         </div>
     );

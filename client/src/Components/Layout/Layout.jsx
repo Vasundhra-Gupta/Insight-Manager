@@ -6,7 +6,10 @@ export default function Layout() {
         <div className="text-white overflow-scroll h-full w-full">
             <Header />
             <Sidebar />
-            <Outlet />
+            <div className="px-6">
+                <Outlet />
+            </div>
+            <hr className="mt-6 w-full" />
             <Footer />
             <Popup />
             <LoginPopup />

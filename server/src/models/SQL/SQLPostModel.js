@@ -356,6 +356,7 @@ export class SQLposts extends Iposts {
                         c.user_lastName lastName,
                         c.user_avatar AS avatar,
                         p.post_id, 
+                        p.category_name,
                         p.post_updatedAt,
                         p.post_createdAt, 
                         p.post_title, 

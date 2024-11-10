@@ -54,7 +54,7 @@ export default function WatchHistoryPage() {
             reference={index + 1 === posts.length ? paginateRef : null}
         >
             {/* children */}
-            <div className="text-sm absolute bottom-2 right-2">
+            <div className="hover:cursor-text text-[15px] text-[#5a5a5a] absolute bottom-3 left-6">
                 watched {formatDateRelative(post.watchedAt)}
             </div>
         </PostListView>
@@ -79,22 +79,21 @@ export default function WatchHistoryPage() {
                 )
             ) : postElements.length > 0 ? (
                 <div>
-                    <div>
+                    <div className="w-full flex items-center justify-center mb-8">
                         <Button
                             btnText={
-                                <div className="flex items-center justify-center gap-2">
-                                    <div className="size-[20px]">
+                                <div className="flex text-black font-medium items-center justify-center gap-2">
+                                    <div className="size-[20px] group-hover:fill-red-700">
                                         {icons.delete}
                                     </div>
                                     <div>Clear Watch History</div>
                                 </div>
                             }
+                            className="group rounded-md p-2 px-3 bg-[#dfdede] hover:bg-[#cccbcb] drop-shadow-xl "
                             onClick={clearHistory}
                         />
                     </div>
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
-                        {postElements}
-                    </div>
+                    <div className="">{postElements}</div>
                 </div>
             ) : (
                 <div>No read posts !!</div>
