@@ -11,8 +11,9 @@ create table users (
     user_email varchar(100) NOT NULL UNIQUE,
     user_password varchar(70) NOT NULL,
     user_createdAt timestamp NOT NULL DEFAULT NOW(),
-    refresh_token varchar(200) NOT NULL DEFAULT ''
+    refresh_token varchar(200) DEFAULT '' -- or NULL
 );
+
 CREATE TABLE saved_posts(
     post_id varchar(40),
     user_id varchar(40),
@@ -20,6 +21,7 @@ CREATE TABLE saved_posts(
     CONSTRAINT saved_posts_user_id_fk FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT saved_posts_post_id_fk FOREIGN KEY(post_id) REFERENCES posts(post_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 create table watch_history (
     post_id varchar(40),
     user_id varchar(40),

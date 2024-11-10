@@ -4,10 +4,10 @@ create table posts (
     post_title varchar(100) NOT NULL,
     post_content text NOT NULL,
     post_ownerId varchar(40),
-    post_visibility boolean DEFAULT true NOT NULL,
+    post_visibility boolean DEFAULT TRUE,
     post_category varchar(40),
-    post_createdAt timestamp NOT NULL DEFAULT NOW(),
-    post_updatedAt timestamp NOT NULL DEFAULT NOW(),
+    post_createdAt timestamp DEFAULT NOW(),
+    post_updatedAt timestamp DEFAULT NOW() ON UPDATE NOW(),
     CONSTRAINT post_category_fk FOREIGN KEY(post_category) REFERENCES categories(category_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT posts_post_ownerId_fk FOREIGN KEY(post_ownerId) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

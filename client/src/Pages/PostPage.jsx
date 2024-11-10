@@ -10,8 +10,7 @@ import parse from 'html-react-parser';
 export default function PostPage() {
     const { postId } = useParams();
     const [loading, setLoading] = useState(true);
-    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } =
-        usePopupContext();
+    const { setShowPopup, setPopupText, setLoginPopupText, setShowLoginPopup } = usePopupContext();
     const [post, setPost] = useState({});
     const { user } = useUserContext();
     const navigate = useNavigate();
@@ -108,9 +107,7 @@ export default function PostPage() {
                 return;
             }
             const res = await followerService.toggleFollow(post.post_ownerId);
-            if (
-                res && res.message === 'FOLLOW_TOGGLED_SUCCESSFULLY'
-            ) {
+            if (res && res.message === 'FOLLOW_TOGGLED_SUCCESSFULLY') {
                 setPost((prev) => ({
                     ...prev,
                     isFollowed: !prev.isFollowed,
