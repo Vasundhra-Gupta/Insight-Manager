@@ -13,6 +13,7 @@ export default function PostCardView({
         post_id,
         category_name,
         post_image,
+        post_content,
         totalViews,
         post_title,
         post_createdAt,
@@ -28,7 +29,7 @@ export default function PostCardView({
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="min-w-[350px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 border-[0.01rem] bg-white drop-shadow-xl rounded-2xl overflow-hidden"
+            className="min-w-[350px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-xl rounded-2xl overflow-hidden"
         >
             {/* post image */}
             <div className="h-[250px] drop-shadow-lg w-full rounded-xl overflow-hidden">
@@ -63,12 +64,17 @@ export default function PostCardView({
                     {post_title}
                 </div>
 
+                {/* post content */}
+                <div className="hover:cursor-text text-[17px] text-black text-ellipsis line-clamp-1 mb-5 mt-2">
+                    {post_content}
+                </div>
+
                 {/* show owner info if home page */}
                 {showOwnerInfo && (
                     <Link
                         to={`/channel/${userName}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-start justify-start gap-3 mt-6"
+                        className="flex items-start justify-start gap-3"
                     >
                         {/* avatar */}
                         <div>
@@ -94,7 +100,7 @@ export default function PostCardView({
                     </Link>
                 )}
 
-                <div className="w-full flex items-center justify-end">
+                <div className="w-full flex items-center justify-end text-white ">
                     <Button
                         btnText={
                             <div className="flex items-center justify-center gap-3">

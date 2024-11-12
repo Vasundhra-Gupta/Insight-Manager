@@ -2,26 +2,34 @@ import { Link } from 'react-router-dom';
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
 import { useState } from 'react';
+import { LOGO } from '../../Constants/constants';
+import { usePopupContext } from '../../Context';
+
 export default function Footer() {
     const [feedback, setFeedback] = useState('');
+    const { setShowPopup, setPopupText } = usePopupContext();
 
     const socials = [
-        { link: '', icon: icons.instagram },
-        { link: '', icon: icons.threads },
         {
-            link: 'https://www.linkedin.com/in/vasundhra-gupta-764713291',
+            link: 'https://discord.com/channels/@sania_singla',
+            icon: icons.discord,
+        },
+        { link: 'https://github.com/Sania-Singla', icon: icons.gitHub },
+        {
+            link: 'https://www.instagram.com/sania__singla',
+            icon: icons.instagram,
+        },
+        { link: 'https://x.com/sania_singla', icon: icons.threads },
+        {
+            link: 'https://www.linkedin.com/in/sania-singla',
             icon: icons.linkedIn,
         },
-        { link: '', icon: icons.facebook },
-        { link: 'https://github.com/Sania-Singla', icon: icons.gitHub },
     ];
 
     const socialElements = socials.map((social) => (
-        <Link to={social.link} target="_blank">
-            <div className="bg-[#dadada] p-2 group rounded-full drop-shadow-xl hover:bg-[#c9c9c9] w-fit">
-                <div className="size-[20px] group-hover:fill-[]">
-                    {social.icon}
-                </div>
+        <Link key={social.link} to={social.link} target="_blank">
+            <div className="bg-[#dadada] p-2 rounded-full drop-shadow-xl hover:bg-[#c9c9c9] w-fit">
+                <div className="size-[20px]">{social.icon}</div>
             </div>
         </Link>
     ));
@@ -29,12 +37,12 @@ export default function Footer() {
     const links = [
         { path: '/', name: 'Home' },
         { path: '/support', name: 'Support' },
-        { path: '/about-ut', name: 'About Us' },
+        { path: '/about-us', name: 'About Us' },
         { path: '/add', name: 'Add Blog' },
     ];
 
     const linkElements = links.map((link) => (
-        <p className="text-center">
+        <p className="text-center" key={link.name}>
             <Link
                 to={link.path}
                 className="hover:text-[#4977ec] hover:underline"
@@ -43,9 +51,6 @@ export default function Footer() {
             </Link>
         </p>
     ));
-
-    const imgLink =
-        'https://img.freepik.com/free-vector/bird-colorful-logo-gradient-vector_343694-1365.jpg?semt=ais_hybrid';
 
     return (
         <div className="px-10 pt-6 pb-4 bg-[#f6f6f6]">
@@ -56,12 +61,14 @@ export default function Footer() {
                     </p>
 
                     <div className="flex items-center mt-4 justify-start gap-4">
-                        <div className="size-[50px] rounded-full overflow-hidden border-[0.01rem] border-black">
-                            <img
-                                src={imgLink}
-                                alt="peer connect logo"
-                                className="object-cover size-full"
-                            />
+                        <div>
+                            <div className="size-[50px] rounded-full overflow-hidden drop-shadow-xl">
+                                <img
+                                    src={LOGO}
+                                    alt="peer connect logo"
+                                    className="object-cover size-full"
+                                />
+                            </div>
                         </div>
                         <div className="text-black text-lg font-medium">
                             Peer Connect
@@ -91,12 +98,12 @@ export default function Footer() {
                     />
                     <Button
                         btnText={'Submit'}
-                        onClick={() =>
-                            alert(
-                                'Your Feedback has been Submitted Successfully !!'
-                            )
-                        }
-                        className="mt-2 rounded-md py-[5px] px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
+                        onClick={() => {
+                            setFeedback('');
+                            setShowPopup(true);
+                            setPopupText('Feedback Submitted Successfully 🤗');
+                        }}
+                        className="text-white mt-2 rounded-md py-[5px] px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
                     />
                 </div>
             </div>

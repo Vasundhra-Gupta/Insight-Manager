@@ -7,7 +7,7 @@ export default function fileRestrictions(file, name, setError) {
         if (!allowedExtensions.includes(extension) || fileSize > maxSizeMB) {
             return setError((prevError) => ({
                 ...prevError,
-                [name]: 'only PNG, JPG/JPEG files are allowed & File size should be less than 100MB.',
+                [name]: 'only png, jpg/jpeg files are allowed and File size should not exceed 100mb.',
             }));
         }
         setError((prevError) => ({ ...prevError, [name]: '' }));

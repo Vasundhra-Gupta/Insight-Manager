@@ -4,6 +4,7 @@ import Sidebar from './Layout/Sidebar';
 import Layout from './Layout/Layout';
 import Button from './General/Button';
 import RTE from './General/RTE';
+import ContributorCard from './General/contributorCard';
 import LoginPopup from './Popups/LoginPopup';
 import DeleteAccountPopup from './Popups/DeleteAccountPopup';
 import UpdateAvatarPopup from './Popups/UpdateAvatarPopup';
@@ -35,6 +36,7 @@ export {
     Layout,
     Button,
     RTE,
+    ContributorCard,
     LoginPopup,
     DeleteAccountPopup,
     UpdateAvatarPopup,

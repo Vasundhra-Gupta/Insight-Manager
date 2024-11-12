@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 import { usePopupContext } from '../../Context';
 import { AnimatePresence, motion } from 'framer-motion';
 import { icons } from '../../Assets/icons';
+import { Button } from '..';
 
 export default function Popup() {
-    const { showPopup, popupText, setShowPopup } = usePopupContext();
+    const { showPopup, popupText, setShowPopup, setPopupText } =
+        usePopupContext();
 
     const popupVariants = {
         initial: {
@@ -58,25 +60,38 @@ export default function Popup() {
                     initial="initial"
                     animate="final"
                     exit="exit"
-                    className="text-white text-lg fixed top-4 right-4 p-4 bg-slate-800 shadow-lg rounded-lg"
+                    className="text-white text-lg fixed top-4 right-4 z-[100] py-4 px-6 bg-slate-800 shadow-lg rounded-lg"
                 >
-                    <div className="size-[20px] stroke-[#aeaeae] absolute right-2 top-2">
-                        {icons.cross}
-                    </div>
-
-                    <div className="flex items-center justify-start gap-2 mt-2 mr-8">
-                        <div className="size-[22px] fill-green-600">
-                            {icons.check}
-                        </div>
-                        <div>{popupText}</div>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <motion.div
-                        key={popupText}
-                        className="relative h-1 mt-3 bg-[#8871ee] rounded"
-                        variants={progressVariants}
+                    {/* cross btn */}
+                    <Button
+                        btnText={
+                            <div className="size-[20px] stroke-[#aeaeae]">
+                                {icons.cross}
+                            </div>
+                        }
+                        onClick={() => {
+                            setShowPopup(false);
+                            setPopupText('');
+                        }}
+                        className="absolute right-2 top-2"
                     />
+
+                    <div className="pt-4">
+                        {/* text */}
+                        <div className="flex items-center justify-start gap-2 w-full">
+                            <div className="size-[22px] fill-green-600">
+                                {icons.check}
+                            </div>
+                            <div className="text-lg">{popupText}</div>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <motion.div
+                            key={popupText}
+                            className="relative h-1 mt-3 bg-[#8871ee] rounded"
+                            variants={progressVariants}
+                        />
+                    </div>
                 </motion.div>
             )}
         </AnimatePresence>

@@ -1,3 +1,179 @@
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useSideBarContext, useUserContext } from '../../Context';
+import { icons } from '../../Assets/icons';
+import { Button, Logout } from '..';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRef } from 'react';
+
 export default function Sidebar() {
-    return <div>Sidebar</div>;
+    const { user } = useUserContext();
+    const navigate = useNavigate();
+    const { showSideBar, setShowSideBar } = useSideBarContext();
+    const items = [
+        { show: true, path: '/', name: 'Home', icon: icons.home },
+        { show: true, path: '/liked', name: 'Liked Blogs', icon: icons.like },
+        { show: true, path: '/saved', name: 'Saved Blogs', icon: icons.save },
+        {
+            show: user,
+            path: '/followers',
+            name: 'Followers',
+            icon: icons.group,
+        },
+        { show: user, path: '/admin', name: 'Admin', icon: icons.user },
+    ];
+
+    const systemItems = [
+        { show: true, path: '/support', name: 'Support', icon: icons.support },
+        {
+            show: user,
+            path: '/settings',
+            name: 'Settings',
+            icon: icons.settings,
+        },
+        { show: true, path: '/about-us', name: 'About Us', icon: icons.search },
+        {
+            show: true,
+            path: '/contact-us',
+            name: 'Contact Us',
+            icon: icons.contact,
+        },
+    ];
+
+    const itemElements = items.map((item) => (
+        <NavLink
+            key={item.name}
+            className={({ isActive }) =>
+                `${isActive && 'backdrop-brightness-90'} ${!item.show && 'hidden'} w-full py-2 px-3 rounded-md hover:backdrop-brightness-90`
+            }
+            to={item.path}
+            onClick={() => setShowSideBar(false)}
+        >
+            <div className="flex items-center justify-start gap-4">
+                <div className="size-[20px]">{item.icon}</div>
+                <div>{item.name}</div>
+            </div>
+        </NavLink>
+    ));
+
+    const systemItemElements = systemItems.map((item) => (
+        <NavLink
+            key={item.name}
+            to={item.path}
+            onClick={() => setShowSideBar(false)}
+            className={({ isActive }) =>
+                `${isActive && 'backdrop-brightness-90'} ${!item.show && 'hidden'} w-full py-2 px-3 rounded-md hover:backdrop-brightness-90`
+            }
+        >
+            <div className="flex items-center justify-start gap-4">
+                <div className="size-[20px]">{item.icon}</div>
+                <div>{item.name}</div>
+            </div>
+        </NavLink>
+    ));
+
+    const sideBarRef = useRef();
+
+    function closeSideBar(e) {
+        if (e.target === sideBarRef.current) {
+            setShowSideBar(false);
+        }
+    }
+
+    const sideBarVariants = {
+        beginning: {
+            x: '100vw',
+        },
+        end: {
+            x: 0,
+            transition: {
+                type: 'tween',
+            },
+        },
+        exit: {
+            x: '100vw',
+            transition: {
+                type: 'tween',
+            },
+        },
+    };
+
+    return (
+        <AnimatePresence>
+            {showSideBar && (
+                <motion.div
+                    variants={sideBarVariants}
+                    initial="beginning"
+                    animate="end"
+                    exit="exit"
+                    ref={sideBarRef}
+                    onClick={closeSideBar}
+                    className="z-[10] h-full fixed inset-0 flex justify-end overflow-y-scroll"
+                >
+                    <div className="w-72 px-4 bg-[#f6f6f6] drop-shadow-xl flex flex-col items-start justify-start h-full">
+                        <div className="h-[60px] px-2 w-full flex items-center justify-center">
+                            {user ? (
+                                <div className="w-full flex items-center justify-between">
+                                    <div className="flex items-center justify-start gap-2">
+                                        <div className="size-[45px] rounded-full overflow-hidden drop-shadow-xl">
+                                            <img
+                                                src={user.user_avatar}
+                                                alt="user avatar"
+                                                className="size-full object-cover "
+                                            />
+                                        </div>
+                                        <div className="leading-6">
+                                            <div className="text-black text-[18px]">
+                                                {user.user_firstName}{' '}
+                                                {user.user_lastName}
+                                            </div>
+                                            <div className="text-[#1f1f1f] text-[15px]">
+                                                @{user.user_name}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div onClick={() => setShowSideBar(false)}>
+                                        <Logout />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="w-full h-full py-3 flex items-center justify-center gap-4">
+                                    <Button
+                                        onClick={() => {
+                                            navigate('/register');
+                                            setShowSideBar(false);
+                                        }}
+                                        btnText="Sign Up"
+                                        className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                    />
+
+                                    <div className="h-full border-r-[0.01rem] border-[#c8c8c8]" />
+
+                                    <Button
+                                        onClick={() => {
+                                            navigate('/login');
+                                            setShowSideBar(false);
+                                        }}
+                                        btnText="Login"
+                                        className="text-white rounded-md py-[5px] w-full bg-[#4977ec] hover:bg-[#3b62c2]"
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                        <hr className="w-full" />
+
+                        <div className="text-lg text-black w-full h-[calc(100%-60px)] py-6 flex flex-col items-start justify-between">
+                            <div className="w-full flex flex-col gap-2 items-start justify-start">
+                                {itemElements}
+                            </div>
+                            <div className="w-full flex flex-col gap-2 items-start justify-start">
+                                <hr className="w-full" />
+                                {systemItemElements}
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 }

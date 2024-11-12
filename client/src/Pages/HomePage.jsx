@@ -62,9 +62,7 @@ export default function HomePage() {
                 // <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
                 //     {postElements}
                 // </div>
-                <div className="">
-                    {postElements}
-                </div>
+                <div className="">{postElements}</div>
             ) : (
                 <div>No posts found !!</div>
             )}

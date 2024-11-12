@@ -63,7 +63,7 @@ export default function ChannelPage() {
             to={tab.path}
             end
             className={({ isActive }) =>
-                `${isActive ? 'border-[#8871ee]' : 'border-white'} border-b-[0.01rem] w-full`
+                `${isActive ? 'border-[#4977ec]' : 'border-white'} border-b-[0.01rem] w-full`
             }
         >
             <div className="w-full text-center">{tab.name}</div>
@@ -73,7 +73,7 @@ export default function ChannelPage() {
     return loading ? (
         <div>loading...</div>
     ) : channel ? (
-        <div className="w-full h-full overflow-scroll p-[5px]">
+        <div className="w-full h-full">
             {/* owner coverImage */}
             <div className="w-full h-[200px] overflow-hidden">
                 <img
@@ -140,9 +140,7 @@ export default function ChannelPage() {
                 {tabElements}
             </div>
 
-            <hr className="mt-2" />
-
-            <div>
+            <div className="w-full mt-6">
                 <Outlet />
             </div>
         </div>

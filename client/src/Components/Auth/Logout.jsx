@@ -27,12 +27,11 @@ export default function Logout() {
     }
 
     return (
-        <div>
-            <Button
-                onClick={handleClick}
-                disabled={loading}
-                btnText={loading ? 'Logging Out...' : 'Logout'}
-            />
-        </div>
+        <Button
+            onClick={handleClick}
+            disabled={loading}
+            btnText={loading ? 'Logging Out...' : 'Logout'}
+            className="text-white rounded-md py-[5px] w-[80px] bg-[#4977ec] hover:bg-[#3b62c2]"
+        />
     );
 }

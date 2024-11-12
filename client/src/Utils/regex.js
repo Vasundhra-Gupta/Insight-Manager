@@ -19,7 +19,7 @@ export default function verifyExpression(name, value, setError) {
                     ? setError((prevError) => ({ ...prevError, [name]: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          [name]: `only letters are allowed and ${name} can be only 15 char long.`,
+                          [name]: `only letters are allowed and should not exceed 15 characters.`,
                       }));
                 break;
             }
@@ -29,7 +29,7 @@ export default function verifyExpression(name, value, setError) {
                     ? setError((prevError) => ({ ...prevError, [name]: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          [name]: 'only numbers, letters and underscores are allowed and userName can be 20 char long',
+                          [name]: `only alpha-numeric char & underscores are allowed and should not exceed 20 characters`,
                       }));
                 break;
             }
@@ -40,7 +40,7 @@ export default function verifyExpression(name, value, setError) {
                     ? setError((prevError) => ({ ...prevError, [name]: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          [name]: `${name} must be 8-12 characters.`,
+                          [name]: `${name.toLowerCase()} must be 8-12 characters.`,
                       }));
                 break;
             }
@@ -51,7 +51,7 @@ export default function verifyExpression(name, value, setError) {
                     ? setError((prevError) => ({ ...prevError, [name]: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          [name]: `${name} should not exceed 100 characters.`,
+                          [name]: `${name.toLowerCase()} should not exceed 100 characters.`,
                       }));
                 break;
             }

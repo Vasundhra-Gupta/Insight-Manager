@@ -36,7 +36,7 @@ export default function PostListView({ post, reference, children }) {
             <div
                 ref={reference}
                 onClick={() => navigate(`/post/${post_id}`)} // items-start justify-start
-                className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-6 border-[0.01rem] bg-white drop-shadow-xl rounded-2xl overflow-hidden"
+                className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-6 bg-white drop-shadow-xl rounded-2xl overflow-hidden"
             >
                 {/* post image */}
                 <div className="h-[300px] drop-shadow-lg w-[45%] rounded-xl overflow-hidden">
@@ -103,7 +103,7 @@ export default function PostListView({ post, reference, children }) {
                         </div>
                     </Link>
 
-                    <div className="absolute right-6 bottom-6">
+                    <div className="absolute right-6 bottom-6 text-white">
                         <Button
                             btnText={
                                 <div className="flex items-center justify-center gap-3">

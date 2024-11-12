@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useUserContext, usePopupContext } from '../../Context';
 import { authService } from '../../Services';
 import { Button } from '..';
@@ -79,14 +79,14 @@ export default function Login() {
     ];
 
     const inputElements = inputFields.map((field) => (
-        <div key={field.name}>
-            <div>
+        <div key={field.name} className="w-full">
+            <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
                 <label htmlFor={field.name}>
-                    {field.required && <span className="text-red-500">* </span>}
-                    {field.label} :
+                    {field.label}
+                    {field.required && <span className="text-red-500">*</span>}
                 </label>
             </div>
-            <div>
+            <div className=" ">
                 <input
                     type={field.type}
                     name={field.name}
@@ -94,32 +94,39 @@ export default function Login() {
                     value={inputs[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    className="bg-transparent border-[0.01rem]"
+                    className="shadow-xl shadow-[#efefef] px-2 py-4 rounded-md indent-2 w-full border-[0.01rem] border-[#aeaeae] bg-transparent placeholder:text-[#a0a0a0]"
                 />
             </div>
         </div>
     ));
 
     return (
-        <div>
+        <div className="text-black w-[400px] h-full">
             {error && (
-                <div className="text-red-500 w-full text-center mb-3">
+                <div className="text-red-500 w-full text-center mb-2">
                     {error}
                 </div>
             )}
 
-            <form
-                onSubmit={handleSubmit}
-                className="flex flex-col items-center justify-center gap-4"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 {inputElements}
 
                 <div>
                     <Button
+                        className="text-white rounded-md py-2 mt-4 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
                         onMouseOver={onMouseOver}
                         btnText={loading ? 'logging in ...' : 'Login'}
                         disabled={disabled}
                     />
+                    <p className="w-full text-center text-[16px] mt-2">
+                        don't have an Account ?{' '}
+                        <Link
+                            to={'/register'}
+                            className="text-[#355ab6] hover:underline"
+                        >
+                            Sign up
+                        </Link>
+                    </p>
                 </div>
             </form>
         </div>

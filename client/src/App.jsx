@@ -28,7 +28,7 @@ export default function App() {
     }, []);
 
     return (
-        <div className="bg-black h-screen w-screen">
+        <div className="bg-white h-screen w-screen">
             {loading ? (
                 <div className="text-3xl text-white h-full w-full flex flex-col items-center justify-center">
                     <div className="size-[50px] fill-[#8871ee] dark:text-[#b5b4b4]">

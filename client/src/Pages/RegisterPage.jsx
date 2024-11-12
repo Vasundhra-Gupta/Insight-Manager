@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { authService } from '../Services';
 import { useUserContext } from '../Context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../Components';
 import { verifyExpression, fileRestrictions } from '../Utils';
+import { LOGO } from '../Constants/constants';
+import { motion } from 'framer-motion';
 
 export default function RegisterPage() {
     const [inputs, setInputs] = useState({
@@ -148,17 +150,12 @@ export default function RegisterPage() {
     ];
 
     const inputElements = inputFields.map((field) => (
-        <div key={field.name}>
-            <div className="flex gap-x-1">
+        <div key={field.name} className="w-full">
+            <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
                 <label htmlFor={field.name}>
                     {field.required && <span className="text-red-500">* </span>}
                     {field.label} :
                 </label>
-                {error[field.name] && (
-                    <div className="pt-[0.09rem] text-red-500 text-sm">
-                        {error[field.name]}
-                    </div>
-                )}
             </div>
             <div>
                 <input
@@ -169,21 +166,23 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder={field.placeholder}
-                    className="bg-transparent border-[0.01rem] w-[300px]"
+                    className="shadow-xl shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
                 />
             </div>
-            {field.name === 'password' && (
+            {error[field.name] && (
+                <div className="mt-1 text-red-500 text-sm font-medium">
+                    {error[field.name]}
+                </div>
+            )}
+            {field.name === 'password' && !error.password && (
                 <div className="text-xs">password must be 8-12 characters.</div>
             )}
         </div>
     ));
 
     const fileElements = fileFields.map((field) => (
-        <div key={field.name}>
-            {error[field.name] && (
-                <div className="text-red-500">{error[field.name]}</div>
-            )}
-            <div>
+        <div key={field.name} className="w-full">
+            <div className="bg-white z-[1] ml-3 px-2 w-fit relative top-3 font-medium">
                 <label htmlFor={field.name}>
                     {field.required && <span className="text-red-500">* </span>}
                     {field.label} :
@@ -195,26 +194,50 @@ export default function RegisterPage() {
                     name={field.name}
                     id={field.name}
                     onChange={handleFileChange}
-                    className="bg-transparent border-[0.01rem] w-[300px]"
+                    className="shadow-xl shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] border border-gray-500 w-full"
                 />
             </div>
+            {error[field.name] && (
+                <div className="text-red-500 text-sm mt-1 font-medium">
+                    {error[field.name]}
+                </div>
+            )}
         </div>
     ));
 
     return (
-        <div className="bg-gray-900 w-full h-full overflow-scroll flex items-center justify-center">
-            <div className="w-full flex flex-col items-center justify-center gap-4">
-                <div>Create new account</div>
+        <div className="py-10 text-black flex flex-col items-center justify-start gap-4 overflow-y-scroll z-[1] bg-white fixed inset-0">
+            <div className="w-full flex items-center justify-center">
+                <div className="overflow-hidden rounded-full size-[90px] drop-shadow-xl">
+                    <img
+                        src={LOGO}
+                        alt="peer connect logo"
+                        className="object-cover size-full"
+                    />
+                </div>
+            </div>
+            <div className=" w-fit">
+                <p className="text-center px-2 text-[28px] font-medium">
+                    Create a new Account
+                </p>
+                <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 0.3 }}
+                    className="relative -top-2 h-[0.05rem] bg-[#333333]"
+                />
+            </div>
 
+            <div className="w-[400px] flex flex-col items-center justify-center gap-3 mt-4">
                 {error.root && (
-                    <div className="text-red-500 w-full text-center mb-4">
+                    <div className="text-red-500 w-full text-center">
                         {error.root}
                     </div>
                 )}
 
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col items-start justify-center gap-4"
+                    className="flex flex-col items-start justify-center gap-4 w-full"
                 >
                     {inputElements}
 
@@ -222,11 +245,20 @@ export default function RegisterPage() {
 
                     <div className="w-full">
                         <Button
-                            className="w-full"
+                            className="text-white rounded-md py-2 mt-4 text-lg w-full bg-[#4977ec] hover:bg-[#3b62c2]"
                             disabled={disabled}
                             onMouseOver={onMouseOver}
                             btnText={loading ? 'Signing Up...' : 'Sign Up'}
                         />
+                        <p className="w-full text-center text-[16px] mt-2">
+                            already have an Account ?{' '}
+                            <Link
+                                to={'/login'}
+                                className="text-[#355ab6] hover:underline"
+                            >
+                                Login
+                            </Link>
+                        </p>
                     </div>
                 </form>
             </div>

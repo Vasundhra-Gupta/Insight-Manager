@@ -51,7 +51,7 @@ export default function ChannelPosts() {
     ));
 
     return (
-        <div>
+        <div className="w-full">
             <div className="w-full">
                 {user?.user_name === channel.user_name && (
                     <div className="w-full flex items-center justify-center mb-4">
@@ -84,7 +84,7 @@ export default function ChannelPosts() {
                     </div>
                 )
             ) : postElements.length > 0 ? (
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-x-6">
                     {postElements}
                 </div>
             ) : (
