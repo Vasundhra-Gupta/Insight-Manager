@@ -6,7 +6,7 @@ import { icons } from '../../Assets/icons';
 import { LIMIT } from '../../Constants/constants';
 import { PostCardView } from '..';
 
-export default function Recemendations({ category }) {
+export default function Recemendations({ category, currentPostId }) {
     const [posts, setPosts] = useState([]);
     const [postsInfo, setPostsInfo] = useState({});
     const [loading, setLoading] = useState(true);
@@ -23,7 +23,10 @@ export default function Recemendations({ category }) {
                     category
                 );
                 if (res && !res.message) {
-                    setPosts((prev) => [...prev, ...res.posts]);
+                    const recemendations = res.posts.filter(
+                        (post) => post.post_id !== currentPostId
+                    );
+                    setPosts((prev) => [...prev, ...recemendations]);
                     setPostsInfo(res.postsInfo);
                 }
             } catch (err) {

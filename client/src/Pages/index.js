@@ -15,6 +15,8 @@ import AdminPage from './AdminPage';
 import UpdatePostPage from './UpdatePostPage';
 import SavedPostsPage from './SavedPostsPage';
 import AboutUsPage from './AboutUsPage';
+import ContactUsPage from './ContactUsPage';
+import FAQpage from './FAQpage';
 
 export {
     AboutUsPage,
@@ -34,4 +36,6 @@ export {
     AdminPage,
     UpdatePostPage,
     SavedPostsPage,
+    ContactUsPage,
+    FAQpage,
 };

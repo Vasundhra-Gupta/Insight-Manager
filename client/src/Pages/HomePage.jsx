@@ -16,7 +16,6 @@ export default function HomePage() {
     // pagination
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
-    // fetching the posts
     useEffect(() => {
         (async function getPosts() {
             try {
@@ -34,7 +33,6 @@ export default function HomePage() {
         })();
     }, [page]);
 
-    // displaying posts
     const postElements = posts?.map((post, index) => (
         <PostListView
             key={post.post_id}
@@ -52,17 +50,14 @@ export default function HomePage() {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                        <div className="size-7 fill-[#4977ec]">
                             {icons.loading}
                         </div>
                         <span className="text-xl ml-3">Please wait . . .</span>
                     </div>
                 )
             ) : postElements.length > 0 ? (
-                // <div className="grid grid-cols-[repeat(auto-fit,minmax(500px,1fr))] gap-x-4 gap-y-7">
-                //     {postElements}
-                // </div>
-                <div className="">{postElements}</div>
+                <div>{postElements}</div>
             ) : (
                 <div>No posts found !!</div>
             )}

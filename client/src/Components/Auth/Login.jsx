@@ -94,7 +94,7 @@ export default function Login() {
                     value={inputs[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    className="shadow-xl shadow-[#efefef] px-2 py-4 rounded-md indent-2 w-full border-[0.01rem] border-[#aeaeae] bg-transparent placeholder:text-[#a0a0a0]"
+                    className="shadow-md shadow-[#efefef] px-2 py-4 rounded-md indent-2 w-full border-[0.01rem] border-[#aeaeae] bg-transparent placeholder:text-[#a0a0a0]"
                 />
             </div>
         </div>

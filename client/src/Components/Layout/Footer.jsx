@@ -2,37 +2,22 @@ import { Link } from 'react-router-dom';
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
 import { useState } from 'react';
-import { LOGO } from '../../Constants/constants';
+import { CONTRIBUTORS, LOGO } from '../../Constants/constants';
 import { usePopupContext } from '../../Context';
 
 export default function Footer() {
     const [feedback, setFeedback] = useState('');
     const { setShowPopup, setPopupText } = usePopupContext();
 
-    const socials = [
-        {
-            link: 'https://discord.com/channels/@sania_singla',
-            icon: icons.discord,
-        },
-        { link: 'https://github.com/Sania-Singla', icon: icons.gitHub },
-        {
-            link: 'https://www.instagram.com/sania__singla',
-            icon: icons.instagram,
-        },
-        { link: 'https://x.com/sania_singla', icon: icons.threads },
-        {
-            link: 'https://www.linkedin.com/in/sania-singla',
-            icon: icons.linkedIn,
-        },
-    ];
-
-    const socialElements = socials.map((social) => (
-        <Link key={social.link} to={social.link} target="_blank">
-            <div className="bg-[#dadada] p-2 rounded-full drop-shadow-xl hover:bg-[#c9c9c9] w-fit">
-                <div className="size-[20px]">{social.icon}</div>
-            </div>
-        </Link>
-    ));
+    const socialElements = Object.entries(CONTRIBUTORS[0].socials).map(
+        ([platform, url]) => (
+            <Link key={platform} to={url} target="_blank">
+                <div className="bg-[#dadada] p-2 rounded-full drop-shadow-md hover:bg-[#c9c9c9] w-fit">
+                    <div className="size-[20px]">{icons[platform]}</div>
+                </div>
+            </Link>
+        )
+    );
 
     const links = [
         { path: '/', name: 'Home' },
@@ -52,6 +37,13 @@ export default function Footer() {
         </p>
     ));
 
+    function submitFeedback(e) {
+        e.preventDefault();
+        setFeedback('');
+        setShowPopup(true);
+        setPopupText('Feedback Submitted Successfully 🤗');
+    }
+
     return (
         <div className="px-10 pt-6 pb-4 bg-[#f6f6f6]">
             <div className="flex items-start justify-between ">
@@ -60,9 +52,12 @@ export default function Footer() {
                         Stay Social, Stay Organized.
                     </p>
 
-                    <div className="flex items-center mt-4 justify-start gap-4">
+                    <Link
+                        to={'/'}
+                        className="flex items-center mt-4 justify-start gap-4"
+                    >
                         <div>
-                            <div className="size-[50px] rounded-full overflow-hidden drop-shadow-xl">
+                            <div className="size-[50px] rounded-full overflow-hidden drop-shadow-md">
                                 <img
                                     src={LOGO}
                                     alt="peer connect logo"
@@ -73,7 +68,7 @@ export default function Footer() {
                         <div className="text-black text-lg font-medium">
                             Peer Connect
                         </div>
-                    </div>
+                    </Link>
                 </div>
 
                 <div className="w-full pr-10">
@@ -85,27 +80,25 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="w-full pl-[10%] flex flex-col items-start justify-center gap-4">
+                <form
+                    onSubmit={submitFeedback}
+                    className="w-full pl-[10%] flex flex-col items-start justify-center gap-4"
+                >
                     <p className="text-black text-lg font-medium underline">
                         Provide a Feedback
                     </p>
                     <input
                         type="text"
-                        placeholder="Drop a Feedback !!"
+                        placeholder="Provide a Feedback !!"
                         value={feedback}
                         onChange={(e) => setFeedback(e.target.value)}
                         className="bg-transparent border-black border-[0.01rem] w-[80%] indent-2 rounded-md p-2 text-black placeholder:text-[15px] placeholder:text-[#505050]"
                     />
                     <Button
                         btnText={'Submit'}
-                        onClick={() => {
-                            setFeedback('');
-                            setShowPopup(true);
-                            setPopupText('Feedback Submitted Successfully 🤗');
-                        }}
                         className="text-white mt-2 rounded-md py-[5px] px-3 bg-[#4977ec] hover:bg-[#3b62c2]"
                     />
-                </div>
+                </form>
             </div>
 
             <hr className="w-full mt-6 mb-4" />

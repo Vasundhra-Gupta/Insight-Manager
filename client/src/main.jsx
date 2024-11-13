@@ -28,6 +28,8 @@ import {
     UpdatePostPage,
     SavedPostsPage,
     AboutUsPage,
+    ContactUsPage,
+    FAQpage,
 } from './Pages';
 
 import { UserContextProvider } from './Context/UserContext';
@@ -63,6 +65,8 @@ const router = createBrowserRouter(
             <Route path="saved" element={<SavedPostsPage />} />
             <Route path="support" element={<SupportPage />} />
             <Route path="about-us" element={<AboutUsPage />} />
+            <Route path="contact-us" element={<ContactUsPage />} />
+            <Route path="faqs" element={<FAQpage />} />
             <Route
                 path="add"
                 element={

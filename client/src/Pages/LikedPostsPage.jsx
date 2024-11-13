@@ -18,7 +18,6 @@ export default function LikedPostsPage() {
     // pagination
     const paginateRef = paginate(postsInfo.hasNextPage, loading, setPage);
 
-    // fetching the posts
     useEffect(() => {
         (async function getPosts() {
             try {
@@ -36,7 +35,6 @@ export default function LikedPostsPage() {
         })();
     }, [page, user]);
 
-    // displaying posts
     const postElements = posts?.map((post, index) => (
         <LikedPostView
             key={post.post_id}
@@ -56,14 +54,14 @@ export default function LikedPostsPage() {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                        <div className="size-7 fill-[#4977ec]">
                             {icons.loading}
                         </div>
                         <span className="text-xl ml-3">Please wait...</span>
                     </div>
                 )
             ) : postElements.length > 0 ? (
-                <div className="">{postElements}</div>
+                <div>{postElements}</div>
             ) : (
                 <div>No liked posts !!</div>
             )}

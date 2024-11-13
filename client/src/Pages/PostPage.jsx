@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, NavLink, Link } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { followerService, likeService, postService } from '../Services';
 import { Button, Comments, Recemendations } from '../Components';
-import { formatDateRelative } from '../Utils';
+import { formatDateRelative, formatCount } from '../Utils';
 import { useUserContext, usePopupContext } from '../Context';
 import { icons } from '../Assets/icons';
 import parse from 'html-react-parser';
@@ -170,12 +170,13 @@ export default function PostPage() {
                         <div className="flex items-center justify-between mt-3">
                             {/* statistics */}
                             <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
-                                {post.totalViews} views &bull; posted
+                                {formatCount(post.totalViews)} views &bull;
+                                posted
                                 {' ' + formatDateRelative(post.post_createdAt)}
                             </div>
 
                             {/* like/dislike btn */}
-                            <div className="bg-[#f0efef] rounded-full overflow-hidden drop-shadow-lg hover:bg-[#ebeaea]">
+                            <div className="bg-[#f0efef] rounded-full overflow-hidden drop-shadow-md hover:bg-[#ebeaea]">
                                 <Button
                                     btnText={
                                         <div className="flex items-center justify-center gap-2">
@@ -189,7 +190,7 @@ export default function PostPage() {
                                                 {icons.like}
                                             </div>
                                             <div className="text-black">
-                                                {post.totalLikes}
+                                                {formatCount(post.totalLikes)}
                                             </div>
                                         </div>
                                     }
@@ -209,7 +210,9 @@ export default function PostPage() {
                                                 {icons.dislike}
                                             </div>
                                             <div className="text-black">
-                                                {post.totalDislikes}
+                                                {formatCount(
+                                                    post.totalDislikes
+                                                )}
                                             </div>
                                         </div>
                                     }
@@ -221,7 +224,7 @@ export default function PostPage() {
 
                         {/* SMALL SCREEN */}
                         {/* post category */}
-                        <div className="xl:hidden absolute top-2 left-2 hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-lg rounded-full w-fit px-4 py-[4px]">
+                        <div className="xl:hidden absolute top-2 left-2 hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px]">
                             <div className="size-[10px] fill-[#2556d1]">
                                 {icons.dot}
                             </div>
@@ -245,7 +248,7 @@ export default function PostPage() {
                                     </div>
                                 }
                                 onClick={toggleSave}
-                                className="bg-[#f0efef] p-3 group rounded-full drop-shadow-lg hover:bg-[#ebeaea]"
+                                className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                             />
                         </div>
                     </div>
@@ -255,7 +258,7 @@ export default function PostPage() {
                         {/* BIGGER SCREEN */}
                         <div className="hidden xl:flex items-center justify-between w-full">
                             {/* post category */}
-                            <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-lg rounded-full w-fit px-4 py-[4px]">
+                            <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-4 py-[4px]">
                                 <div className="size-[10px] fill-[#2556d1]">
                                     {icons.dot}
                                 </div>
@@ -279,7 +282,7 @@ export default function PostPage() {
                                         </div>
                                     }
                                     onClick={toggleSave}
-                                    className="bg-[#f0efef] p-3 group rounded-full drop-shadow-lg hover:bg-[#ebeaea]"
+                                    className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                                 />
                             </div>
                         </div>
@@ -369,7 +372,10 @@ export default function PostPage() {
                     Recommended Similar Posts
                 </h2>
                 <div className="w-full">
-                    <Recemendations category={post.category_name} />
+                    <Recemendations
+                        category={post.category_name}
+                        currentPostId={post.post_id}
+                    />
                 </div>
             </div>
 

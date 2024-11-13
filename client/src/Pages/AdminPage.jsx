@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AdminPostRow, Button } from '../Components';
 import { userService, postService } from '../Services';
 import { useUserContext } from '../Context';
-import { paginate } from '../Utils';
+import { paginate, formatCount } from '../Utils';
 import { LIMIT } from '../Constants/constants';
 import { icons } from '../Assets/icons';
 
@@ -74,13 +74,29 @@ export default function AdminPage() {
         },
     ];
 
+    const tableHeads = [
+        'Toggle',
+        'Visibility',
+        'Post',
+        'Category',
+        'Date uploaded',
+        'Views',
+        'Comments',
+        'Ratings',
+        'Options',
+    ];
+
+    const tableHeadElements = tableHeads.map((head) => (
+        <th className="text-[1.13rem] font-bold py-[18px] px-6">{head}</th>
+    ));
+
     const statElements = stats?.map((item) => (
         <div
             key={item.name}
-            className="border-[0.01rem] rounded-lg p-4 bg-slate-900"
+            className="bg-[#f9f9f9] text-2xl flex items-center justify-between gap-8 rounded-xl h-[120px] p-8 drop-shadow-md overflow-hidden"
         >
-            <div className="text-2xl font-medium">{item.name}</div>
-            <div className="mt-4 text-xl">{item.value}</div>
+            <div className="font-medium">{item.name}</div>
+            <div>{formatCount(item.value)}</div>
         </div>
     ));
 
@@ -105,22 +121,24 @@ export default function AdminPage() {
     return loading ? (
         <div>loading...</div>
     ) : (
-        <div className="p-4">
-            <div className="flex items-center justify-between">
-                <div className="pl-4">
-                    <div className="size-[125px] overflow-hidden rounded-full">
-                        <img
-                            src={user.user_avatar}
-                            alt="user avatar"
-                            className="object-cover size-full"
-                        />
+        <div className="px-4 w-full">
+            <div className="flex items-center justify-between bg-[#f9f9f9] rounded-xl drop-shadow-md px-6 py-4">
+                <div className="">
+                    <div className="drop-shadow-md">
+                        <div className="size-[125px] overflow-hidden rounded-full">
+                            <img
+                                src={user.user_avatar}
+                                alt="user avatar"
+                                className="object-cover size-full"
+                            />
+                        </div>
                     </div>
                     <div className="mt-4">
                         <div className="text-3xl font-medium">
                             Welcome Back, {user.user_firstName}{' '}
                             {user.user_lastName}
                         </div>
-                        <div className="text-sm mt-1 text-[#c2c2c2]">
+                        <div className="text-[15px] mt-1 text-black">
                             Track you channel's progress, Seamless post
                             Management & Elevated Results.
                         </div>
@@ -134,15 +152,16 @@ export default function AdminPage() {
                                 <div className="size-[20px] fill-white">
                                     {icons.plus}
                                 </div>
-                                <div>New Post</div>
+                                <div className="text-white">New Post</div>
                             </div>
                         }
-                        onClick={() => navigate('/add-post')}
+                        onClick={() => navigate('/add')}
+                        className="text-white rounded-md p-2 w-full bg-[#4977ec] font-medium hover:bg-[#3b62c2]"
                     />
                 </div>
             </div>
 
-            <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7">
+            <div className="mt-10 grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-x-4 gap-y-7">
                 {statElements}
             </div>
 
@@ -158,41 +177,15 @@ export default function AdminPage() {
                 />
             </div>
 
-            <div className="overflow-x-scroll mt-10 w-full">
-                <table className=" border-[0.1rem] border-[#b5b4b4] w-full text-nowrap text-[#efefef]">
-                    <thead>
-                        <tr className="w-full border-b-[0.1rem] border-[#b5b4b4]">
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Toggle
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Visibility
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Post
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Category
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Date uploaded
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Views
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Comments
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Ratings
-                            </th>
-                            <th className="text-[1.13rem] font-bold py-[18px] px-6">
-                                Options
-                            </th>
+            <div className="overflow-x-scroll mt-10 w-full rounded-xl drop-shadow-md">
+                <table className="w-full text-nowrap bg-[#f9f9f9] text-[#efefef] border-[0.01rem] rounded-xl overflow-hidden">
+                    <thead className="w-full">
+                        <tr className="w-full drop-shadow-md bg-[#f9f9f9] text-black">
+                            {tableHeadElements}
                         </tr>
                     </thead>
 
-                    <tbody>{postElements}</tbody>
+                    <tbody className="text-black">{postElements}</tbody>
                 </table>
 
                 {postsLoading &&
@@ -202,7 +195,7 @@ export default function AdminPage() {
                         </div>
                     ) : (
                         <div className="flex items-center justify-center my-2 w-full">
-                            <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                            <div className="size-7 fill-[#4977ec]">
                                 {icons.loading}
                             </div>
                             <span className="text-xl ml-3">Please wait...</span>

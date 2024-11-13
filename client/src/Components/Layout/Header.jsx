@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Button, Logout } from '..';
 import { useUserContext, useSideBarContext } from '../../Context';
 import { LOGO } from '../../Constants/constants';
@@ -30,16 +30,34 @@ export default function Header() {
 
     return (
         <div className="fixed top-0 z-[1] w-full bg-[#f6f6f6] text-black h-[60px] px-8 font-medium flex items-center justify-between gap-2">
-            {/* logo */}
-            <div className="flex items-center justify-center gap-4 text-nowrap font-medium text-xl">
-                <div className="overflow-hidden rounded-full size-[45px] drop-shadow-xl">
-                    <img
-                        src={LOGO}
-                        alt="peer connect logo"
-                        className="object-cover size-full hover:brightness-95"
-                    />
-                </div>
-                <div>Peer Connect</div>
+            <div className="flex items-center justify-center gap-6">
+                {/* hamburgur menu btn */}
+                <Button
+                    btnText={
+                        <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
+                            {icons.hamburgur}
+                        </div>
+                    }
+                    onClick={() => {
+                        setShowSideBar((prev) => !prev);
+                    }}
+                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                />
+
+                {/* logo */}
+                <Link
+                    to={'/'}
+                    className="flex items-center justify-center gap-4 text-nowrap font-medium text-xl"
+                >
+                    <div className="overflow-hidden rounded-full size-[40px] drop-shadow-md">
+                        <img
+                            src={LOGO}
+                            alt="peer connect logo"
+                            className="object-cover size-full hover:brightness-95"
+                        />
+                    </div>
+                    <div>Peer Connect</div>
+                </Link>
             </div>
 
             {/* links */}
@@ -48,7 +66,7 @@ export default function Header() {
             </div>
 
             {/* search bar */}
-            <div className="hidden relative group drop-shadow-xl w-[35%]">
+            <div className="hidden relative group drop-shadow-md w-[35%]">
                 <input
                     type="text"
                     placeholder="Search here"
@@ -63,11 +81,11 @@ export default function Header() {
                 {/* <Button
                     btnText={<div className="text-white">Search</div>}
                     onClick={() => {}}
-                    className="absolute right-1 top-[50%] translate-y-[-50%] bg-[#4977ec] px-4 py-[5px] group rounded-full drop-shadow-xl hover:bg-[#3b66d2] w-fit"
+                    className="absolute right-1 top-[50%] translate-y-[-50%] bg-[#4977ec] px-4 py-[5px] group rounded-full drop-shadow-md hover:bg-[#3b66d2] w-fit"
                 /> */}
             </div>
 
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-4">
                 {/* search btn */}
                 <Button
                     btnText={
@@ -76,8 +94,24 @@ export default function Header() {
                         </div>
                     }
                     onClick={() => {}}
-                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-xl hover:drop-shadow-md w-fit"
+                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                 />
+
+                {/* add post btn */}
+                <NavLink
+                    to={'/add'}
+                    className={({ isActive }) => `${isActive && 'hidden'}`}
+                >
+                    <Button
+                        btnText={
+                            <div className="size-[20px] group-hover:fill-[#4977ec] fill-[#434343]">
+                                {icons.plus}
+                            </div>
+                        }
+                        onClick={() => {}}
+                        className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                    />
+                </NavLink>
 
                 <div className="hidden sm:flex">
                     {/* login/logout btn */}
@@ -103,19 +137,6 @@ export default function Header() {
                         </div>
                     )}
                 </div>
-
-                {/* hamburgur menu btn */}
-                <Button
-                    btnText={
-                        <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
-                            {icons.hamburgur}
-                        </div>
-                    }
-                    onClick={() => {
-                        setShowSideBar((prev) => !prev);
-                    }}
-                    className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-xl hover:drop-shadow-md w-fit"
-                />
             </div>
         </div>
     );

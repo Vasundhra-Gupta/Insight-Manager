@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { usePopupContext, useUserContext } from '../../Context';
 import { commentService, likeService } from '../../Services';
-import { formatDateRelative } from '../../Utils';
+import { formatDateRelative, formatCount } from '../../Utils';
 import { icons } from '../../Assets/icons';
 import { Button } from '..';
 
@@ -149,7 +149,7 @@ export default function Comment({ comment, setComments }) {
     }
 
     return (
-        <div className="w-full mb-6 bg-white drop-shadow-lg relative flex items-start justify-start gap-x-4 rounded-xl p-4">
+        <div className="w-full mb-6 bg-white drop-shadow-md relative flex items-start justify-start gap-x-4 rounded-xl p-4">
             <div>
                 <NavLink to={`/channel/${user_name}`}>
                     <div className="rounded-full size-[50px] overflow-hidden">
@@ -205,14 +205,14 @@ export default function Comment({ comment, setComments }) {
                                     setNewContent(comment_content);
                                 }}
                                 btnText="Cancel"
-                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                             />
 
                             {/* submit btn */}
                             <Button
                                 type="submit"
                                 btnText={isUpdating ? 'Updating...' : 'Update'}
-                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                                className="text-black bg-[#f0efef] px-3 py-1 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                             />
                         </div>
                     </form>
@@ -222,7 +222,7 @@ export default function Comment({ comment, setComments }) {
                     </div>
                 )}
 
-                <div className="bg-[#f0efef] rounded-full overflow-hidden mt-4 drop-shadow-lg hover:bg-[#ebeaea] w-fit">
+                <div className="bg-[#f0efef] rounded-full overflow-hidden mt-4 drop-shadow-md hover:bg-[#ebeaea] w-fit">
                     <Button
                         onClick={handleLike}
                         btnText={
@@ -236,7 +236,9 @@ export default function Comment({ comment, setComments }) {
                                 >
                                     {icons.like}
                                 </div>
-                                <div className="text-black">{likes}</div>
+                                <div className="text-black">
+                                    {formatCount(likes)}
+                                </div>
                             </div>
                         }
                         className="bg-[#f0efef] py-[5px] px-2 hover:bg-[#ebeaea] border-r-[0.1rem] border-[#e6e6e6]"
@@ -255,7 +257,9 @@ export default function Comment({ comment, setComments }) {
                                 >
                                     {icons.dislike}
                                 </div>
-                                <div className="text-black">{dislikes}</div>
+                                <div className="text-black">
+                                    {formatCount(dislikes)}
+                                </div>
                             </div>
                         }
                         className="bg-[#f0efef] py-[5px] px-2 hover:bg-[#ebeaea]"
@@ -264,7 +268,7 @@ export default function Comment({ comment, setComments }) {
             </div>
 
             {user_name === user?.user_name && !isEditing && (
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 absolute top-2 right-2">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 absolute top-2 right-2">
                     <Button
                         onClick={() => setIsEditing(true)}
                         btnText={
@@ -272,7 +276,7 @@ export default function Comment({ comment, setComments }) {
                                 {icons.edit}
                             </div>
                         }
-                        className="bg-[#f0efef] p-3 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                        className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                     />
 
                     <Button
@@ -282,7 +286,7 @@ export default function Comment({ comment, setComments }) {
                                 {icons.delete}
                             </div>
                         }
-                        className="bg-[#f0efef] p-3 group rounded-full drop-shadow-xl hover:bg-[#ebeaea]"
+                        className="bg-[#f0efef] p-3 group rounded-full drop-shadow-md hover:bg-[#ebeaea]"
                     />
                 </div>
             )}

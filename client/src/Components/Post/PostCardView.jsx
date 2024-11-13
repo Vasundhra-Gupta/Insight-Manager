@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { formatDateRelative } from '../../Utils';
+import { formatCount, formatDateRelative } from '../../Utils';
 import { Button } from '..';
 import { icons } from '../../Assets/icons';
 
@@ -29,10 +29,10 @@ export default function PostCardView({
         <div
             ref={reference}
             onClick={() => navigate(`/post/${post_id}`)}
-            className="min-w-[350px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-xl rounded-2xl overflow-hidden"
+            className="min-w-[350px] mb-6 flex flex-col items-start justify-center gap-6 relative cursor-pointer w-full p-4 bg-white drop-shadow-md rounded-2xl overflow-hidden"
         >
             {/* post image */}
-            <div className="h-[250px] drop-shadow-lg w-full rounded-xl overflow-hidden">
+            <div className="h-[250px] drop-shadow-md w-full rounded-xl overflow-hidden">
                 <img
                     alt="post image"
                     src={post_image}
@@ -43,7 +43,7 @@ export default function PostCardView({
             <div className="w-full">
                 <div className="flex items-start justify-between w-full">
                     {/* post category */}
-                    <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-lg rounded-full w-fit px-3 py-[2px]">
+                    <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-3 py-[2px]">
                         <div className="size-[9px] fill-[#2556d1]">
                             {icons.dot}
                         </div>
@@ -54,7 +54,7 @@ export default function PostCardView({
 
                     {/* statistics */}
                     <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
-                        {totalViews} views &bull; posted
+                        {formatCount(totalViews)} views &bull; posted
                         {' ' + formatDateRelative(post_createdAt)}
                     </div>
                 </div>
@@ -77,7 +77,7 @@ export default function PostCardView({
                         className="flex items-start justify-start gap-3"
                     >
                         {/* avatar */}
-                        <div>
+                        <div className='drop-shadow-md'>
                             <div className="size-[50px]">
                                 <img
                                     alt="post owner avatar"

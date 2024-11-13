@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { commentService } from '../../Services';
+import { formatCount } from '../../Utils';
 import { Comment, Button } from '..';
 import { usePopupContext, useUserContext } from '../../Context';
 
@@ -84,13 +85,13 @@ export default function Comments({ postId }) {
                         type="reset"
                         btnText="Cancel"
                         onClick={(e) => setInput('')}
-                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-4 py-1 group rounded-full drop-shadow-xl"
+                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-4 py-1 group rounded-full drop-shadow-md"
                     />
                     <Button
                         type="submit"
                         btnText={addingComment ? 'adding...' : 'Comment'}
                         disabled={addingComment}
-                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-3 py-1 group rounded-full drop-shadow-xl"
+                        className="text-white bg-[#4977ec] hover:bg-[#3b62c2] px-3 py-1 group rounded-full drop-shadow-md"
                     />
                 </div>
             </form>
@@ -98,7 +99,7 @@ export default function Comments({ postId }) {
             {comments.length > 0 ? (
                 <div className="">
                     <div className="mt-4 text-black">
-                        {comments.length} Comments
+                        {formatCount(comments.length)} Comments
                     </div>
                     <div className="mt-4">{commentElements}</div>
                 </div>

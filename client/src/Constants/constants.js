@@ -4,6 +4,8 @@ import SANIAIMAGE from '../Assets/images/sania.jpg';
 import VASUNDHRAIMAGE from '../Assets/images/vasundhra.jpg';
 import VANSHIKAIMAGE from '../Assets/images/vanshika.jpg';
 import LOGO from '../Assets/images/logo.jpg';
+const EMAIL = 'peerconnect@gmail.com';
+const CONTACTNUMBER = 'xxxxxxxxxx';
 
 const CONTRIBUTORS = [
     {
@@ -16,6 +18,7 @@ const CONTRIBUTORS = [
             discord: 'https://discord.com/channels/@sania_singla',
             gitHub: 'https://github.com/Sania-Singla',
             threads: 'https://x.com/sania_singla',
+            instagram: 'https://www.instagram.com/sania__singla',
         },
     },
     {
@@ -44,4 +47,4 @@ const CONTRIBUTORS = [
     },
 ];
 
-export { LIMIT, DEFAULT_RTE_TEXT, LOGO, CONTRIBUTORS };
+export { LIMIT, DEFAULT_RTE_TEXT, LOGO, CONTRIBUTORS, EMAIL, CONTACTNUMBER };

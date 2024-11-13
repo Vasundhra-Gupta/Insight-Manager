@@ -9,15 +9,15 @@ export default function ContributorCard({ contributor }) {
             <motion.div
                 whileHover={{
                     y: -5,
-                    boxShadow: '0px 10px 10px rgba(0, 0, 0, 0.1)', // increase shadow on hover
+                    boxShadow: '0px 10px 10px rgba(0, 0, 0, 0.05)', // increase shadow on hover
                 }}
                 transition={{
                     type: 'tween',
                 }}
-                className="bg-[#f9f9f9] h-full max-w-[330px] flex flex-col items-center justify-center gap-6 rounded-xl p-6 drop-shadow-xl overflow-hidden"
+                className="bg-[#f9f9f9] h-full max-w-[330px] flex flex-col items-center justify-center gap-6 rounded-xl p-6 drop-shadow-md overflow-hidden"
             >
                 <div className="w-full flex items-center justify-center">
-                    <div className="size-[145px] overflow-hidden border rounded-full drop-shadow-lg">
+                    <div className="size-[145px] overflow-hidden border rounded-full drop-shadow-md">
                         <img
                             src={image}
                             alt={`${name} profile photo`}
@@ -41,7 +41,7 @@ export default function ContributorCard({ contributor }) {
                                         target="_blank"
                                     >
                                         <div className="flex items-center justify-center">
-                                            <div className="bg-[#eaeaea] p-1 rounded-full w-fit drop-shadow-lg hover:brightness-90">
+                                            <div className="bg-[#eaeaea] p-1 rounded-full w-fit drop-shadow-md hover:brightness-90">
                                                 <div className="size-[16px]">
                                                     {icons[platform]}
                                                 </div>

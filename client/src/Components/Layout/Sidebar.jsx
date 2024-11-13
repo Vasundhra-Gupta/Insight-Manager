@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useSideBarContext, useUserContext } from '../../Context';
 import { icons } from '../../Assets/icons';
 import { Button, Logout } from '..';
@@ -20,6 +20,7 @@ export default function Sidebar() {
             icon: icons.group,
         },
         { show: user, path: '/admin', name: 'Admin', icon: icons.user },
+        { show: true, path: '/', name: 'My Content', icon: icons.image },
     ];
 
     const systemItems = [
@@ -81,7 +82,7 @@ export default function Sidebar() {
 
     const sideBarVariants = {
         beginning: {
-            x: '100vw',
+            x: '-100vw',
         },
         end: {
             x: 0,
@@ -90,7 +91,7 @@ export default function Sidebar() {
             },
         },
         exit: {
-            x: '100vw',
+            x: '-100vw',
             transition: {
                 type: 'tween',
             },
@@ -107,36 +108,43 @@ export default function Sidebar() {
                     exit="exit"
                     ref={sideBarRef}
                     onClick={closeSideBar}
-                    className="z-[10] h-full fixed inset-0 flex justify-end overflow-y-scroll"
+                    className="z-[10] h-full fixed inset-0 flex justify-start overflow-y-scroll"
                 >
-                    <div className="w-72 px-4 bg-[#f6f6f6] drop-shadow-xl flex flex-col items-start justify-start h-full">
-                        <div className="h-[60px] px-2 w-full flex items-center justify-center">
+                    <div className="w-72 px-4 bg-[#f6f6f6] drop-shadow-md flex flex-col items-start justify-start h-full">
+                        <div className="h-[60px] pl-4 gap-5 w-full flex items-center justify-between">
+                            {/* hamburgur menu btn */}
+                            <Button
+                                btnText={
+                                    <div className="size-[20px] fill-[#434343] group-hover:fill-[#4977ec]">
+                                        {icons.hamburgur}
+                                    </div>
+                                }
+                                onClick={() => {
+                                    setShowSideBar((prev) => !prev);
+                                }}
+                                className="bg-[#ffffff] p-[10px] group rounded-full drop-shadow-md w-fit"
+                            />
                             {user ? (
-                                <div className="w-full flex items-center justify-between">
-                                    <div className="flex items-center justify-start gap-2">
-                                        <div className="size-[45px] rounded-full overflow-hidden drop-shadow-xl">
+                                <div className="w-full h-full py-3 flex items-center justify-end gap-4">
+                                    <div onClick={() => setShowSideBar(false)}>
+                                        <Logout />
+                                    </div>
+
+                                    <Link
+                                        to={`/channel/${user.user_name}`}
+                                        onClick={() => setShowSideBar(false)}
+                                    >
+                                        <div className="size-[30px] rounded-full overflow-hidden drop-shadow-md hover:brightness-90">
                                             <img
                                                 src={user.user_avatar}
                                                 alt="user avatar"
                                                 className="size-full object-cover "
                                             />
                                         </div>
-                                        <div className="leading-6">
-                                            <div className="text-black text-[18px]">
-                                                {user.user_firstName}{' '}
-                                                {user.user_lastName}
-                                            </div>
-                                            <div className="text-[#1f1f1f] text-[15px]">
-                                                @{user.user_name}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div onClick={() => setShowSideBar(false)}>
-                                        <Logout />
-                                    </div>
+                                    </Link>
                                 </div>
                             ) : (
-                                <div className="w-full h-full py-3 flex items-center justify-center gap-4">
+                                <div className="w-full h-full py-3 flex items-center justify-end gap-2">
                                     <Button
                                         onClick={() => {
                                             navigate('/register');

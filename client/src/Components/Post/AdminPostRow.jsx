@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { icons } from '../../Assets/icons';
-import { formatDateExact } from '../../Utils';
+import { formatDateExact, formatCount } from '../../Utils';
 import { postService } from '../../Services';
 import { Button } from '..';
 import { usePopupContext } from '../../Context';
@@ -52,13 +52,14 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                     prev.filter((post) => post.post_id !== post_id)
                 );
             }
+            ``;
         } catch (err) {
             navigate('/server-error');
         }
     }
 
     return (
-        <tr ref={reference} className="border-b-[0.01rem] border-b-slate-600">
+        <tr ref={reference} className="bg-[#f9f9f9] border-b-[0.01rem] border-b-[#c1c1c1]">
             <td className="">
                 <div className="flex items-center justify-center">
                     <label
@@ -114,16 +115,20 @@ export default function AdminPostRow({ post, reference, setPosts }) {
             <td className=" text-center text-[1.1rem]">
                 {formatDateExact(post_createdAt)}
             </td>
-            <td className=" text-center text-[1.1rem] ">{totalViews}</td>
-            <td className=" text-center text-[1.1rem]">{totalComments}</td>
+            <td className=" text-center text-[1.1rem] ">
+                {formatCount(totalViews)}
+            </td>
+            <td className=" text-center text-[1.1rem]">
+                {formatCount(totalComments)}
+            </td>
 
             <td className="">
                 <div className="flex items-center justify-center">
                     <div className="rounded-[12px] bg-[#d4ffd4] px-2 py-[2px] text-[#196619] text-[1.1rem]">
-                        {totalLikes} likes
+                        {formatCount(totalLikes)} likes
                     </div>
                     <div className="rounded-[12px] bg-[#ffd2d2] px-2 py-[2px] ml-4 text-[#ba2828] text-[1.1rem]">
-                        {totalDislikes} dislikes
+                        {formatCount(totalDislikes)} dislikes
                     </div>
                 </div>
             </td>
@@ -132,18 +137,18 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                 <div className="flex items-center justify-center gap-4">
                     <Button
                         onClick={deletePost}
-                        className="size-[27px] fill-none stroke-[#b5b4b4] hover:stroke-[#a40000] "
+                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                         btnText={
-                            <div className="size-[20px] fill-black">
+                            <div className="size-[20px] fill-black hover:fill-[#d42828]">
                                 {icons.delete}
                             </div>
                         }
                     />
                     <Button
-                        onClick={() => navigate(`/update/:${post_id}`)}
-                        className="size-[25px] fill-none stroke-[#b5b4b4] hover:stroke-[#8871ee]"
+                        onClick={() => navigate(`/update/${post_id}`)}
+                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
                         btnText={
-                            <div className="size-[20px] fill-black">
+                            <div className="size-[20px] fill-black hover:fill-[#2256db]">
                                 {icons.edit}
                             </div>
                         }

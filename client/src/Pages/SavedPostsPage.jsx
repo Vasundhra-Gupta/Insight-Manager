@@ -65,7 +65,7 @@ export default function SavedPostsPage() {
                     </div>
                 ) : (
                     <div className="flex items-center justify-center my-2 w-full">
-                        <div className="size-7 fill-[#8871ee] dark:text-[#b5b4b4]">
+                        <div className="size-7 fill-[#4977ec]">
                             {icons.loading}
                         </div>
                         <span className="text-xl ml-3">Please wait...</span>

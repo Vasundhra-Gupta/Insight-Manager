@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { formatDateRelative } from '../../Utils';
+import { formatCount, formatDateRelative } from '../../Utils';
 import { Button, PostCardView } from '..';
 import { icons } from '../../Assets/icons';
 
@@ -36,10 +36,10 @@ export default function PostListView({ post, reference, children }) {
             <div
                 ref={reference}
                 onClick={() => navigate(`/post/${post_id}`)} // items-start justify-start
-                className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-6 bg-white drop-shadow-xl rounded-2xl overflow-hidden"
+                className="mb-6 hidden relative cursor-pointer sm:flex flex-row w-full p-4 gap-x-6 bg-white drop-shadow-md rounded-2xl overflow-hidden"
             >
                 {/* post image */}
-                <div className="h-[300px] drop-shadow-lg w-[45%] rounded-xl overflow-hidden">
+                <div className="h-[300px] drop-shadow-md w-[45%] rounded-xl overflow-hidden">
                     <img
                         alt="post image"
                         src={post_image}
@@ -50,7 +50,7 @@ export default function PostListView({ post, reference, children }) {
                 <div className="w-[55%] pt-4 realtive flex flex-col items-start justify-start">
                     <div className="flex items-start justify-between w-full">
                         {/* post category */}
-                        <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-lg rounded-full w-fit px-3 py-[2px]">
+                        <div className="hover:cursor-text flex items-center justify-center gap-2 bg-[#ffffff] drop-shadow-md rounded-full w-fit px-3 py-[2px]">
                             <div className="size-[9px] fill-[#2556d1]">
                                 {icons.dot}
                             </div>
@@ -61,7 +61,7 @@ export default function PostListView({ post, reference, children }) {
 
                         {/* statistics */}
                         <div className="hover:cursor-text text-[15px] text-[#5a5a5a]">
-                            {totalViews} views &bull; posted
+                            {formatCount(totalViews)} views &bull; posted
                             {' ' + formatDateRelative(post_createdAt)}
                         </div>
                     </div>
@@ -82,7 +82,7 @@ export default function PostListView({ post, reference, children }) {
                         className="flex items-start justify-start gap-3 mt-6"
                     >
                         {/* avatar */}
-                        <div>
+                        <div className="drop-shadow-md">
                             <div className="size-[50px]">
                                 <img
                                     alt="post owner avatar"

@@ -63,7 +63,7 @@ export default function AddPostPage() {
             if (res && !res.message) {
                 setPopupText('Post Created Successfully 🤗');
                 setShowPopup(true);
-                navigate(`/post/${postId}`);
+                navigate(`/post/${res.post_id}`);
             }
         } catch (err) {
             navigate('/server-error');

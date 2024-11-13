@@ -166,7 +166,7 @@ export default function RegisterPage() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     placeholder={field.placeholder}
-                    className="shadow-xl shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
+                    className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] w-full border-[0.01rem] border-gray-500 bg-transparent"
                 />
             </div>
             {error[field.name] && (
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                     name={field.name}
                     id={field.name}
                     onChange={handleFileChange}
-                    className="shadow-xl shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] border border-gray-500 w-full"
+                    className="shadow-md shadow-[#f7f7f7] py-[15px] rounded-[5px] pl-[10px] border border-gray-500 w-full"
                 />
             </div>
             {error[field.name] && (
@@ -207,16 +207,16 @@ export default function RegisterPage() {
 
     return (
         <div className="py-10 text-black flex flex-col items-center justify-start gap-4 overflow-y-scroll z-[1] bg-white fixed inset-0">
-            <div className="w-full flex items-center justify-center">
-                <div className="overflow-hidden rounded-full size-[90px] drop-shadow-xl">
+            <Link to={'/'} className="w-full flex items-center justify-center hover:brightness-95">
+                <div className="overflow-hidden rounded-full size-[90px] drop-shadow-md">
                     <img
                         src={LOGO}
                         alt="peer connect logo"
                         className="object-cover size-full"
                     />
                 </div>
-            </div>
-            <div className=" w-fit">
+            </Link>
+            <div className="w-fit">
                 <p className="text-center px-2 text-[28px] font-medium">
                     Create a new Account
                 </p>
@@ -226,9 +226,18 @@ export default function RegisterPage() {
                     transition={{ duration: 0.3 }}
                     className="relative -top-2 h-[0.05rem] bg-[#333333]"
                 />
+                <p className="w-full text-center text-[16px]">
+                    already have an Account ?{' '}
+                    <Link
+                        to={'/login'}
+                        className="text-[#355ab6] hover:underline"
+                    >
+                        Login
+                    </Link>
+                </p>
             </div>
 
-            <div className="w-[400px] flex flex-col items-center justify-center gap-3 mt-4">
+            <div className="w-[400px] flex flex-col items-center justify-center gap-3">
                 {error.root && (
                     <div className="text-red-500 w-full text-center">
                         {error.root}
@@ -250,15 +259,6 @@ export default function RegisterPage() {
                             onMouseOver={onMouseOver}
                             btnText={loading ? 'Signing Up...' : 'Sign Up'}
                         />
-                        <p className="w-full text-center text-[16px] mt-2">
-                            already have an Account ?{' '}
-                            <Link
-                                to={'/login'}
-                                className="text-[#355ab6] hover:underline"
-                            >
-                                Login
-                            </Link>
-                        </p>
                     </div>
                 </form>
             </div>

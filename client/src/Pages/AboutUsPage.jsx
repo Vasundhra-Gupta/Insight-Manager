@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function AboutUsPage() {
     const members = CONTRIBUTORS.map((contributor) => (
-        <div className="w-full flex flex-col gap-4 items-center justify-center">
+        <div className="w-full flex flex-col gap-3 items-center justify-center">
             <div className="drop-shadow-xl hover:brightness-90">
                 <div className="size-[100px] rounded-full overflow-hidden">
                     <img
@@ -13,12 +13,14 @@ export default function AboutUsPage() {
                     />
                 </div>
             </div>
-            <div className="font-semibold text-lg">{contributor.name}</div>
+            <div className="w-full text-center font-semibold text-xl">
+                {contributor.name}
+            </div>
         </div>
     ));
     return (
         <div className="w-full flex items-start justify-center">
-            <div className="w-[70%]">
+            <div className="w-[90%]">
                 <h1 className="w-full font-semibold text-center mb-6">
                     About Us
                 </h1>
@@ -76,7 +78,7 @@ export default function AboutUsPage() {
                     different zones, but we share a common goal: to build a
                     space for students to connect, collaborate, and grow.
                 </p>
-                <div className="mt-10 flex items-center justify-between w-full">
+                <div className="mt-10 flex flex-col sm:flex-row items-start justify-between w-full gap-10">
                     {members}
                 </div>
                 <hr className="m-8" />
