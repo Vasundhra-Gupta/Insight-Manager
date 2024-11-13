@@ -16,6 +16,9 @@ export const icons = {
             />
         </svg>
     ),
+    toggle: (
+        <span className="inline-block h-6 w-12 rounded-2xl bg-[#d7d7d7] duration-200 after:absolute after:bottom-1 after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:duration-200 peer-checked:bg-[#4977ec] peer-checked:after:left-7" />
+    ),
     image: (
         <svg
             xmlns="http://www.w3.org/2000/svg"

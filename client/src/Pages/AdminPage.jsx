@@ -165,7 +165,8 @@ export default function AdminPage() {
                 {statElements}
             </div>
 
-            <div className="mt-10 w-full">
+            {/* search bar */}
+            <div className="relative group drop-shadow-md mt-10 w-full">
                 <input
                     type="text"
                     placeholder="Search here"
@@ -173,8 +174,11 @@ export default function AdminPage() {
                     onChange={(e) => setSearch(e.target.value)}
                     name="search"
                     id="search"
-                    className="bg-transparent rounded-full border-[0.01rem] p-1 indent-2 max-w-[500px] w-[50%]"
+                    className="max-w-[500px] w-full bg-white border-[#dedede] border-[0.1rem] indent-8 rounded-full p-2 text-black text-[16px] font-normal placeholder:text-[#525252] outline-none focus:border-[#4977ec]"
                 />
+                <div className="size-[20px] fill-[#434343] group-focus-within:fill-[#4977ec] absolute top-3 left-3">
+                    {icons.search}
+                </div>
             </div>
 
             <div className="overflow-x-scroll mt-10 w-full rounded-xl drop-shadow-md">

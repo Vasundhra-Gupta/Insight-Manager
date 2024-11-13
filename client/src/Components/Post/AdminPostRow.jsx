@@ -59,7 +59,10 @@ export default function AdminPostRow({ post, reference, setPosts }) {
     }
 
     return (
-        <tr ref={reference} className="bg-[#f9f9f9] border-b-[0.01rem] border-b-[#c1c1c1]">
+        <tr
+            ref={reference}
+            className="bg-[#f9f9f9] border-b-[0.01rem] border-b-[#c1c1c1]"
+        >
             <td className="">
                 <div className="flex items-center justify-center">
                     <label
@@ -74,7 +77,7 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                             onChange={togglePostVisibility}
                         />
 
-                        <span className="inline-block h-6 w-12 rounded-2xl bg-gray-200 duration-200 after:absolute after:bottom-1 after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-black after:duration-200 peer-checked:bg-[#ae7aff] peer-checked:after:left-7" />
+                        {icons.toggle}
                     </label>
                 </div>
             </td>
@@ -82,11 +85,11 @@ export default function AdminPostRow({ post, reference, setPosts }) {
             <td className="text-center px-8">
                 <div className="w-[130px] flex items-center justify-center">
                     {post_visibility ? (
-                        <div className="border-[0.01rem] border-[#008300] text-lg rounded-full px-3 py-[2px] text-[#008300]">
+                        <div className="border-[0.1rem] border-[#008300] text-lg rounded-full px-3 text-[#008300]">
                             Published
                         </div>
                     ) : (
-                        <div className="border-[0.01rem] border-[#ba0000] text-lg rounded-full px-3 py-[2px] text-[#ba0000]">
+                        <div className="border-[0.1rem] border-[#ba0000] text-lg rounded-full px-3 text-[#ba0000]">
                             Unpublished
                         </div>
                     )}
@@ -124,10 +127,10 @@ export default function AdminPostRow({ post, reference, setPosts }) {
 
             <td className="">
                 <div className="flex items-center justify-center">
-                    <div className="rounded-[12px] bg-[#d4ffd4] px-2 py-[2px] text-[#196619] text-[1.1rem]">
+                    <div className="drop-shadow-md rounded-md bg-[#d9fed9] px-2 py-[2px] text-[#196619] text-[1.1rem]">
                         {formatCount(totalLikes)} likes
                     </div>
-                    <div className="rounded-[12px] bg-[#ffd2d2] px-2 py-[2px] ml-4 text-[#ba2828] text-[1.1rem]">
+                    <div className="drop-shadow-md rounded-md bg-[#ffd8d8] px-2 py-[2px] ml-4 text-[#ba2828] text-[1.1rem]">
                         {formatCount(totalDislikes)} dislikes
                     </div>
                 </div>
@@ -137,18 +140,18 @@ export default function AdminPostRow({ post, reference, setPosts }) {
                 <div className="flex items-center justify-center gap-4">
                     <Button
                         onClick={deletePost}
-                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                        className="bg-[#ffffff] group p-2 rounded-full drop-shadow-md w-fit"
                         btnText={
-                            <div className="size-[20px] fill-black hover:fill-[#d42828]">
+                            <div className="size-[20px] fill-black group-hover:fill-[#d42828]">
                                 {icons.delete}
                             </div>
                         }
                     />
                     <Button
                         onClick={() => navigate(`/update/${post_id}`)}
-                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md hover:drop-shadow-md w-fit"
+                        className="bg-[#ffffff] p-2 group rounded-full drop-shadow-md w-fit"
                         btnText={
-                            <div className="size-[20px] fill-black hover:fill-[#2256db]">
+                            <div className="size-[20px] fill-black group-hover:fill-[#2256db]">
                                 {icons.edit}
                             </div>
                         }

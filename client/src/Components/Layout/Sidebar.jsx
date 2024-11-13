@@ -20,7 +20,12 @@ export default function Sidebar() {
             icon: icons.group,
         },
         { show: user, path: '/admin', name: 'Admin', icon: icons.user },
-        { show: true, path: '/', name: 'My Content', icon: icons.image },
+        {
+            show: user,
+            path: `/channel/${user?.user_name}`,
+            name: 'My Content',
+            icon: icons.image,
+        },
     ];
 
     const systemItems = [
